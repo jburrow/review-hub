@@ -1,4 +1,4 @@
-import { CommentState, ReviewCommentEvent, reduceComments } from "monaco-review/dist/events-comments-reducers";
+import { ReviewCommentStore, ReviewCommentEvent, reduceComments } from "monaco-review";
 
 export type FileEditEvent = { type: "edit"; fullPath: string; text: string };
 export type FileDeleteEvent = { type: "delete"; fullPath: string, };
@@ -31,7 +31,7 @@ export type FileState = {
   text: string;
   status: FileStateStatus;
   history: VersionControlEvent[];
-  comments: CommentState;
+  comments: ReviewCommentStore;
 };
 
 export interface VersionControlState {
@@ -46,7 +46,7 @@ function createFileState(
   text: string,
   history: VersionControlEvent[],
   status: FileStateStatus,
-  comments: CommentState
+  comments: ReviewCommentStore
 ): FileState {
   return {
     fullPath: fullPath,

@@ -9,8 +9,8 @@ import { DiffEditor, ControlledEditor, monaco } from "@monaco-editor/react";
 import * as mx from "monaco-editor";
 import 'react-resizable/css/styles.css';
 import 'react-grid-layout/css/styles.css';
-import { createReviewManager, ReviewManager } from "monaco-review/dist";
-import { CommentState, ReviewCommentEvent } from "monaco-review/dist/events-comments-reducers";
+import { createReviewManager, ReviewManager, ReviewCommentStore, ReviewCommentEvent } from "monaco-review";
+
 import './index.css';
 
 
@@ -150,7 +150,7 @@ interface AppState {
 }
 
 interface SelectedView {
-    fullPath: string, label?: string, text: string, original?: string, comments?: CommentState
+    fullPath: string, label?: string, text: string, original?: string, comments?: ReviewCommentStore
 }
 type AppStateEvents = { type: 'selectScript', fullPath: string } |
     { type: 'selectedView', } & SelectedView;
