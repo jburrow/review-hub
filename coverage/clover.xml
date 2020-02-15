@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1581805918817" clover="3.2.0">
+  <project timestamp="1581805918817" name="All files">
+    <metrics statements="35" coveredstatements="28" conditionals="17" coveredconditionals="11" methods="5" coveredmethods="5" elements="57" coveredelements="44" complexity="0" loc="35" ncloc="35" packages="1" files="1" classes="1"/>
+    <file name="events-version-control.ts" path="/Users/jamesburrow/review-hub/src/events-version-control.ts">
+      <metrics statements="35" coveredstatements="28" conditionals="17" coveredconditionals="11" methods="5" coveredmethods="5"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="24" count="1" type="cond" truecount="2" falsecount="0"/>
+      <line num="25" count="1" type="stmt"/>
+      <line num="26" count="1" type="stmt"/>
+      <line num="51" count="6" type="stmt"/>
+      <line num="60" count="1" type="stmt"/>
+      <line num="61" count="2" type="stmt"/>
+      <line num="64" count="1" type="stmt"/>
+      <line num="68" count="6" type="stmt"/>
+      <line num="70" count="0" type="stmt"/>
+      <line num="73" count="6" type="stmt"/>
+      <line num="74" count="6" type="stmt"/>
+      <line num="75" count="6" type="cond" truecount="2" falsecount="0"/>
+      <line num="82" count="6" type="stmt"/>
+      <line num="83" count="6" type="stmt"/>
+      <line num="84" count="6" type="stmt"/>
+      <line num="86" count="6" type="stmt"/>
+      <line num="88" count="0" type="stmt"/>
+      <line num="89" count="0" type="stmt"/>
+      <line num="90" count="0" type="stmt"/>
+      <line num="92" count="5" type="stmt"/>
+      <line num="93" count="5" type="stmt"/>
+      <line num="95" count="1" type="stmt"/>
+      <line num="96" count="1" type="stmt"/>
+      <line num="98" count="1" type="stmt"/>
+      <line num="100" count="0" type="stmt"/>
+      <line num="102" count="0" type="stmt"/>
+      <line num="110" count="0" type="stmt"/>
+      <line num="113" count="6" type="stmt"/>
+      <line num="122" count="6" type="stmt"/>
+      <line num="133" count="1" type="stmt"/>
+      <line num="137" count="6" type="cond" truecount="2" falsecount="0"/>
+      <line num="139" count="6" type="stmt"/>
+      <line num="140" count="6" type="stmt"/>
+      <line num="143" count="6" type="stmt"/>
+    </file>
+  </project>
+</coverage>

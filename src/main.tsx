@@ -197,7 +197,7 @@ export const App = () => {
     const [appState, appDispatch] = React.useReducer(reducer, {});
     const [vcStore, vcDispatch] = React.useReducer(versionControlReducer, loadVersionControlStore());
     const [wsStore, wsDispatch] = React.useReducer(versionControlReducer, initialVersionControlState());
-    const [cmtStore, cmtDispatch] = React.useReducer(() => null, {});
+
     const currentUser = 'xyz-user';
 
     return (
