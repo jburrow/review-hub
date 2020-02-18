@@ -27,11 +27,15 @@ export enum FileStateStatus {
 }
 
 export type FileState = {
+  history: { fileState: FileStateX, event: VersionControlEvent }[];
+} & FileStateX;
+
+export type FileStateX = {
   fullPath: string;
   text: string;
   status: FileStateStatus;
-  history: VersionControlEvent[];
   comments: ReviewCommentStore;
+  revision: number;
 };
 
 export interface VersionControlState {
@@ -44,22 +48,29 @@ function createFileState(
   event: VersionControlEvent,
   fullPath: string,
   text: string,
-  history: VersionControlEvent[],
+  prev: FileState,
   status: FileStateStatus,
-  comments: ReviewCommentStore
+  comments: ReviewCommentStore,
 ): FileState {
-  return {
+  const current: FileStateX = {
     fullPath: fullPath,
     status: status,
     text: text,
-    history: [...history, event],
+    revision: prev.revision+1,
     comments: comments || { comments: {} }
+  }
+
+  return {
+    ...current,
+    history: [...prev.history, { event: event, fileState: current }],
   };
 }
 
 export function initialVersionControlState(): VersionControlState {
   return { files: {}, version: -1, events: [] };
 }
+
+export type VCDispatch = (event: VersionControlEvent) => void;
 
 export function versionControlReducer(
   state: VersionControlState, event: VersionControlEvent,
@@ -72,16 +83,18 @@ export function versionControlReducer(
     case "commit":
       const updates: { [fullPath: string]: FileState } = {};
       for (const e of event.events) {
-        const prev = state.files[e.fullPath] || {
+        const prev = (state.files[e.fullPath] || {
           fullPath: null,
           text: null,
           status: FileStateStatus.active,
           history: [],
-          comments: { viewZoneIdsToDelete: [], comments: {} }
-        };
+          comments: { viewZoneIdsToDelete: [], comments: {} },
+          revision: -1
+        }) as FileState;
         let status = FileStateStatus.active;
         let text = prev.text;
         let comments = prev.comments;
+        let nextRevision = prev.revision + 1;
 
         switch (e.type) {
           case "comment":
@@ -103,9 +116,10 @@ export function versionControlReducer(
               event,
               e.newFullPath,
               e.text || prev.text,
-              prev.history,
+              prev,
               status,
               comments
+
             );
             break;
         }
@@ -114,7 +128,7 @@ export function versionControlReducer(
           event,
           e.fullPath,
           text,
-          prev.history,
+          prev,
           status,
           comments
         );

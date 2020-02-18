@@ -3,15 +3,16 @@ import * as React from 'react'
 import * as RGL from "react-grid-layout";
 import {
     reduceVersionControl, FileEditEvent, versionControlReducer, VersionControlState,
-    FileEvents, FileState, VersionControlEvent, initialVersionControlState
+    FileEvents, FileState, VersionControlEvent, initialVersionControlState, VCDispatch
 } from "./events-version-control";
 import { DiffEditor, ControlledEditor, monaco } from "@monaco-editor/react";
-import * as mx from "monaco-editor";
 import 'react-resizable/css/styles.css';
 import 'react-grid-layout/css/styles.css';
 import { createReviewManager, ReviewManager, ReviewCommentStore, ReviewCommentEvent } from "monaco-review";
 
 import './index.css';
+
+type AppDispatch = (event: AppStateEvents) => void;
 
 
 const ReactGridLayout = RGL.WidthProvider(RGL);
@@ -68,6 +69,7 @@ const Editor = (props: { currentUser: string, view: SelectedView, wsDispatch(e: 
                 setEditor(editor.getModifiedEditor());
             }}
                 options={{ originalEditable: false }}
+                language={"javascript"}
                 height={200}
                 modified={props.view.text}
                 original={props.view.original}
@@ -83,30 +85,19 @@ const Editor = (props: { currentUser: string, view: SelectedView, wsDispatch(e: 
 };
 
 interface HistoryRow {
-    revision?: string, event: FileEvents
+    revision?: number, text: string
 }
 const History = (props: { script: FileState, appDispatch: AppDispatch }) => {
     const [selected, setSelected] = React.useState<number[]>([]);
 
     const convert = (e: HistoryRow) => {
-        switch (e.event.type) {
-            case "edit":
-                return `${e.revision} : ${e.event.fullPath} : "${e.event.text.substring(0, 10)} ..."`
-            default:
-                return JSON.stringify(e);
-        }
+        return <div>{e.revision} "{e.text.substring(0, 10)} ..."</div>
     }
 
     if (props.script) {
-        const events: HistoryRow[] = []
+        const events: HistoryRow[] = [];
         for (const history of props.script.history) {
-            if (history.type === 'commit') {
-                for (const e of history.events) {
-                    if (props.script.fullPath === e.fullPath) {
-                        events.push({ revision: history.id, event: e });
-                    }
-                }
-            }
+            events.push({ revision: history.fileState.revision, text: history.fileState.text });
         }
 
         return <div>{events.map((h, idx) => (
@@ -121,8 +112,8 @@ const History = (props: { script: FileState, appDispatch: AppDispatch }) => {
 
                 <button onClick={() => props.appDispatch({
                     type: "selectedView",
-                    fullPath: h.event.fullPath,
-                    text: (h.event as FileEditEvent).text,
+                    fullPath: props.script.fullPath,
+                    text: h.text,
 
                 })}>view</button>
 
@@ -135,8 +126,8 @@ const History = (props: { script: FileState, appDispatch: AppDispatch }) => {
                     type: "selectedView",
                     fullPath: props.script.fullPath,
                     label: `base:${original.revision} v other:${m.revision}`,
-                    text: (m.event as FileEditEvent).text,
-                    original: (original.event as FileEditEvent).text
+                    text: m.text,
+                    original: m.text
                 })
             }}>diff</button>}
         </div>
@@ -204,35 +195,18 @@ export const App = () => {
         <ReactGridLayout
             rowHeight={30}
             maxRows={20}
-            compactType={null}
+            compactType={'vertical'}
             cols={12}
             useCSSTransforms={false}
             draggableCancel={".fish"}
-
         >
             <div key="0.1" data-grid={{ x: 0, y: 0, w: 3, h: 8 }} style={{ backgroundColor: 'pink', }}>
                 <div className="fish">
                     <h3>version-control</h3>
                     <SCM appDispatch={appDispatch} files={vcStore.files} />
                     {vcStore.events.length}
-                    <h3>working set</h3>
-                    <SCM appDispatch={appDispatch} files={wsStore.files} />
-                    {wsStore.events.length}
-                    <button onClick={() => {
-                        let events = [];
-                        for (const e of wsStore.events) {
-                            if (e.type == 'commit') {
-                                events = events.concat(e.events);
-                            }
-                        }
 
-                        vcDispatch({
-                            type: "commit", author: "james", id: 'id-2',
-                            events: events
-                        })
-                        wsDispatch({ type: "reset" });
-
-                    }}>Commit</button>
+                    <StagingSCM vcDispatch={vcDispatch} wsDispatch={wsDispatch} appDispatch={appDispatch} events={wsStore.events} files={wsStore.files}></StagingSCM>
                 </div>
             </div>
             <div key="0.2" data-grid={{ x: 3, y: 0, w: 6, h: 8, }} style={{ backgroundColor: 'yellow', }} >
@@ -277,7 +251,34 @@ const VCHistory = (props: { vcStore: VersionControlState }) => {
         {rows.reverse().map((r, idx) => <div key={idx}>{r}</div>)}
     </div>
 }
-type AppDispatch = (event: AppStateEvents) => void;
+
+
+const StagingSCM = (props: { files: Record<string, FileState>, events: VersionControlEvent[], wsDispatch: VCDispatch, vcDispatch: VCDispatch, appDispatch: AppDispatch }) => {
+    return (<div>
+        <h3>working set</h3>
+        <SCM appDispatch={props.appDispatch} files={props.files} />
+
+        <button onClick={() => {
+            let events = [];
+            for (const e of props.events) {
+                if (e.type == 'commit') {
+                    events = events.concat(e.events);
+                }
+            }
+
+            props.vcDispatch({
+                type: "commit", author: "james", id: 'id-2',
+                events: events
+            })
+            props.wsDispatch({ type: "reset" });
+
+        }} disabled={props.events.length == 0}>Commit</button>
+
+        <button onClick={() => {
+            props.wsDispatch({ type: "reset" });
+        }} disabled={props.events.length == 0}>Discard Changes</button>
+    </div>)
+}
 
 const SCM = (props: { files: Record<string, FileState>, appDispatch: AppDispatch }) => {
     const handleClick = (fullPath: string) => {
@@ -286,12 +287,12 @@ const SCM = (props: { files: Record<string, FileState>, appDispatch: AppDispatch
         props.appDispatch({ type: 'selectedView', fullPath: value.fullPath, text: value.text, comments: value.comments });
     };
 
-    const items = Object.entries(props.files).map(([key, value]) => <SCMItem key={value.fullPath} fullPath={value.fullPath} onClick={handleClick} />);
+    const items = Object.entries(props.files).map(([key, value]) => <SCMItem key={value.fullPath} fullPath={value.fullPath} revision={value.revision.toString()} onClick={handleClick} />);
     return <ul>{items}</ul>
 }
 
-const SCMItem = (props: { fullPath: string, onClick(fullPath: string): void }) => {
-    return <li onClick={() => props.onClick(props.fullPath)}>{props.fullPath}</li>
+const SCMItem = (props: { fullPath: string, revision: string, onClick(fullPath: string): void }) => {
+    return <li onClick={() => props.onClick(props.fullPath)}>{props.fullPath} @ v{props.revision}</li>
 }
 
 render(<App />, document.getElementById('root'));
