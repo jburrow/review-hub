@@ -34,7 +34,7 @@ export type FileStateX = {
   fullPath: string;
   text: string;
   status: FileStateStatus;
-  comments: ReviewCommentStore;
+  commentStore: ReviewCommentStore;
   revision: number;
 };
 
@@ -50,14 +50,14 @@ function createFileState(
   text: string,
   prev: FileState,
   status: FileStateStatus,
-  comments: ReviewCommentStore,
+  commentStore: ReviewCommentStore,
 ): FileState {
   const current: FileStateX = {
     fullPath: fullPath,
     status: status,
     text: text,
     revision: prev.revision+1,
-    comments: comments || { comments: {} }
+    commentStore: commentStore|| { comments: {} }
   }
 
   return {
@@ -88,18 +88,19 @@ export function versionControlReducer(
           text: null,
           status: FileStateStatus.active,
           history: [],
-          comments: { viewZoneIdsToDelete: [], comments: {} },
+          commentStore: { comments: {} },
           revision: -1
         }) as FileState;
+
         let status = FileStateStatus.active;
         let text = prev.text;
-        let comments = prev.comments;
-        let nextRevision = prev.revision + 1;
+        let commentStore = prev.commentStore;
+
 
         switch (e.type) {
           case "comment":
-            comments = reduceComments(e.commentEvents, comments);
-            console.info('comments', comments)
+            commentStore = reduceComments(e.commentEvents, commentStore);
+            console.info('commentStore after reduce', commentStore)
             break;
           case "edit":
             text = e.text;
@@ -118,8 +119,7 @@ export function versionControlReducer(
               e.text || prev.text,
               prev,
               status,
-              comments
-
+              commentStore
             );
             break;
         }
@@ -130,7 +130,7 @@ export function versionControlReducer(
           text,
           prev,
           status,
-          comments
+          commentStore
         );
       }
       return {

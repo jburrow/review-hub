@@ -8,7 +8,7 @@ const baseConfig = (mode, target) => {
       index: "./src/main.tsx"
     },
     mode,
-    devtool: "none",
+    devtool: "source-map",
     devServer: {
       publicPath: "/dist/"
     },

@@ -2,8 +2,8 @@ import { render } from "react-dom";
 import * as React from 'react'
 import * as RGL from "react-grid-layout";
 import {
-    reduceVersionControl, FileEditEvent, versionControlReducer, VersionControlState,
-    FileEvents, FileState, VersionControlEvent, initialVersionControlState, VCDispatch
+    reduceVersionControl, versionControlReducer, VersionControlState,
+    FileEvents, FileState, VersionControlEvent, initialVersionControlState, VCDispatch, FileStateX
 } from "./events-version-control";
 import { DiffEditor, ControlledEditor, monaco } from "@monaco-editor/react";
 import 'react-resizable/css/styles.css';
@@ -25,6 +25,7 @@ const Editor = (props: { currentUser: string, view: SelectedView, wsDispatch(e: 
     const [reviewManager, setReviewManager] = React.useState<ReviewManager>(null);
 
     React.useEffect(() => {
+        console.debug('load view', props.view?.text, props.view?.original)
         if (props.view) {
             setText(props.view.text);
             setComments([]);
@@ -35,9 +36,9 @@ const Editor = (props: { currentUser: string, view: SelectedView, wsDispatch(e: 
         console.debug('load comments', props.view?.comments?.comments)
         if (reviewManager !== null && props.view) {
             //mx.editor.createModel()
-            const model = ((window as any).monaco).editor.createModel(props.view.text, 'javascript');
-            reviewManager.editor.setModel(model)
-            reviewManager.loadFromStore(props.view.comments, [])
+            // const model = ((window as any).monaco).editor.createModel(props.view.text, 'javascript');
+            // reviewManager.editor.setModel(model)
+            reviewManager.loadFromStore(props.view.comments || { comments: {}, deletedCommentIds: new Set(), dirtyCommentIds: new Set() }, [])
         }
     }, [reviewManager, props.view]);
 
@@ -84,23 +85,18 @@ const Editor = (props: { currentUser: string, view: SelectedView, wsDispatch(e: 
     </div> : null;
 };
 
-interface HistoryRow {
-    revision?: number, text: string
-}
+
 const History = (props: { script: FileState, appDispatch: AppDispatch }) => {
     const [selected, setSelected] = React.useState<number[]>([]);
 
-    const convert = (e: HistoryRow) => {
-        return <div>{e.revision} "{e.text.substring(0, 10)} ..."</div>
+    const convert = (e: FileStateX) => {
+        const comments = e.commentStore?.comments || {};
+
+        return <div>{e.revision}  x{Object.values(comments).length}x "{e.text.substring(0, 10)} ..."</div>
     }
 
     if (props.script) {
-        const events: HistoryRow[] = [];
-        for (const history of props.script.history) {
-            events.push({ revision: history.fileState.revision, text: history.fileState.text });
-        }
-
-        return <div>{events.map((h, idx) => (
+        return <div>{props.script.history.map((h, idx) => (
             <div key={idx} >
                 <button onClick={() => {
                     if (selected.indexOf(idx) > -1) {
@@ -113,21 +109,22 @@ const History = (props: { script: FileState, appDispatch: AppDispatch }) => {
                 <button onClick={() => props.appDispatch({
                     type: "selectedView",
                     fullPath: props.script.fullPath,
-                    text: h.text,
-
+                    text: h.fileState.text,
+                    comments: h.fileState.commentStore
                 })}>view</button>
 
-                {convert(h)}
+                {convert(h.fileState)}
             </div>))}
             {selected.length == 2 && <button onClick={() => {
-                const m = events[selected[1]];
-                const original = events[selected[0]]
+                const m = props.script.history[selected[1]].fileState;
+                const original = props.script.history[selected[0]].fileState;
                 props.appDispatch({
                     type: "selectedView",
                     fullPath: props.script.fullPath,
                     label: `base:${original.revision} v other:${m.revision}`,
                     text: m.text,
-                    original: m.text
+                    original: m.text,
+                    comments: m.commentStore
                 })
             }}>diff</button>}
         </div>
@@ -151,6 +148,7 @@ const reducer = (state: AppState, event: AppStateEvents) => {
         case "selectScript":
             return { ...state, selectedScript: { fullPath: event.fullPath } }
         case "selectedView":
+            // debugger;
             return {
                 ...state, selectedView: {
                     fullPath: event.fullPath,
@@ -179,6 +177,12 @@ function loadVersionControlStore(): VersionControlState {
     }, {
         type: "commit", author: "james", id: 'id-2',
         events: [{ fullPath: "/script1.py", text: "function version(){ return 's1.3'}", type: "edit" }]
+    }, {
+        type: "commit", author: "james", id: 'id-4',
+        events: [{
+            fullPath: "/script1.py", commentEvents: [
+                { lineNumber: 1, text: '', type: 'create', createdAt: '', createdBy: 'xxx', id: '1', }], type: "comment"
+        }]
     }]);
 
     return store;
@@ -206,7 +210,11 @@ export const App = () => {
                     <SCM appDispatch={appDispatch} files={vcStore.files} />
                     {vcStore.events.length}
 
-                    <StagingSCM vcDispatch={vcDispatch} wsDispatch={wsDispatch} appDispatch={appDispatch} events={wsStore.events} files={wsStore.files}></StagingSCM>
+                    <StagingSCM vcDispatch={vcDispatch}
+                        wsDispatch={wsDispatch}
+                        appDispatch={appDispatch}
+                        events={wsStore.events}
+                        files={wsStore.files}></StagingSCM>
                 </div>
             </div>
             <div key="0.2" data-grid={{ x: 3, y: 0, w: 6, h: 8, }} style={{ backgroundColor: 'yellow', }} >
@@ -284,7 +292,7 @@ const SCM = (props: { files: Record<string, FileState>, appDispatch: AppDispatch
     const handleClick = (fullPath: string) => {
         const value = props.files[fullPath];
         props.appDispatch({ type: 'selectScript', fullPath: value.fullPath })
-        props.appDispatch({ type: 'selectedView', fullPath: value.fullPath, text: value.text, comments: value.comments });
+        props.appDispatch({ type: 'selectedView', fullPath: value.fullPath, text: value.text, comments: value.commentStore });
     };
 
     const items = Object.entries(props.files).map(([key, value]) => <SCMItem key={value.fullPath} fullPath={value.fullPath} revision={value.revision.toString()} onClick={handleClick} />);
