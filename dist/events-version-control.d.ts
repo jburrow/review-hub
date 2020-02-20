@@ -1,4 +1,4 @@
-import { CommentState, ReviewCommentEvent } from "monaco-review/dist/events-comments-reducers";
+import { ReviewCommentStore, ReviewCommentEvent } from "monaco-review";
 export declare type FileEditEvent = {
     type: "edit";
     fullPath: string;
@@ -34,11 +34,17 @@ export declare enum FileStateStatus {
     deleted = 2
 }
 export declare type FileState = {
+    history: {
+        fileState: FileStateX;
+        event: VersionControlEvent;
+    }[];
+} & FileStateX;
+export declare type FileStateX = {
     fullPath: string;
     text: string;
     status: FileStateStatus;
-    history: VersionControlEvent[];
-    comments: CommentState;
+    commentStore: ReviewCommentStore;
+    revision: number;
 };
 export interface VersionControlState {
     files: Record<string, FileState>;
@@ -46,5 +52,6 @@ export interface VersionControlState {
     events: VersionControlEvent[];
 }
 export declare function initialVersionControlState(): VersionControlState;
+export declare type VCDispatch = (event: VersionControlEvent) => void;
 export declare function versionControlReducer(state: VersionControlState, event: VersionControlEvent): VersionControlState;
 export declare function reduceVersionControl(actions: VersionControlEvent[], state?: VersionControlState): VersionControlState;
