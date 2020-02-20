@@ -103,9 +103,9 @@ test("reduceVersionControl: reset=>edit=>comment=>comment", () => {
   expect(store.files["/script1.py"].text).toBe("t1");
   for (const h of store.files["/script1.py"].history) {
     console.debug('history')
-    for (const c of Object.values(h.fileState.commentStore?.comments || {})) {
-      console.debug(`\t${c.comment.lineNumber} - ${c.comment.text}`)
-    }
+    // for (const c of Object.values(h.fileState.commentStore.comments)) {
+    //   //console.debug(`\t${c.comment.lineNumber} - ${c.comment.text}`)
+    // }
 
   }
 

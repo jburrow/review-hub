@@ -1,174 +1,22 @@
+import { monaco } from "@monaco-editor/react";
+import * as React from 'react';
 import { render } from "react-dom";
-import * as React from 'react'
 import * as RGL from "react-grid-layout";
-import {
-    reduceVersionControl, versionControlReducer, VersionControlState,
-    FileEvents, FileState, VersionControlEvent, initialVersionControlState, VCDispatch, FileStateX
-} from "./events-version-control";
-import { DiffEditor, ControlledEditor, monaco } from "@monaco-editor/react";
-import 'react-resizable/css/styles.css';
 import 'react-grid-layout/css/styles.css';
-import { createReviewManager, ReviewManager, ReviewCommentStore, ReviewCommentEvent } from "monaco-review";
-
+import 'react-resizable/css/styles.css';
+import { FileEvents, FileState, initialVersionControlState, reduceVersionControl, VCDispatch, VersionControlEvent, versionControlReducer, VersionControlState } from "./events-version-control";
 import './index.css';
-
-type AppDispatch = (event: AppStateEvents) => void;
-
+import { Editor } from "./panels/editor";
+import { History } from "./panels/script-history";
+import { VCHistory } from "./panels/vchistory";
+import { AppDispatch, reducer } from "./store";
+import { withStyles, createStyles, WithStyles } from "@material-ui/core";
 
 const ReactGridLayout = RGL.WidthProvider(RGL);
 
 monaco.init().then(() => console.debug('Monaco has initialized...', (window as any).monaco));
 
-const Editor = (props: { currentUser: string, view: SelectedView, wsDispatch(e: VersionControlEvent): void }) => {
-    const [text, setText] = React.useState<string>(null);
-    const [comments, setComments] = React.useState<ReviewCommentEvent[]>(null);
-    const [reviewManager, setReviewManager] = React.useState<ReviewManager>(null);
 
-    React.useEffect(() => {
-        console.debug('load view', props.view?.text, props.view?.original)
-        if (props.view) {
-            setText(props.view.text);
-            setComments([]);
-        }
-    }, [props.view])
-
-    React.useEffect(() => {
-        console.debug('load comments', props.view?.comments?.comments)
-        if (reviewManager !== null && props.view) {
-            //mx.editor.createModel()
-            // const model = ((window as any).monaco).editor.createModel(props.view.text, 'javascript');
-            // reviewManager.editor.setModel(model)
-            reviewManager.loadFromStore(props.view.comments || { comments: {}, deletedCommentIds: new Set(), dirtyCommentIds: new Set() }, [])
-        }
-    }, [reviewManager, props.view]);
-
-    function setEditor(editor) {//: monaco.editor.IStandaloneCodeEditor
-        const rm = createReviewManager(editor, props.currentUser, [], (c) => { console.log('CONSOLE', c); setComments(c) })
-        setReviewManager(rm);
-    }
-
-
-
-    return props.view && props.view.fullPath ? <div>
-        {text !== props.view.text ? <button onClick={() => {
-            props.wsDispatch({
-                type: 'commit',
-                author: props.currentUser,
-                events: [{ type: 'edit', fullPath: props.view.fullPath, text: text }]
-            })
-        }}>Stage Change</button> : <div>not modified text</div>}
-
-        {(comments || []).length ? <button onClick={() => {
-            props.wsDispatch({
-                type: 'commit',
-                author: props.currentUser,
-                events: [{ type: 'comment', fullPath: props.view.fullPath, commentEvents: comments }]
-            })
-            setComments([]);
-        }}>Stage Comments {`${comments.length}`}</button> : <div>not modified comments</div>}
-
-        {(comments || []).length && <button onClick={() => {
-            setComments([]);
-            reviewManager.loadFromStore(props.view.comments || { comments: {}, deletedCommentIds: new Set(), dirtyCommentIds: new Set() }, [])
-
-        }}>Discard Comments</button>}
-
-        {props.view.original ?
-            <DiffEditor editorDidMount={(_modified, _original, editor) => {
-                editor.getModifiedEditor().onDidChangeModelContent(() => setText(editor.getModifiedEditor().getValue()));
-                setEditor(editor.getModifiedEditor());
-            }}
-                options={{ originalEditable: false }}
-                language={"javascript"}
-                height={200}
-                modified={props.view.text}
-                original={props.view.original}
-            /> :
-            <ControlledEditor value={props.view.text}
-                height={200}
-                options={{ readOnly: false }}
-                editorDidMount={(_, editor) => {
-                    setEditor(editor);
-                }}
-                onChange={(e, t) => setText(t)} />}
-    </div> : null;
-};
-
-
-const History = (props: { script: FileState, appDispatch: AppDispatch }) => {
-    const [selected, setSelected] = React.useState<number[]>([]);
-
-    const convert = (e: FileStateX) => {
-        const comments = e.commentStore?.comments || {};
-
-        return <div>{e.revision}  x{Object.values(comments).length}x "{e.text.substring(0, 10)} ..."</div>
-    }
-
-    if (props.script) {
-        return <div>{props.script.history.map((h, idx) => (
-            <div key={idx} >
-                <button onClick={() => {
-                    if (selected.indexOf(idx) > -1) {
-                        setSelected(selected.filter((i) => i !== idx));
-                    } else {
-                        setSelected(selected.concat(idx));
-                    }
-                }}>{selected.indexOf(idx) > -1 ? 'deselect' : 'select'}</button>
-
-                <button onClick={() => props.appDispatch({
-                    type: "selectedView",
-                    fullPath: props.script.fullPath,
-                    text: h.fileState.text,
-                    comments: h.fileState.commentStore
-                })}>view</button>
-
-                {convert(h.fileState)}
-            </div>))}
-            {selected.length == 2 && <button onClick={() => {
-                const m = props.script.history[selected[1]].fileState;
-                const original = props.script.history[selected[0]].fileState;
-                props.appDispatch({
-                    type: "selectedView",
-                    fullPath: props.script.fullPath,
-                    label: `base:${original.revision} v other:${m.revision}`,
-                    text: m.text,
-                    original: m.text,
-                    comments: m.commentStore
-                })
-            }}>diff</button>}
-        </div>
-    }
-    return null;
-};
-
-interface AppState {
-    selectedScript?: { fullPath: string };
-    selectedView?: { fullPath: string, text: string, original?: string, label?: string };
-}
-
-interface SelectedView {
-    fullPath: string, label?: string, text: string, original?: string, comments?: ReviewCommentStore
-}
-type AppStateEvents = { type: 'selectScript', fullPath: string } |
-    { type: 'selectedView', } & SelectedView;
-
-const reducer = (state: AppState, event: AppStateEvents) => {
-    switch (event.type) {
-        case "selectScript":
-            return { ...state, selectedScript: { fullPath: event.fullPath } }
-        case "selectedView":
-            return {
-                ...state, selectedView: {
-                    fullPath: event.fullPath,
-                    text: event.text,
-                    original: event.original,
-                    label: event.label,
-                    comments: event.comments
-                }
-            }
-    }
-    return state;
-}
 
 function loadVersionControlStore(): VersionControlState {
     const events: FileEvents[] = [
@@ -196,7 +44,19 @@ function loadVersionControlStore(): VersionControlState {
     return store;
 }
 
-export const App = () => {
+interface DataGridItemProps {
+    key: string, dataGrid: any, className: string
+}
+const DataGridItem: React.FunctionComponent<DataGridItemProps> = (props) => {
+    return <div key={props.key} data-grid={props.dataGrid} className={props.className}>
+        {JSON.stringify(props.dataGrid)} 
+        <div className="fish">{props.children}</div>
+    </div>;
+}
+
+const AppStyles = createStyles({ version_control: { backgroundColor: 'purple' } });
+
+export const App = withStyles(AppStyles)((props: WithStyles<typeof AppStyles>) => {
     const [appState, appDispatch] = React.useReducer(reducer, {});
     const [vcStore, vcDispatch] = React.useReducer(versionControlReducer, loadVersionControlStore());
     const [wsStore, wsDispatch] = React.useReducer(versionControlReducer, initialVersionControlState());
@@ -212,20 +72,22 @@ export const App = () => {
             useCSSTransforms={false}
             draggableCancel={".fish"}
         >
-            <div key="0.1" data-grid={{ x: 0, y: 0, w: 3, h: 8 }} style={{ backgroundColor: 'pink', }}>
-                <div className="fish">
-                    <h3>version-control</h3>
-                    <SCM appDispatch={appDispatch} files={vcStore.files} />
-                    {vcStore.events.length}
 
-                    <StagingSCM vcDispatch={vcDispatch}
-                        wsDispatch={wsDispatch}
-                        appDispatch={appDispatch}
-                        events={wsStore.events}
-                        wsfiles={wsStore.files}
-                        vcfiles={vcStore.files}></StagingSCM>
-                </div>
+            <div key="0.1" data-grid={{ x: 0, y: 0, w: 3, h: 8 }} className={props.classes.version_control}>
+
+                <h3>version-control</h3>
+                <SCM appDispatch={appDispatch} files={vcStore.files} />
+                {vcStore.events.length}
+
+                <StagingSCM vcDispatch={vcDispatch}
+                    wsDispatch={wsDispatch}
+                    appDispatch={appDispatch}
+                    events={wsStore.events}
+                    wsfiles={wsStore.files}
+                    vcfiles={vcStore.files}></StagingSCM>
+
             </div>
+
             <div key="0.2" data-grid={{ x: 3, y: 0, w: 6, h: 8, }} style={{ backgroundColor: 'yellow', }} >
                 {appState.selectedView ? <h5>Editor - {appState.selectedView.fullPath} - {appState.selectedView.label}</h5> : 'Editor'}
                 <div className="fish" style={{ height: "calc(100% - 100px)", backgroundColor: 'red' }}>
@@ -252,22 +114,8 @@ export const App = () => {
             </div>
         </ReactGridLayout>
     );
-}
+})
 
-const VCHistory = (props: { vcStore: VersionControlState }) => {
-    const rows = [];
-    for (const e of props.vcStore.events) {
-        if (e.type == 'commit') {
-            rows.push(`commit: ${e.id}`)
-            for (const fe of e.events) {
-                rows.push(JSON.stringify(fe))
-            }
-        }
-    }
-    return <div>
-        {rows.reverse().map((r, idx) => <div key={idx}>{r}</div>)}
-    </div>
-}
 
 
 const StagingSCM = (props: {
