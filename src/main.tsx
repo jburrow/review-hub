@@ -47,6 +47,8 @@ const Editor = (props: { currentUser: string, view: SelectedView, wsDispatch(e: 
         setReviewManager(rm);
     }
 
+
+
     return props.view && props.view.fullPath ? <div>
         {text !== props.view.text ? <button onClick={() => {
             props.wsDispatch({
@@ -54,7 +56,7 @@ const Editor = (props: { currentUser: string, view: SelectedView, wsDispatch(e: 
                 author: props.currentUser,
                 events: [{ type: 'edit', fullPath: props.view.fullPath, text: text }]
             })
-        }}>Save</button> : <div>not modified text</div>}
+        }}>Stage Change</button> : <div>not modified text</div>}
 
         {(comments || []).length ? <button onClick={() => {
             props.wsDispatch({
@@ -62,7 +64,14 @@ const Editor = (props: { currentUser: string, view: SelectedView, wsDispatch(e: 
                 author: props.currentUser,
                 events: [{ type: 'comment', fullPath: props.view.fullPath, commentEvents: comments }]
             })
-        }}>Save Comments {`${comments.length}`}</button> : <div>not modified comments</div>}
+            setComments([]);
+        }}>Stage Comments {`${comments.length}`}</button> : <div>not modified comments</div>}
+
+        {(comments || []).length && <button onClick={() => {
+            setComments([]);
+            reviewManager.loadFromStore(props.view.comments || { comments: {}, deletedCommentIds: new Set(), dirtyCommentIds: new Set() }, [])
+
+        }}>Discard Comments</button>}
 
         {props.view.original ?
             <DiffEditor editorDidMount={(_modified, _original, editor) => {
@@ -148,7 +157,6 @@ const reducer = (state: AppState, event: AppStateEvents) => {
         case "selectScript":
             return { ...state, selectedScript: { fullPath: event.fullPath } }
         case "selectedView":
-            // debugger;
             return {
                 ...state, selectedView: {
                     fullPath: event.fullPath,
@@ -214,7 +222,8 @@ export const App = () => {
                         wsDispatch={wsDispatch}
                         appDispatch={appDispatch}
                         events={wsStore.events}
-                        files={wsStore.files}></StagingSCM>
+                        wsfiles={wsStore.files}
+                        vcfiles={vcStore.files}></StagingSCM>
                 </div>
             </div>
             <div key="0.2" data-grid={{ x: 3, y: 0, w: 6, h: 8, }} style={{ backgroundColor: 'yellow', }} >
@@ -261,10 +270,15 @@ const VCHistory = (props: { vcStore: VersionControlState }) => {
 }
 
 
-const StagingSCM = (props: { files: Record<string, FileState>, events: VersionControlEvent[], wsDispatch: VCDispatch, vcDispatch: VCDispatch, appDispatch: AppDispatch }) => {
+const StagingSCM = (props: {
+    wsfiles: Record<string, FileState>,
+    vcfiles: Record<string, FileState>,
+    events: VersionControlEvent[], wsDispatch: VCDispatch,
+    vcDispatch: VCDispatch, appDispatch: AppDispatch
+}) => {
     return (<div>
         <h3>working set</h3>
-        <SCM appDispatch={props.appDispatch} files={props.files} />
+        <SCM appDispatch={props.appDispatch} files={props.wsfiles} />
 
         <button onClick={() => {
             let events = [];
