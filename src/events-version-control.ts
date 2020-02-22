@@ -27,8 +27,10 @@ export enum FileStateStatus {
 }
 
 export type FileState = {
-  history: { fileState: FileStateX, event: VersionControlEvent }[];
+  history: FileStateHistory[];
 } & FileStateX;
+
+export interface FileStateHistory { fileState: FileStateX, event: VersionControlEvent };
 
 export type FileStateX = {
   fullPath: string;
@@ -56,8 +58,8 @@ function createFileState(
     fullPath: fullPath,
     status: status,
     text: text,
-    revision: prev.revision+1,
-    commentStore: commentStore|| { comments: {} }
+    revision: prev.revision + 1,
+    commentStore: commentStore || { comments: {} }
   }
 
   return {

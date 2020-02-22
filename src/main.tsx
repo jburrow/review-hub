@@ -7,7 +7,7 @@ import 'react-resizable/css/styles.css';
 import { FileEvents, FileState, initialVersionControlState, reduceVersionControl, VCDispatch, VersionControlEvent, versionControlReducer, VersionControlState } from "./events-version-control";
 import './index.css';
 import { Editor } from "./panels/editor";
-import { History } from "./panels/script-history";
+import { FileHistory } from "./panels/file-history";
 import { VCHistory } from "./panels/vchistory";
 import { AppDispatch, reducer } from "./store";
 import { withStyles, createStyles, WithStyles } from "@material-ui/core";
@@ -121,9 +121,9 @@ export const App = withStyles(AppStyles)((props: WithStyles<typeof AppStyles>) =
                 </div>
             </div>
             <div key="0.3" data-grid={{ x: 9, y: 0, w: 3, h: 8 }} className={props.classes.script_history}>
-                <h3>History</h3>
+                <h3>File History {appStore.selectedFile?.fullPath}</h3>
                 <div className="fish">
-                    <History script={appStore.selectedScript && vcStore.files[appStore.selectedScript.fullPath]}
+                    <FileHistory file={appStore.selectedFile && vcStore.files[appStore.selectedFile.fullPath]}
                         appDispatch={appDispatch}
                     />
                 </div>

@@ -1,7 +1,7 @@
 import {  ReviewCommentStore } from "monaco-review";
 
 export interface AppState {
-    selectedScript?: { fullPath: string };
+    selectedFile?: { fullPath: string };
     selectedView?: { fullPath: string, text: string, original?: string, label?: string };
 }
 
@@ -14,7 +14,7 @@ export type AppStateEvents = { type: 'selectScript', fullPath: string } |
 export const reducer = (state: AppState, event: AppStateEvents) => {
     switch (event.type) {
         case "selectScript":
-            return { ...state, selectedScript: { fullPath: event.fullPath } }
+            return { ...state, selectedFile: { fullPath: event.fullPath } }
         case "selectedView":
             return {
                 ...state, selectedView: {

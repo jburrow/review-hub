@@ -33,8 +33,6 @@ export const Editor = (props: { currentUser: string, view: SelectedView, wsDispa
         setReviewManager(rm);
     }
 
-
-
     return props.view && props.view.fullPath ? <div>
         {text !== props.view.text ? <button onClick={() => {
             props.wsDispatch({
