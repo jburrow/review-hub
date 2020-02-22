@@ -55,6 +55,7 @@ export interface VersionControlState {
     commits: Record<string, Files>;
     version: number;
     events: VersionControlEvent[];
+    headCommitId: string;
 }
 export declare function initialVersionControlState(): VersionControlState;
 export declare type VCDispatch = (event: VersionControlEvent) => void;

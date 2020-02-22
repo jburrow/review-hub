@@ -9,8 +9,10 @@ export declare const StagingSCM: (props: {
     wsDispatch: VCDispatch;
     vcDispatch: VCDispatch;
     appDispatch: AppDispatch;
+    selectedFile: string;
 }) => JSX.Element;
 export declare const SCM: (props: {
     files: Record<string, FileState>;
     appDispatch: AppDispatch;
+    selectedFile: string;
 }) => JSX.Element;

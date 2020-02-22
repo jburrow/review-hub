@@ -241,6 +241,7 @@ export const App = withStyles(AppStyles)(
               file={
                 appStore.selectedFile && vcStore.files[appStore.selectedFile]
               }
+              selectedView={appStore.selectedView}
               appDispatch={appDispatch}
             />
           </div>

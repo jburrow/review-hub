@@ -1,9 +1,7 @@
 import { ReviewCommentStore } from "monaco-review";
 export interface AppState {
     selectedCommitId?: string;
-    selectedFile?: {
-        fullPath: string;
-    };
+    selectedFile?: string;
     selectedView?: SelectedView;
 }
 export interface SelectedView {
@@ -12,6 +10,8 @@ export interface SelectedView {
     text: string;
     original?: string;
     comments?: ReviewCommentStore;
+    revision: number;
+    originalRevision?: number;
 }
 export declare type AppStateEvents = {
     type: "selectScript";

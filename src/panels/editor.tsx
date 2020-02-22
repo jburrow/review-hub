@@ -47,6 +47,10 @@ export const Editor = (props: {
 
   return props.view && props.view.fullPath ? (
     <div>
+      <div>
+        {props.view?.fullPath} {props.view?.revision}
+      </div>
+
       {text !== props.view.text ? (
         <button
           onClick={() => {
@@ -117,15 +121,16 @@ export const Editor = (props: {
             setEditor(editor.getModifiedEditor());
           }}
           options={{ originalEditable: false }}
-          language={"javascript"}
-          height={200}
+          language={"javascript"} //TODO - work out how to do lanuage
+          height={200} //TODO - hack work out how to set the hieght
           modified={props.view.text}
           original={props.view.original}
         />
       ) : (
         <ControlledEditor
           value={props.view.text}
-          height={200}
+          height={200} //TODO - hack work out how to set the hieght
+          language={"javascript"} //TODO - work out how to do lanuage
           options={{ readOnly: false }}
           editorDidMount={(_, editor) => {
             setEditor(editor);
