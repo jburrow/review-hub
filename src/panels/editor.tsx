@@ -1,6 +1,4 @@
 import { DiffEditor, ControlledEditor } from "@monaco-editor/react";
-import 'react-resizable/css/styles.css';
-import 'react-grid-layout/css/styles.css';
 import { createReviewManager, ReviewManager, ReviewCommentEvent } from "monaco-review";
 import * as React from 'react'
 import { SelectedView } from "../store";

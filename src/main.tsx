@@ -49,15 +49,39 @@ interface DataGridItemProps {
 }
 const DataGridItem: React.FunctionComponent<DataGridItemProps> = (props) => {
     return <div key={props.key} data-grid={props.dataGrid} className={props.className}>
-        {JSON.stringify(props.dataGrid)} 
+        {JSON.stringify(props.dataGrid)}
         <div className="fish">{props.children}</div>
     </div>;
 }
 
-const AppStyles = createStyles({ version_control: { backgroundColor: 'purple' } });
+const AppStyles = createStyles({
+    layout:{
+        fontSize:'12px',
+        backgroundColor:'#f9f4f6'
+    },
+    version_control: {
+        backgroundColor: '#bf8da5'
+    },
+    editor:{
+        backgroundColor:'#ead9e1'
+    },
+    script_history:{
+        backgroundColor:'#d4b3c3'
+    },
+    vc_history:{
+        backgroundColor:'#894d69'
+    }
+});
+//https://www.w3schools.com/w3css/w3css_color_generator.asp
+//  w3-theme-l5
+// # w3-theme-l4
+// # w3-theme-l3
+// #bf8da5 w3-theme-l2
+// #aa6886 w3-theme-l1
+// #894d69
 
 export const App = withStyles(AppStyles)((props: WithStyles<typeof AppStyles>) => {
-    const [appState, appDispatch] = React.useReducer(reducer, {});
+    const [appStore, appDispatch] = React.useReducer(reducer, {});
     const [vcStore, vcDispatch] = React.useReducer(versionControlReducer, loadVersionControlStore());
     const [wsStore, wsDispatch] = React.useReducer(versionControlReducer, initialVersionControlState());
 
@@ -71,6 +95,7 @@ export const App = withStyles(AppStyles)((props: WithStyles<typeof AppStyles>) =
             cols={12}
             useCSSTransforms={false}
             draggableCancel={".fish"}
+            className={props.classes.layout}
         >
 
             <div key="0.1" data-grid={{ x: 0, y: 0, w: 3, h: 8 }} className={props.classes.version_control}>
@@ -88,29 +113,28 @@ export const App = withStyles(AppStyles)((props: WithStyles<typeof AppStyles>) =
 
             </div>
 
-            <div key="0.2" data-grid={{ x: 3, y: 0, w: 6, h: 8, }} style={{ backgroundColor: 'yellow', }} >
-                {appState.selectedView ? <h5>Editor - {appState.selectedView.fullPath} - {appState.selectedView.label}</h5> : 'Editor'}
-                <div className="fish" style={{ height: "calc(100% - 100px)", backgroundColor: 'red' }}>
-
-                    <Editor currentUser={currentUser} view={appState.selectedView}
-
+            <div key="0.2" data-grid={{ x: 3, y: 0, w: 6, h: 8, }} className={props.classes.editor} >
+                {appStore.selectedView ? <h5>Editor - {appStore.selectedView.fullPath} - {appStore.selectedView.label}</h5> : 'Editor'}
+                <div className="fish">
+                    <Editor currentUser={currentUser} view={appStore.selectedView}
                         wsDispatch={wsDispatch} />
                 </div>
             </div>
-            <div key="0.3" data-grid={{ x: 9, y: 0, w: 3, h: 8 }} style={{ backgroundColor: 'orange', }}>
+            <div key="0.3" data-grid={{ x: 9, y: 0, w: 3, h: 8 }} className={props.classes.script_history}>
                 <h3>History</h3>
                 <div className="fish">
-                    <History script={appState.selectedScript && vcStore.files[appState.selectedScript.fullPath]}
+                    <History script={appStore.selectedScript && vcStore.files[appStore.selectedScript.fullPath]}
                         appDispatch={appDispatch}
                     />
                 </div>
             </div>
-            <div key="1.1" data-grid={{ x: 0, y: 1, w: 12, h: 10 }} style={{ backgroundColor: 'cyan', }}>
+            <div key="1.1" data-grid={{ x: 0, y: 1, w: 12, h: 10 }} className={props.classes.vc_history}>
                 <h3>VC History</h3>
                 <div className="fish">
                     <VCHistory vcStore={vcStore} />
+                    <div>{vcStore.version}</div>
                 </div>
-                {vcStore.version}
+               
             </div>
         </ReactGridLayout>
     );
