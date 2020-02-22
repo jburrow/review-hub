@@ -2,6 +2,9 @@ import * as React from "react";
 import { AppDispatch } from "../store";
 import { FileState } from "../events-version-control";
 import { VersionControlEvent, VCDispatch } from "../events-version-control";
+import { WithStyles, withStyles } from "@material-ui/core";
+import { SelectedStyles } from "../styles";
+import { v4 } from "uuid";
 
 export const StagingSCM = (props: {
   wsfiles: Record<string, FileState>;
@@ -10,11 +13,16 @@ export const StagingSCM = (props: {
   wsDispatch: VCDispatch;
   vcDispatch: VCDispatch;
   appDispatch: AppDispatch;
+  selectedFile: string;
 }) => {
   return (
     <div>
       <h3>working set</h3>
-      <SCM appDispatch={props.appDispatch} files={props.wsfiles} />
+      <SCM
+        appDispatch={props.appDispatch}
+        files={props.wsfiles}
+        selectedFile={props.selectedFile}
+      />
 
       <button
         onClick={() => {
@@ -28,7 +36,7 @@ export const StagingSCM = (props: {
           props.vcDispatch({
             type: "commit",
             author: "james",
-            id: "id-2",
+            id: v4(),
             events: events
           });
           props.wsDispatch({ type: "reset" });
@@ -53,6 +61,7 @@ export const StagingSCM = (props: {
 export const SCM = (props: {
   files: Record<string, FileState>;
   appDispatch: AppDispatch;
+  selectedFile: string;
 }) => {
   const handleClick = (fullPath: string) => {
     const value = props.files[fullPath];
@@ -61,7 +70,8 @@ export const SCM = (props: {
       type: "selectedView",
       fullPath: value.fullPath,
       text: value.text,
-      comments: value.commentStore
+      comments: value.commentStore,
+      revision: value.revision
     });
   };
 
@@ -71,19 +81,32 @@ export const SCM = (props: {
       fullPath={value.fullPath}
       revision={value.revision.toString()}
       onClick={handleClick}
+      selected={props.selectedFile === value.fullPath}
     />
   ));
   return <ul>{items}</ul>;
 };
 
-const SCMItem = (props: {
-  fullPath: string;
-  revision: string;
-  onClick(fullPath: string): void;
-}) => {
-  return (
-    <li onClick={() => props.onClick(props.fullPath)}>
-      {props.fullPath} @ v{props.revision}
-    </li>
-  );
-};
+const SCMItem = withStyles(SelectedStyles)(
+  (
+    props: {
+      fullPath: string;
+      revision: string;
+      onClick(fullPath: string): void;
+      selected: boolean;
+    } & WithStyles<typeof SelectedStyles>
+  ) => {
+    return (
+      <li
+        onClick={() => props.onClick(props.fullPath)}
+        className={
+          props.selected
+            ? props.classes.selectedItem
+            : props.classes.inactiveItem
+        }
+      >
+        {props.fullPath} @ v{props.revision}
+      </li>
+    );
+  }
+);

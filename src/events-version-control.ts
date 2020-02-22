@@ -55,6 +55,7 @@ export interface FileStateHistory {
 }
 
 export type FileStateX = {
+  //TODO name bettererer
   fullPath: string;
   text: string;
   status: FileStateStatus;
@@ -69,6 +70,7 @@ export interface VersionControlState {
   commits: Record<string, Files>;
   version: number;
   events: VersionControlEvent[];
+  headCommitId: string;
 }
 
 function createFileState(
@@ -94,7 +96,13 @@ function createFileState(
 }
 
 export function initialVersionControlState(): VersionControlState {
-  return { files: {}, version: -1, events: [], commits: {} };
+  return {
+    files: {},
+    version: -1,
+    events: [],
+    commits: {},
+    headCommitId: null
+  };
 }
 
 export type VCDispatch = (event: VersionControlEvent) => void;
@@ -173,7 +181,8 @@ export function versionControlReducer(
         files: files,
         commits: { ...state.commits, ...newCommit },
         events: [...state.events, event],
-        version: state.version + 1
+        version: state.version + 1,
+        headCommitId: event.id
       };
   }
 }

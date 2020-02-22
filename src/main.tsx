@@ -17,7 +17,8 @@ import { FileHistory } from "./panels/file-history";
 import { VCHistory } from "./panels/vc-history";
 import { StagingSCM, SCM } from "./panels/staging-scm";
 import { reducer } from "./store";
-import { withStyles, createStyles, WithStyles } from "@material-ui/core";
+import { withStyles, WithStyles } from "@material-ui/core";
+import { AppStyles } from "./styles";
 
 const ReactGridLayout = RGL.WidthProvider(RGL);
 
@@ -118,25 +119,6 @@ const DataGridItem: React.FunctionComponent<DataGridItemProps> = props => {
   );
 };
 
-const AppStyles = createStyles({
-  layout: {
-    fontSize: "12px",
-    backgroundColor: "#f9f4f633"
-  },
-  version_control: {
-    backgroundColor: "#D28C1F33"
-  },
-  editor: {
-    backgroundColor: "#561E8E33"
-  },
-  script_history: {
-    backgroundColor: "#1E518933"
-  },
-  vc_history: {
-    backgroundColor: "#684D2533"
-  }
-});
-
 // .color-primary-0 { color: #D28C1F }	/* Main Primary color */
 // .color-primary-1 { color: #FFC56C }
 // .color-primary-2 { color: #E4B367 }
@@ -209,7 +191,11 @@ export const App = withStyles(AppStyles)(
             )}
           </h3>
 
-          <SCM appDispatch={appDispatch} files={activeFiles} />
+          <SCM
+            appDispatch={appDispatch}
+            files={activeFiles}
+            selectedFile={appStore.selectedFile}
+          />
           {vcStore.events.length}
 
           <StagingSCM
@@ -219,6 +205,7 @@ export const App = withStyles(AppStyles)(
             events={wsStore.events}
             wsfiles={wsStore.files}
             vcfiles={vcStore.files}
+            selectedFile={appStore.selectedFile}
           ></StagingSCM>
         </div>
 
@@ -248,12 +235,11 @@ export const App = withStyles(AppStyles)(
           data-grid={{ x: 9, y: 0, w: 3, h: 8 }}
           className={props.classes.script_history}
         >
-          <h3>File History {appStore.selectedFile?.fullPath}</h3>
+          <h3>File History {appStore.selectedFile}</h3>
           <div className="fish">
             <FileHistory
               file={
-                appStore.selectedFile &&
-                vcStore.files[appStore.selectedFile.fullPath]
+                appStore.selectedFile && vcStore.files[appStore.selectedFile]
               }
               appDispatch={appDispatch}
             />
@@ -266,7 +252,11 @@ export const App = withStyles(AppStyles)(
         >
           <h3>VC History</h3>
           <div className="fish">
-            <VCHistory vcStore={vcStore} appDispatch={appDispatch} />
+            <VCHistory
+              vcStore={vcStore}
+              appDispatch={appDispatch}
+              selectedCommitId={appStore.selectedCommitId}
+            />
             <div>{vcStore.version}</div>
           </div>
         </div>

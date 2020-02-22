@@ -28,9 +28,6 @@ export const Editor = (props: {
   React.useEffect(() => {
     console.debug("load comments", props.view?.comments?.comments);
     if (reviewManager !== null && props.view) {
-      //mx.editor.createModel()
-      // const model = ((window as any).monaco).editor.createModel(props.view.text, 'javascript');
-      // reviewManager.editor.setModel(model)
       reviewManager.loadFromStore(
         props.view.comments || {
           comments: {},
@@ -44,10 +41,7 @@ export const Editor = (props: {
 
   function setEditor(editor) {
     //: monaco.editor.IStandaloneCodeEditor
-    const rm = createReviewManager(editor, props.currentUser, [], c => {
-      console.log("CONSOLE", c);
-      setComments(c);
-    });
+    const rm = createReviewManager(editor, props.currentUser, [], setComments);
     setReviewManager(rm);
   }
 

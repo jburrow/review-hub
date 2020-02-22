@@ -42,7 +42,8 @@ export const FileHistory = (props: {
                   type: "selectedView",
                   fullPath: props.file.fullPath,
                   text: h.fileState.text,
-                  comments: h.fileState.commentStore
+                  comments: h.fileState.commentStore,
+                  revision: props.file.revision
                 })
               }
             >
@@ -62,7 +63,9 @@ export const FileHistory = (props: {
                 fullPath: props.file.fullPath,
                 label: `base:${original.revision} v other:${m.revision}`,
                 text: m.text,
+                revision: props.file.revision,
                 original: m.text,
+                originalRevision: m.revision,
                 comments: m.commentStore
               });
             }}
