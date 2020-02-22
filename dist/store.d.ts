@@ -1,14 +1,10 @@
 import { ReviewCommentStore } from "monaco-review";
 export interface AppState {
+    selectedCommitId?: string;
     selectedFile?: {
         fullPath: string;
     };
-    selectedView?: {
-        fullPath: string;
-        text: string;
-        original?: string;
-        label?: string;
-    };
+    selectedView?: SelectedView;
 }
 export interface SelectedView {
     fullPath: string;
@@ -18,21 +14,13 @@ export interface SelectedView {
     comments?: ReviewCommentStore;
 }
 export declare type AppStateEvents = {
-    type: 'selectScript';
+    type: "selectScript";
     fullPath: string;
 } | {
-    type: 'selectedView';
-} & SelectedView;
-export declare const reducer: (state: AppState, event: AppStateEvents) => AppState | {
-    selectedView: {
-        fullPath: string;
-        text: string;
-        original: string;
-        label: string;
-        comments: ReviewCommentStore;
-    };
-    selectedFile?: {
-        fullPath: string;
-    };
-};
+    type: "selectCommit";
+    commitId: string;
+} | ({
+    type: "selectedView";
+} & SelectedView);
+export declare const reducer: (state: AppState, event: AppStateEvents) => AppState;
 export declare type AppDispatch = (event: AppStateEvents) => void;

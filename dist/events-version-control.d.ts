@@ -20,15 +20,17 @@ export declare type FileRenameEvent = {
     text: string;
 };
 export declare type FileEvents = FileEditEvent | FileDeleteEvent | FileRenameEvent | FileCommentEvent;
-export declare type VersionControlEvent = {
+export declare type VersionControlCommitEvent = {
     type: "commit";
     id?: string;
     author: string;
     events: FileEvents[];
-} | {
+};
+export declare type VersionControlCommitReset = {
     type: "reset";
     id?: string;
 };
+export declare type VersionControlEvent = VersionControlCommitEvent | VersionControlCommitReset;
 export declare enum FileStateStatus {
     active = 1,
     deleted = 2
@@ -47,8 +49,10 @@ export declare type FileStateX = {
     commentStore: ReviewCommentStore;
     revision: number;
 };
+export declare type Files = Record<string, FileState>;
 export interface VersionControlState {
-    files: Record<string, FileState>;
+    files: Files;
+    commits: Record<string, Files>;
     version: number;
     events: VersionControlEvent[];
 }

@@ -3,12 +3,7 @@ import { ReviewCommentStore } from "monaco-review";
 export interface AppState {
   selectedCommitId?: string;
   selectedFile?: { fullPath: string };
-  selectedView?: {
-    fullPath: string;
-    text: string;
-    original?: string;
-    label?: string;
-  };
+  selectedView?: SelectedView;
 }
 
 export interface SelectedView {
@@ -23,10 +18,10 @@ export type AppStateEvents =
   | { type: "selectCommit"; commitId: string }
   | ({ type: "selectedView" } & SelectedView);
 
-export const reducer = (state: AppState, event: AppStateEvents) => {
+export const reducer = (state: AppState, event: AppStateEvents): AppState => {
   switch (event.type) {
     case "selectCommit":
-      return { ...state, selectCommitId: event.commitId };
+      return { ...state, selectedCommitId: event.commitId };
     case "selectScript":
       return { ...state, selectedFile: { fullPath: event.fullPath } };
     case "selectedView":

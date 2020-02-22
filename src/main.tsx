@@ -8,15 +8,13 @@ import {
   FileEvents,
   initialVersionControlState,
   reduceVersionControl,
-  VCDispatch,
-  VersionControlEvent,
   versionControlReducer,
   VersionControlState
 } from "./events-version-control";
 import "./index.css";
 import { Editor } from "./panels/editor";
 import { FileHistory } from "./panels/file-history";
-import { VCHistory } from "./panels/vchistory";
+import { VCHistory } from "./panels/vc-history";
 import { StagingSCM, SCM } from "./panels/staging-scm";
 import { reducer } from "./store";
 import { withStyles, createStyles, WithStyles } from "@material-ui/core";
@@ -179,6 +177,7 @@ export const App = withStyles(AppStyles)(
       ? vcStore.commits[appStore.selectedCommitId]
       : vcStore.files;
 
+    console.log("appStore.selectedCommitId", appStore.selectedCommitId);
     const currentUser = "xyz-user";
 
     return (
@@ -196,7 +195,20 @@ export const App = withStyles(AppStyles)(
           data-grid={{ x: 0, y: 0, w: 3, h: 8 }}
           className={props.classes.version_control}
         >
-          <h3>version-control</h3>
+          <h3>
+            version-control{" "}
+            {appStore.selectedCommitId ? appStore.selectedCommitId : "HEAD"}
+            {appStore.selectedCommitId && (
+              <button
+                onClick={() =>
+                  appDispatch({ type: "selectCommit", commitId: null })
+                }
+              >
+                HEAD
+              </button>
+            )}
+          </h3>
+
           <SCM appDispatch={appDispatch} files={activeFiles} />
           {vcStore.events.length}
 
