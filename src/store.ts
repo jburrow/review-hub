@@ -1,4 +1,4 @@
-import {  ReviewCommentStore } from "monaco-review";
+import { ReviewCommentStore } from "monaco-review";
 
 export interface AppState {
     selectedFile?: { fullPath: string };

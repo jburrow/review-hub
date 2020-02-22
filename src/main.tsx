@@ -55,21 +55,21 @@ const DataGridItem: React.FunctionComponent<DataGridItemProps> = (props) => {
 }
 
 const AppStyles = createStyles({
-    layout:{
-        fontSize:'12px',
-        backgroundColor:'#f9f4f6'
+    layout: {
+        fontSize: '12px',
+        backgroundColor: '#f9f4f6'
     },
     version_control: {
         backgroundColor: '#bf8da5'
     },
-    editor:{
-        backgroundColor:'#ead9e1'
+    editor: {
+        backgroundColor: '#ead9e1'
     },
-    script_history:{
-        backgroundColor:'#d4b3c3'
+    script_history: {
+        backgroundColor: '#d4b3c3'
     },
-    vc_history:{
-        backgroundColor:'#894d69'
+    vc_history: {
+        backgroundColor: '#894d69'
     }
 });
 //https://www.w3schools.com/w3css/w3css_color_generator.asp
@@ -134,7 +134,7 @@ export const App = withStyles(AppStyles)((props: WithStyles<typeof AppStyles>) =
                     <VCHistory vcStore={vcStore} />
                     <div>{vcStore.version}</div>
                 </div>
-               
+
             </div>
         </ReactGridLayout>
     );

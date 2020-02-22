@@ -1,6 +1,6 @@
 import { ReviewCommentStore } from "monaco-review";
 export interface AppState {
-    selectedScript?: {
+    selectedFile?: {
         fullPath: string;
     };
     selectedView?: {
@@ -31,7 +31,7 @@ export declare const reducer: (state: AppState, event: AppStateEvents) => AppSta
         label: string;
         comments: ReviewCommentStore;
     };
-    selectedScript?: {
+    selectedFile?: {
         fullPath: string;
     };
 };

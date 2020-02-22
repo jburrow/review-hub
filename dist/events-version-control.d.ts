@@ -34,11 +34,12 @@ export declare enum FileStateStatus {
     deleted = 2
 }
 export declare type FileState = {
-    history: {
-        fileState: FileStateX;
-        event: VersionControlEvent;
-    }[];
+    history: FileStateHistory[];
 } & FileStateX;
+export interface FileStateHistory {
+    fileState: FileStateX;
+    event: VersionControlEvent;
+}
 export declare type FileStateX = {
     fullPath: string;
     text: string;

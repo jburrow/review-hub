@@ -134,5 +134,5 @@ test("reduceVersionControl: commit=>commit=>commit=>commit - check revisions", (
   }]);
 
   expect(Object.keys(store.files['/script1.py'].history).length).toBe(4);
-  expect(store.files['/script1.py'].history.map((h)=>h.fileState.revision)).toEqual([0,1,2,3]);
+  expect(store.files['/script1.py'].history.map((h) => h.fileState.revision)).toEqual([0, 1, 2, 3]);
 })

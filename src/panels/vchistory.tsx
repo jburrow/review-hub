@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { VersionControlState} from "../events-version-control";
+import { VersionControlState } from "../events-version-control";
 
 export const VCHistory = (props: { vcStore: VersionControlState }) => {
     const rows = [];
