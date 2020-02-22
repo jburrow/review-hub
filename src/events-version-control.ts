@@ -1,25 +1,44 @@
-import { ReviewCommentStore, ReviewCommentEvent, reduceComments } from "monaco-review";
+import {
+  ReviewCommentStore,
+  ReviewCommentEvent,
+  reduceComments
+} from "monaco-review";
+import { v4 } from "uuid";
 
 export type FileEditEvent = { type: "edit"; fullPath: string; text: string };
-export type FileDeleteEvent = { type: "delete"; fullPath: string, };
-export type FileCommentEvent = { type: "comment"; fullPath: string, commentEvents: ReviewCommentEvent[] };
+export type FileDeleteEvent = { type: "delete"; fullPath: string };
+export type FileCommentEvent = {
+  type: "comment";
+  fullPath: string;
+  commentEvents: ReviewCommentEvent[];
+};
 export type FileRenameEvent = {
   type: "rename";
   fullPath: string;
   newFullPath: string;
   text: string;
 };
-export type FileEvents = FileEditEvent | FileDeleteEvent | FileRenameEvent | FileCommentEvent;
+export type FileEvents =
+  | FileEditEvent
+  | FileDeleteEvent
+  | FileRenameEvent
+  | FileCommentEvent;
 
-export type VersionControlEvent = {
+export type VersionControlCommitEvent = {
   type: "commit";
-  id?: string,
+  id?: string;
   author: string;
   events: FileEvents[];
-} | {
+};
+
+export type VersionControlCommitReset = {
   type: "reset";
   id?: string;
-}
+};
+
+export type VersionControlEvent =
+  | VersionControlCommitEvent
+  | VersionControlCommitReset;
 
 export enum FileStateStatus {
   active = 1,
@@ -30,7 +49,10 @@ export type FileState = {
   history: FileStateHistory[];
 } & FileStateX;
 
-export interface FileStateHistory { fileState: FileStateX, event: VersionControlEvent };
+export interface FileStateHistory {
+  fileState: FileStateX;
+  event: VersionControlEvent;
+}
 
 export type FileStateX = {
   fullPath: string;
@@ -40,8 +62,11 @@ export type FileStateX = {
   revision: number;
 };
 
+export type Files = Record<string, FileState>;
+
 export interface VersionControlState {
-  files: Record<string, FileState>;
+  files: Files;
+  commits: Record<string, Files>;
   version: number;
   events: VersionControlEvent[];
 }
@@ -52,7 +77,7 @@ function createFileState(
   text: string,
   prev: FileState,
   status: FileStateStatus,
-  commentStore: ReviewCommentStore,
+  commentStore: ReviewCommentStore
 ): FileState {
   const current: FileStateX = {
     fullPath: fullPath,
@@ -60,24 +85,24 @@ function createFileState(
     text: text,
     revision: prev.revision + 1,
     commentStore: commentStore || { comments: {} }
-  }
+  };
 
   return {
     ...current,
-    history: [...prev.history, { event: event, fileState: current }],
+    history: [...prev.history, { event: event, fileState: current }]
   };
 }
 
 export function initialVersionControlState(): VersionControlState {
-  return { files: {}, version: -1, events: [] };
+  return { files: {}, version: -1, events: [], commits: {} };
 }
 
 export type VCDispatch = (event: VersionControlEvent) => void;
 
 export function versionControlReducer(
-  state: VersionControlState, event: VersionControlEvent,
+  state: VersionControlState,
+  event: VersionControlEvent
 ) {
-
   switch (event.type) {
     case "reset":
       return initialVersionControlState();
@@ -98,11 +123,10 @@ export function versionControlReducer(
         let text = prev.text;
         let commentStore = prev.commentStore;
 
-
         switch (e.type) {
           case "comment":
             commentStore = reduceComments(e.commentEvents, commentStore);
-            console.info('commentStore after reduce', commentStore)
+            console.info("commentStore after reduce", commentStore);
             break;
           case "edit":
             text = e.text;
@@ -135,11 +159,19 @@ export function versionControlReducer(
           commentStore
         );
       }
+
+      const files = {
+        ...state.files,
+        ...updates
+      };
+
+      const commitId = event.id || v4();
+      const newCommit: Record<string, Files> = {};
+      newCommit[commitId] = files;
+
       return {
-        files: {
-          ...state.files,
-          ...updates,
-        },
+        files: files,
+        commits: { ...state.commits, ...newCommit },
         events: [...state.events, event],
         version: state.version + 1
       };

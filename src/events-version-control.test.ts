@@ -1,7 +1,8 @@
 import {
   reduceVersionControl,
   VersionControlEvent,
-  FileStateStatus, FileEvents
+  FileStateStatus,
+  FileEvents
 } from "./events-version-control";
 test("reduceVersionControl: edit=>edit=>edit", () => {
   let actions: VersionControlEvent[] = [
@@ -71,7 +72,6 @@ test("reduceVersionControl: edit=>delete=>edit", () => {
   expect(store.files["/script1.py"].status).toBe(FileStateStatus.active);
 });
 
-
 test("reduceVersionControl: reset=>edit=>comment=>comment", () => {
   let actions: VersionControlEvent[] = [
     { type: "reset" },
@@ -83,20 +83,38 @@ test("reduceVersionControl: reset=>edit=>comment=>comment", () => {
     {
       type: "commit",
       author: "author.one",
-      events: [{
-        type: "comment",
-        fullPath: "/script1.py",
-        commentEvents: [{ lineNumber: 1, text: '2', type: 'create', createdBy: 'author.comment' }]
-      }]
+      events: [
+        {
+          type: "comment",
+          fullPath: "/script1.py",
+          commentEvents: [
+            {
+              lineNumber: 1,
+              text: "2",
+              type: "create",
+              createdBy: "author.comment"
+            }
+          ]
+        }
+      ]
     },
     {
       type: "commit",
       author: "author.one",
-      events: [{
-        type: "comment",
-        fullPath: "/script1.py",
-        commentEvents: [{ lineNumber: 2, text: '2', type: 'create', createdBy: 'author.comment' }]
-      }]
+      events: [
+        {
+          type: "comment",
+          fullPath: "/script1.py",
+          commentEvents: [
+            {
+              lineNumber: 2,
+              text: "2",
+              type: "create",
+              createdBy: "author.comment"
+            }
+          ]
+        }
+      ]
     }
   ];
   let store = reduceVersionControl(actions);
@@ -106,33 +124,85 @@ test("reduceVersionControl: reset=>edit=>comment=>comment", () => {
     // for (const c of Object.values(h.fileState.commentStore.comments)) {
     //   //console.debug(`\t${c.comment.lineNumber} - ${c.comment.text}`)
     // }
-
   }
 });
 
 test("reduceVersionControl: commit=>commit=>commit=>commit - check revisions", () => {
   const events: FileEvents[] = [
-    { fullPath: "/script1.py", text: "function version(){ return 's1.1'}", type: "edit" },
-    { fullPath: "/script2.py", text: "function version(){ return 's2.1'}", type: "edit" },
-    { fullPath: "/script3.py", text: "function version(){ return 's3.1'}", type: "edit" }];
+    {
+      fullPath: "/script1.py",
+      text: "function version(){ return 's1.1'}",
+      type: "edit"
+    },
+    {
+      fullPath: "/script2.py",
+      text: "function version(){ return 's2.1'}",
+      type: "edit"
+    },
+    {
+      fullPath: "/script3.py",
+      text: "function version(){ return 's3.1'}",
+      type: "edit"
+    }
+  ];
 
-  const store = reduceVersionControl([{
-    type: "commit", author: "james", id: 'id-0',
-    events: events
-  }, {
-    type: "commit", author: "james", id: 'id-1',
-    events: [{ fullPath: "/script1.py", text: "function version(){ return 's1.2'}", type: "edit" }]
-  }, {
-    type: "commit", author: "james", id: 'id-2',
-    events: [{ fullPath: "/script1.py", text: "function version(){ return 's1.3'}", type: "edit" }]
-  }, {
-    type: "commit", author: "james", id: 'id-4',
-    events: [{
-      fullPath: "/script1.py", commentEvents: [
-        { lineNumber: 1, text: '', type: 'create', createdAt: '', createdBy: 'xxx', id: '1', }], type: "comment"
-    }]
-  }]);
+  const store = reduceVersionControl([
+    {
+      type: "commit",
+      author: "james",
+      id: "id-0",
+      events: events
+    },
+    {
+      type: "commit",
+      author: "james",
+      id: "id-1",
+      events: [
+        {
+          fullPath: "/script1.py",
+          text: "function version(){ return 's1.2'}",
+          type: "edit"
+        }
+      ]
+    },
+    {
+      type: "commit",
+      author: "james",
+      id: "id-2",
+      events: [
+        {
+          fullPath: "/script1.py",
+          text: "function version(){ return 's1.3'}",
+          type: "edit"
+        }
+      ]
+    },
+    {
+      type: "commit",
+      author: "james",
+      id: "id-4",
+      events: [
+        {
+          fullPath: "/script1.py",
+          commentEvents: [
+            {
+              lineNumber: 1,
+              text: "",
+              type: "create",
+              createdAt: "",
+              createdBy: "xxx",
+              id: "1"
+            }
+          ],
+          type: "comment"
+        }
+      ]
+    }
+  ]);
 
-  expect(Object.keys(store.files['/script1.py'].history).length).toBe(4);
-  expect(store.files['/script1.py'].history.map((h) => h.fileState.revision)).toEqual([0, 1, 2, 3]);
-})
+  expect(Object.keys(store.files["/script1.py"].history).length).toBe(4);
+  expect(
+    store.files["/script1.py"].history.map(h => h.fileState.revision)
+  ).toEqual([0, 1, 2, 3]);
+  expect(Object.keys(store.commits)).toEqual(["id-0", "id-1", "id-2", "id-4"]);
+});
