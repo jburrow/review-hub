@@ -18,7 +18,6 @@ export const Editor = (props: {
   const [reviewManager, setReviewManager] = React.useState<ReviewManager>(null);
 
   React.useEffect(() => {
-    console.debug("load view", props.view?.text, props.view?.original);
     if (props.view) {
       setText(props.view.text);
       setComments([]);
@@ -45,11 +44,13 @@ export const Editor = (props: {
     setReviewManager(rm);
   }
 
+  const editorHeight = "calc(100% - 25px)";
+
   return props.view && props.view.fullPath ? (
-    <div>
-      <div>
-        {props.view?.fullPath} {props.view?.revision}
-      </div>
+    <div style={{ height: "calc(100% - 20px)", backgroundColor: "red" }}>
+      <span>
+        * {props.view?.fullPath} - {props.view?.revision} - {props.view?.label}*
+      </span>
 
       {text !== props.view.text ? (
         <button
@@ -66,7 +67,7 @@ export const Editor = (props: {
           Stage Change
         </button>
       ) : (
-        <div>not modified text</div>
+        <span>not modified text</span>
       )}
 
       {(comments || []).length ? (
@@ -89,7 +90,7 @@ export const Editor = (props: {
           Stage Comments {`${comments.length}`}
         </button>
       ) : (
-        <div>not modified comments</div>
+        <span>not modified comments</span>
       )}
 
       {(comments || []).length && (
@@ -122,14 +123,14 @@ export const Editor = (props: {
           }}
           options={{ originalEditable: false }}
           language={"javascript"} //TODO - work out how to do lanuage
-          height={200} //TODO - hack work out how to set the hieght
+          height={editorHeight} //TODO - hack work out how to set the hieght
           modified={props.view.text}
           original={props.view.original}
         />
       ) : (
         <ControlledEditor
           value={props.view.text}
-          height={200} //TODO - hack work out how to set the hieght
+          height={editorHeight}
           language={"javascript"} //TODO - work out how to do lanuage
           options={{ readOnly: false }}
           editorDidMount={(_, editor) => {

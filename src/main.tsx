@@ -105,43 +105,30 @@ function loadVersionControlStore(): VersionControlState {
   return store;
 }
 
-interface DataGridItemProps {
-  key: string;
-  dataGrid: any;
-  className: string;
-}
-const DataGridItem: React.FunctionComponent<DataGridItemProps> = props => {
-  return (
-    <div key={props.key} data-grid={props.dataGrid} className={props.className}>
-      {JSON.stringify(props.dataGrid)}
-      <div className="fish">{props.children}</div>
-    </div>
-  );
-};
+// interface DataGridItemProps {
+//   key: string;
+//   dataGrid: any;
+//   className: string;
+//   style?: any;
+// }
 
-// .color-primary-0 { color: #D28C1F }	/* Main Primary color */
-// .color-primary-1 { color: #FFC56C }
-// .color-primary-2 { color: #E4B367 }
-// .color-primary-3 { color: #684D25 }
-// .color-primary-4 { color: #6E4300 }
-
-// .color-secondary-1-0 { color: #D2C71F }	/* Main Secondary color (1) */
-// .color-secondary-1-1 { color: #FFF66C }
-// .color-secondary-1-2 { color: #E4DC67 }
-// .color-secondary-1-3 { color: #686325 }
-// .color-secondary-1-4 { color: #6E6800 }
-
-// .color-secondary-2-0 { color: #561E8E }	/* Main Secondary color (2) */
-// .color-secondary-2-1 { color: #8D5AC1 }
-// .color-secondary-2-2 { color: #734C9A }
-// .color-secondary-2-3 { color: #311C46 }
-// .color-secondary-2-4 { color: #27044B }
-
-// .color-complement-0 { color: #1E5189 }	/* Main Complement color */
-// .color-complement-1 { color: #5887BC }
-// .color-complement-2 { color: #4A6D95 }
-// .color-complement-3 { color: #1B2E44 }
-// .color-complement-4 { color: #042448 }
+// const DataGridItem = withStyles(AppStyles)(
+//   (props: DataGridItemProps & WithStyles<typeof AppStyles>) => {
+//     return (
+//       <div
+//         key={props.key}
+//         data-grid={props.dataGrid}
+//         className={props.className}
+//         style={props.style}
+//       >
+//         {JSON.stringify(props.dataGrid)}
+//         <div className={props.classes.panel_content}>
+//           {(props as any).children}
+//         </div>
+//       </div>
+//     );
+//   }
+// );
 
 export const App = withStyles(AppStyles)(
   (props: WithStyles<typeof AppStyles>) => {
@@ -169,7 +156,7 @@ export const App = withStyles(AppStyles)(
         compactType={"vertical"}
         cols={12}
         useCSSTransforms={false}
-        draggableCancel={".fish"}
+        draggableCancel={props.classes.panel_content}
         className={props.classes.layout}
       >
         <div
@@ -208,21 +195,24 @@ export const App = withStyles(AppStyles)(
             selectedFile={appStore.selectedFile}
           ></StagingSCM>
         </div>
-
+        {/* <DataGridItem
+          dataGrid={{ x: 3, y: 0, w: 6, h: 8 }}
+          key={"unique"}
+          className={props.classes.vc_history}
+        >
+          HELLO
+        </DataGridItem> */}
         <div
           key="0.2"
           data-grid={{ x: 3, y: 0, w: 6, h: 8 }}
           className={props.classes.editor}
         >
-          {appStore.selectedView ? (
-            <h5>
-              Editor - {appStore.selectedView.fullPath} -{" "}
-              {appStore.selectedView.label}
-            </h5>
-          ) : (
-            "Editor"
-          )}
-          <div className="fish">
+          <div>
+            Editor - {appStore.selectedView?.fullPath} -{" "}
+            {appStore.selectedView?.label}
+          </div>
+
+          <div className={props.classes.panel_content}>
             <Editor
               currentUser={currentUser}
               view={appStore.selectedView}
@@ -236,7 +226,7 @@ export const App = withStyles(AppStyles)(
           className={props.classes.script_history}
         >
           <h3>File History {appStore.selectedFile}</h3>
-          <div className="fish">
+          <div className={props.classes.panel_content}>
             <FileHistory
               file={
                 appStore.selectedFile && vcStore.files[appStore.selectedFile]
@@ -252,11 +242,12 @@ export const App = withStyles(AppStyles)(
           className={props.classes.vc_history}
         >
           <h3>VC History</h3>
-          <div className="fish">
+          <div className={props.classes.panel_content}>
             <VCHistory
               vcStore={vcStore}
               appDispatch={appDispatch}
               selectedCommitId={appStore.selectedCommitId}
+              selectedView={appStore.selectedView}
             />
             <div>{vcStore.version}</div>
           </div>
@@ -267,3 +258,27 @@ export const App = withStyles(AppStyles)(
 );
 
 render(<App />, document.getElementById("root"));
+
+// .color-primary-0 { color: #D28C1F }	/* Main Primary color */
+// .color-primary-1 { color: #FFC56C }
+// .color-primary-2 { color: #E4B367 }
+// .color-primary-3 { color: #684D25 }
+// .color-primary-4 { color: #6E4300 }
+
+// .color-secondary-1-0 { color: #D2C71F }	/* Main Secondary color (1) */
+// .color-secondary-1-1 { color: #FFF66C }
+// .color-secondary-1-2 { color: #E4DC67 }
+// .color-secondary-1-3 { color: #686325 }
+// .color-secondary-1-4 { color: #6E6800 }
+
+// .color-secondary-2-0 { color: #561E8E }	/* Main Secondary color (2) */
+// .color-secondary-2-1 { color: #8D5AC1 }
+// .color-secondary-2-2 { color: #734C9A }
+// .color-secondary-2-3 { color: #311C46 }
+// .color-secondary-2-4 { color: #27044B }
+
+// .color-complement-0 { color: #1E5189 }	/* Main Complement color */
+// .color-complement-1 { color: #5887BC }
+// .color-complement-2 { color: #4A6D95 }
+// .color-complement-3 { color: #1B2E44 }
+// .color-complement-4 { color: #042448 }

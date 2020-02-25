@@ -16,6 +16,10 @@ export const AppStyles = createStyles({
   },
   vc_history: {
     backgroundColor: "#684D2533"
+  },
+  panel_content: {
+    backgroundColor: "lilac",
+    height: "100%"
   }
 });
 
