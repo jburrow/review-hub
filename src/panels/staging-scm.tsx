@@ -1,6 +1,6 @@
 import * as React from "react";
 import { AppDispatch } from "../store";
-import { FileState } from "../events-version-control";
+import { FileState, isReadonly } from "../events-version-control";
 import { VersionControlEvent, VCDispatch } from "../events-version-control";
 import { WithStyles, withStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
@@ -69,6 +69,8 @@ export const SCM = (props: {
     props.appDispatch({
       type: "selectedView",
       fullPath: value.fullPath,
+      label: "todo",
+      readOnly: isReadonly(value.history, value.revision),
       text: value.text,
       comments: value.commentStore,
       revision: value.revision

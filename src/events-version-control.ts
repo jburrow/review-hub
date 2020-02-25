@@ -199,3 +199,7 @@ export function reduceVersionControl(
 
   return state;
 }
+
+export function isReadonly(history: FileStateHistory[], revision: number) {
+  return history[history.length - 1].fileState.revision !== revision;
+}

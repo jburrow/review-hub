@@ -3,7 +3,8 @@ import {
   VersionControlState,
   VersionControlCommitEvent,
   FileEditEvent,
-  FileCommentEvent
+  FileCommentEvent,
+  isReadonly
 } from "../events-version-control";
 import { AppDispatch, SelectedView } from "../store";
 import { SelectedStyles } from "../styles";
@@ -111,6 +112,11 @@ export const SelectEditButton = withStyles(SelectedStyles)(
               type: "selectedView",
               fullPath: f.fullPath,
               revision: f.revision,
+              label: "todo",
+              readOnly: isReadonly(
+                props.vcStore.files[f.fullPath].history,
+                f.revision
+              ),
               text: f.text
             });
           }}

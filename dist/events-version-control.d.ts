@@ -61,3 +61,4 @@ export declare function initialVersionControlState(): VersionControlState;
 export declare type VCDispatch = (event: VersionControlEvent) => void;
 export declare function versionControlReducer(state: VersionControlState, event: VersionControlEvent): VersionControlState;
 export declare function reduceVersionControl(actions: VersionControlEvent[], state?: VersionControlState): VersionControlState;
+export declare function isReadonly(history: FileStateHistory[], revision: number): boolean;

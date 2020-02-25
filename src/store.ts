@@ -8,12 +8,13 @@ export interface AppState {
 
 export interface SelectedView {
   fullPath: string;
-  label?: string;
+  label: string;
   text: string;
   original?: string;
   comments?: ReviewCommentStore;
   revision: number;
   originalRevision?: number;
+  readOnly: boolean;
 }
 export type AppStateEvents =
   | { type: "selectScript"; fullPath: string }
@@ -34,6 +35,7 @@ export const reducer = (state: AppState, event: AppStateEvents): AppState => {
           text: event.text,
           original: event.original,
           label: event.label,
+          readOnly: event.readOnly,
           comments: event.comments,
           revision: event.revision,
           originalRevision: event.originalRevision

@@ -3,7 +3,8 @@ import { AppDispatch, SelectedView } from "../store";
 import {
   FileState,
   FileStateX,
-  FileStateHistory
+  FileStateHistory,
+  isReadonly
 } from "../events-version-control";
 import { withStyles, WithStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
@@ -73,6 +74,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                     fullPath: props.file.fullPath,
                     label: `base:${original.revision} v other:${m.revision}`,
                     text: m.text,
+                    readOnly: isReadonly(props.file.history, m.revision),
                     revision: m.revision,
                     original: original.text,
                     originalRevision: original.revision,
@@ -93,6 +95,8 @@ export const FileHistory = withStyles(SelectedStyles)(
                   props.appDispatch({
                     type: "selectedView",
                     fullPath: props.file.fullPath,
+                    readOnly: isReadonly(props.file.history, m.revision),
+                    label: "todo",
                     text: m.text,
                     revision: m.revision,
                     comments: m.commentStore
@@ -120,6 +124,8 @@ const ViewButton: React.FunctionComponent<{
         props.appDispatch({
           type: "selectedView",
           fullPath: props.history.fileState.fullPath,
+          label: "todo",
+          readOnly: true, //todo isEditable(props.history, props.history.fileState.revision),
           text: props.history.fileState.text,
           comments: props.history.fileState.commentStore,
           revision: props.history.fileState.revision

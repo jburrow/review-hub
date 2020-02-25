@@ -47,9 +47,10 @@ export const Editor = (props: {
   const editorHeight = "calc(100% - 25px)";
 
   return props.view && props.view.fullPath ? (
-    <div style={{ height: "calc(100% - 20px)", backgroundColor: "red" }}>
+    <div style={{ height: "calc(100% - 20px)" }}>
       <span>
-        * {props.view?.fullPath} - {props.view?.revision} - {props.view?.label}*
+        * {props.view?.fullPath} - {props.view?.revision} - {props.view?.label}-{" "}
+        {props.view.readOnly ? "readonly" : "editable"}*
       </span>
 
       {text !== props.view.text ? (
@@ -121,7 +122,7 @@ export const Editor = (props: {
               );
             setEditor(editor.getModifiedEditor());
           }}
-          options={{ originalEditable: false }}
+          options={{ originalEditable: false, readOnly: props.view.readOnly }}
           language={"javascript"} //TODO - work out how to do lanuage
           height={editorHeight} //TODO - hack work out how to set the hieght
           modified={props.view.text}
@@ -132,7 +133,7 @@ export const Editor = (props: {
           value={props.view.text}
           height={editorHeight}
           language={"javascript"} //TODO - work out how to do lanuage
-          options={{ readOnly: false }}
+          options={{ readOnly: props.view.readOnly }}
           editorDidMount={(_, editor) => {
             setEditor(editor);
           }}

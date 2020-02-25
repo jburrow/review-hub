@@ -6,12 +6,13 @@ export interface AppState {
 }
 export interface SelectedView {
     fullPath: string;
-    label?: string;
+    label: string;
     text: string;
     original?: string;
     comments?: ReviewCommentStore;
     revision: number;
     originalRevision?: number;
+    readOnly: boolean;
 }
 export declare type AppStateEvents = {
     type: "selectScript";
