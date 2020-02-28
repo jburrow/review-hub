@@ -34,7 +34,7 @@ export const FileHistory = withStyles(SelectedStyles)(
             v{e.revision}
           </span>{" "}
           <span>{Object.values(comments).length}</span>{" "}
-          <div style={{ fontSize: 10 }}>"{e.text.substring(0, 35)} ..."</div>
+          <div style={{ fontSize: 10 }}>"{e.text?.substring(0, 35)} ..."</div>
         </span>
       );
     };

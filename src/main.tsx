@@ -9,7 +9,9 @@ import {
   initialVersionControlState,
   reduceVersionControl,
   versionControlReducer,
-  VersionControlState
+  VersionControlState,
+  FileState,
+  FileStateStatus
 } from "./events-version-control";
 import "./index.css";
 import { Editor } from "./panels/editor";
@@ -182,6 +184,10 @@ export const App = withStyles(AppStyles)(
             appDispatch={appDispatch}
             files={activeFiles}
             selectedFile={appStore.selectedFile}
+            filter={i => {
+              debugger;
+              return i[1].status === FileStateStatus.active;
+            }}
           />
           {vcStore.events.length}
 

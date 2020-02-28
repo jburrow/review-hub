@@ -17,7 +17,7 @@ export interface SelectedView {
   readOnly: boolean;
 }
 export type AppStateEvents =
-  | { type: "selectScript"; fullPath: string }
+  //| { type: "selectScript"; fullPath: string }
   | { type: "selectCommit"; commitId: string }
   | ({ type: "selectedView" } & SelectedView);
 
@@ -25,11 +25,12 @@ export const reducer = (state: AppState, event: AppStateEvents): AppState => {
   switch (event.type) {
     case "selectCommit":
       return { ...state, selectedCommitId: event.commitId };
-    case "selectScript":
-      return { ...state, selectedFile: event.fullPath };
+    // case "selectScript":
+    //   return { ...state, selectedFile: event.fullPath };
     case "selectedView":
       return {
         ...state,
+        selectedFile: event.fullPath,
         selectedView: {
           fullPath: event.fullPath,
           text: event.text,

@@ -50,9 +50,43 @@ export const Editor = (props: {
     <div style={{ height: "calc(100% - 20px)" }}>
       <span>
         * {props.view?.fullPath} - {props.view?.revision} - {props.view?.label}-{" "}
-        {props.view.readOnly ? "readonly" : "editable"}*
+        {props.view.readOnly ? (
+          <span style={{ backgroundColor: "red" }}>READ-ONLY</span>
+        ) : (
+          <span style={{ backgroundColor: "green" }}>EDITABLE</span>
+        )}
+        *
       </span>
 
+      <button
+        onClick={() => {
+          props.wsDispatch({
+            type: "commit",
+            author: props.currentUser,
+            events: [{ type: "delete", fullPath: props.view.fullPath }]
+          });
+        }}
+      >
+        delete
+      </button>
+      <button
+        onClick={() => {
+          props.wsDispatch({
+            type: "commit",
+            author: props.currentUser,
+            events: [
+              {
+                type: "rename",
+                fullPath: props.view.fullPath,
+                text: text,
+                newFullPath: props.view.fullPath + ".renamed"
+              }
+            ]
+          });
+        }}
+      >
+        rename
+      </button>
       {text !== props.view.text ? (
         <button
           onClick={() => {

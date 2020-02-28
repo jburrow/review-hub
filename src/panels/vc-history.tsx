@@ -32,6 +32,7 @@ export const VCHistory = (props: {
           ></SelectCommitButton>
           {ce.events.map((e, idx) => (
             <div key={idx}>
+              {e.type} - {e.fullPath}
               {(e.type === "edit" || e.type == "comment") && (
                 <SelectEditButton
                   commitId={ce.id}
@@ -41,7 +42,7 @@ export const VCHistory = (props: {
                   editEvent={e}
                 ></SelectEditButton>
               )}
-              <div style={{ fontSize: 10 }}>{JSON.stringify(e)}</div>
+              {/* <div style={{ fontSize: 10 }}>{JSON.stringify(e)}</div> */}
             </div>
           ))}
         </div>
@@ -121,15 +122,17 @@ export const SelectEditButton = withStyles(SelectedStyles)(
             });
           }}
         >
-          Select Revision
+          View Revision
         </button>
-        <span
-          className={
-            selected ? props.classes.selectedItem : props.classes.inactiveItem
-          }
-        >
-          {props.editEvent.type}
-        </span>
+        {selected && (
+          <span
+            className={
+              selected ? props.classes.selectedItem : props.classes.inactiveItem
+            }
+          >
+            Selected
+          </span>
+        )}
       </React.Fragment>
     );
   }

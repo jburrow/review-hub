@@ -15,9 +15,6 @@ export interface SelectedView {
     readOnly: boolean;
 }
 export declare type AppStateEvents = {
-    type: "selectScript";
-    fullPath: string;
-} | {
     type: "selectCommit";
     commitId: string;
 } | ({

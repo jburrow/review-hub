@@ -135,9 +135,12 @@ export function versionControlReducer(
           case "comment":
             commentStore = reduceComments(e.commentEvents, commentStore);
             console.info("commentStore after reduce", commentStore);
+
             break;
           case "edit":
+            status = FileStateStatus.active;
             text = e.text;
+
             break;
           case "delete":
             status = FileStateStatus.deleted;
@@ -152,9 +155,10 @@ export function versionControlReducer(
               e.newFullPath,
               e.text || prev.text,
               prev,
-              status,
+              FileStateStatus.active,
               commentStore
             );
+
             break;
         }
 

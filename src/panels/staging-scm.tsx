@@ -1,6 +1,10 @@
 import * as React from "react";
 import { AppDispatch } from "../store";
-import { FileState, isReadonly } from "../events-version-control";
+import {
+  FileState,
+  isReadonly,
+  FileStateStatus
+} from "../events-version-control";
 import { VersionControlEvent, VCDispatch } from "../events-version-control";
 import { WithStyles, withStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
@@ -62,10 +66,11 @@ export const SCM = (props: {
   files: Record<string, FileState>;
   appDispatch: AppDispatch;
   selectedFile: string;
+  filter?(any): boolean;
 }) => {
   const handleClick = (fullPath: string) => {
     const value = props.files[fullPath];
-    props.appDispatch({ type: "selectScript", fullPath: value.fullPath });
+
     props.appDispatch({
       type: "selectedView",
       fullPath: value.fullPath,
@@ -77,11 +82,16 @@ export const SCM = (props: {
     });
   };
 
-  const items = Object.entries(props.files).map(([key, value]) => (
+  const filteredItems = props.filter
+    ? Object.entries(props.files).filter(props.filter)
+    : Object.entries(props.files);
+
+  const items = filteredItems.map(([key, value]) => (
     <SCMItem
       key={value.fullPath}
       fullPath={value.fullPath}
       revision={value.revision.toString()}
+      status={value.status}
       onClick={handleClick}
       selected={props.selectedFile === value.fullPath}
     />
@@ -94,12 +104,14 @@ const SCMItem = withStyles(SelectedStyles)(
     props: {
       fullPath: string;
       revision: string;
+      status: FileStateStatus;
       onClick(fullPath: string): void;
       selected: boolean;
     } & WithStyles<typeof SelectedStyles>
   ) => {
     return (
       <li
+        style={props.status === 2 ? { textDecoration: "line-through" } : {}}
         onClick={() => props.onClick(props.fullPath)}
         className={
           props.selected
@@ -107,7 +119,7 @@ const SCMItem = withStyles(SelectedStyles)(
             : props.classes.inactiveItem
         }
       >
-        {props.fullPath} @ v{props.revision}
+        {props.fullPath} @ v{props.revision} - {props.status}
       </li>
     );
   }

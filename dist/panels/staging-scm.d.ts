@@ -15,4 +15,5 @@ export declare const SCM: (props: {
     files: Record<string, FileState>;
     appDispatch: AppDispatch;
     selectedFile: string;
+    filter?(any: any): boolean;
 }) => JSX.Element;
