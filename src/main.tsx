@@ -8,9 +8,7 @@ import {
   FileEvents,
   initialVersionControlState,
   reduceVersionControl,
-  versionControlReducer,
   VersionControlState,
-  FileState,
   FileStateStatus
 } from "./events-version-control";
 import "./index.css";
@@ -18,7 +16,7 @@ import { Editor } from "./panels/editor";
 import { FileHistory } from "./panels/file-history";
 import { VCHistory } from "./panels/vc-history";
 import { StagingSCM, SCM } from "./panels/staging-scm";
-import { reducer } from "./store";
+import { XReducer } from "./store";
 import { withStyles, WithStyles } from "@material-ui/core";
 import { AppStyles } from "./styles";
 
@@ -134,21 +132,17 @@ function loadVersionControlStore(): VersionControlState {
 
 export const App = withStyles(AppStyles)(
   (props: WithStyles<typeof AppStyles>) => {
-    const [appStore, appDispatch] = React.useReducer(reducer, {});
-    const [vcStore, vcDispatch] = React.useReducer(
-      versionControlReducer,
-      loadVersionControlStore()
-    );
-    const [wsStore, wsDispatch] = React.useReducer(
-      versionControlReducer,
-      initialVersionControlState()
-    );
+    const [store, dispatch] = React.useReducer(XReducer, {
+      appStore: {},
+      wsStore: initialVersionControlState(),
+      vcStore: loadVersionControlStore()
+    });
 
-    const activeFiles = appStore.selectedCommitId
-      ? vcStore.commits[appStore.selectedCommitId]
-      : vcStore.files;
+    const activeFiles = store.appStore.selectedCommitId
+      ? store.vcStore.commits[store.appStore.selectedCommitId]
+      : store.vcStore.files;
 
-    console.log("appStore.selectedCommitId", appStore.selectedCommitId);
+    console.log("appStore.selectedCommitId", store.appStore.selectedCommitId);
     const currentUser = "xyz-user";
 
     return (
@@ -168,11 +162,13 @@ export const App = withStyles(AppStyles)(
         >
           <h3>
             version-control{" "}
-            {appStore.selectedCommitId ? appStore.selectedCommitId : "HEAD"}
-            {appStore.selectedCommitId && (
+            {store.appStore.selectedCommitId
+              ? store.appStore.selectedCommitId
+              : "HEAD"}
+            {store.appStore.selectedCommitId && (
               <button
                 onClick={() =>
-                  appDispatch({ type: "selectCommit", commitId: null })
+                  dispatch({ type: "selectCommit", commitId: null })
                 }
               >
                 HEAD
@@ -181,24 +177,22 @@ export const App = withStyles(AppStyles)(
           </h3>
 
           <SCM
-            appDispatch={appDispatch}
+            appDispatch={dispatch}
             files={activeFiles}
-            selectedFile={appStore.selectedFile}
+            selectedFile={store.appStore.selectedFile}
             filter={i => {
               debugger;
               return i[1].status === FileStateStatus.active;
             }}
           />
-          {vcStore.events.length}
+          {store.vcStore.events.length}
 
           <StagingSCM
-            vcDispatch={vcDispatch}
-            wsDispatch={wsDispatch}
-            appDispatch={appDispatch}
-            events={wsStore.events}
-            wsfiles={wsStore.files}
-            vcfiles={vcStore.files}
-            selectedFile={appStore.selectedFile}
+            dispatch={dispatch}
+            events={store.wsStore.events}
+            wsfiles={store.wsStore.files}
+            vcfiles={store.vcStore.files}
+            selectedFile={store.appStore.selectedFile}
           ></StagingSCM>
         </div>
         {/* <DataGridItem
@@ -214,15 +208,15 @@ export const App = withStyles(AppStyles)(
           className={props.classes.editor}
         >
           <div>
-            Editor - {appStore.selectedView?.fullPath} -{" "}
-            {appStore.selectedView?.label}
+            Editor - {store.appStore.selectedView?.fullPath} -{" "}
+            {store.appStore.selectedView?.label}
           </div>
 
           <div className={props.classes.panel_content}>
             <Editor
               currentUser={currentUser}
-              view={appStore.selectedView}
-              wsDispatch={wsDispatch}
+              view={store.appStore.selectedView}
+              dispatch={dispatch}
             />
           </div>
         </div>
@@ -231,14 +225,15 @@ export const App = withStyles(AppStyles)(
           data-grid={{ x: 9, y: 0, w: 3, h: 8 }}
           className={props.classes.script_history}
         >
-          <h3>File History {appStore.selectedFile}</h3>
+          <h3>File History {store.appStore.selectedFile}</h3>
           <div className={props.classes.panel_content}>
             <FileHistory
               file={
-                appStore.selectedFile && vcStore.files[appStore.selectedFile]
+                store.appStore.selectedFile &&
+                store.vcStore.files[store.appStore.selectedFile]
               }
-              selectedView={appStore.selectedView}
-              appDispatch={appDispatch}
+              selectedView={store.appStore.selectedView}
+              appDispatch={dispatch}
             />
           </div>
         </div>
@@ -250,12 +245,12 @@ export const App = withStyles(AppStyles)(
           <h3>VC History</h3>
           <div className={props.classes.panel_content}>
             <VCHistory
-              vcStore={vcStore}
-              appDispatch={appDispatch}
-              selectedCommitId={appStore.selectedCommitId}
-              selectedView={appStore.selectedView}
+              vcStore={store.vcStore}
+              appDispatch={dispatch}
+              selectedCommitId={store.appStore.selectedCommitId}
+              selectedView={store.appStore.selectedView}
             />
-            <div>{vcStore.version}</div>
+            <div>{store.vcStore.version}</div>
           </div>
         </div>
       </ReactGridLayout>

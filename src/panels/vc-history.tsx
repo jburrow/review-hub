@@ -4,7 +4,8 @@ import {
   VersionControlCommitEvent,
   FileEditEvent,
   FileCommentEvent,
-  isReadonly
+  isReadonly,
+  FileRenameEvent
 } from "../events-version-control";
 import { AppDispatch, SelectedView } from "../store";
 import { SelectedStyles } from "../styles";
@@ -33,7 +34,9 @@ export const VCHistory = (props: {
           {ce.events.map((e, idx) => (
             <div key={idx}>
               {e.type} - {e.fullPath}
-              {(e.type === "edit" || e.type == "comment") && (
+              {(e.type === "edit" ||
+                e.type == "comment" ||
+                e.type == "rename") && (
                 <SelectEditButton
                   commitId={ce.id}
                   selectedView={props.selectedView}
@@ -87,7 +90,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
       commitId: string;
       vcStore: VersionControlState;
       appDispatch: AppDispatch;
-      editEvent: FileEditEvent | FileCommentEvent;
+      editEvent: FileEditEvent | FileCommentEvent | FileRenameEvent;
       selectedView: SelectedView;
     } & WithStyles<typeof SelectedStyles>
   ) => {

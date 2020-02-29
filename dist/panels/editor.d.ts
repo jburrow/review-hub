@@ -1,8 +1,7 @@
 /// <reference types="react" />
-import { SelectedView } from "../store";
-import { VersionControlEvent } from "../events-version-control";
+import { SelectedView, XEvent } from "../store";
 export declare const Editor: (props: {
     currentUser: string;
     view: SelectedView;
-    wsDispatch(e: VersionControlEvent): void;
+    dispatch(e: XEvent): void;
 }) => JSX.Element;

@@ -15,7 +15,7 @@ export type FileCommentEvent = {
 export type FileRenameEvent = {
   type: "rename";
   fullPath: string;
-  newFullPath: string;
+  oldFullPath: string;
   text: string;
 };
 export type FileEvents =
@@ -148,14 +148,15 @@ export function versionControlReducer(
 
             break;
           case "rename":
-            status = FileStateStatus.deleted;
+            status = FileStateStatus.active;
+            text = e.text || prev.text;
 
-            updates[e.newFullPath] = createFileState(
+            updates[e.oldFullPath] = createFileState(
               event,
-              e.newFullPath,
-              e.text || prev.text,
+              e.oldFullPath,
+              "",
               prev,
-              FileStateStatus.active,
+              FileStateStatus.deleted,
               commentStore
             );
 

@@ -1,4 +1,10 @@
 import { ReviewCommentStore } from "monaco-review";
+import {
+  VersionControlState,
+  VersionControlCommitEvent,
+  VersionControlCommitReset,
+  versionControlReducer
+} from "./events-version-control";
 
 export interface AppState {
   selectedCommitId?: string;
@@ -47,3 +53,62 @@ export const reducer = (state: AppState, event: AppStateEvents): AppState => {
 };
 
 export type AppDispatch = (event: AppStateEvents) => void;
+
+export type XEvent =
+  | AppStateEvents
+  | ({ storeType: VersionControlStoreType } & VersionControlCommitEvent)
+  | ({ storeType: VersionControlStoreType } & VersionControlCommitReset);
+
+export enum VersionControlStoreType {
+  Working,
+  VersionControl
+}
+
+export interface XState {
+  appStore: AppState;
+  vcStore: VersionControlState;
+  wsStore: VersionControlState;
+}
+
+export const XReducer = (state: XState, event: XEvent): XState => {
+  switch (event.type) {
+    case "selectCommit":
+    case "selectedView":
+      return {
+        ...state,
+        appStore: reducer(state.appStore, event)
+      };
+    case "commit":
+    case "reset":
+      switch (event.storeType) {
+        case VersionControlStoreType.VersionControl:
+          const vcStore = versionControlReducer(state.vcStore, event);
+          const c = vcStore.files[state.appStore.selectedFile];
+
+          const s1 = XReducer(state, {
+            type: "reset",
+            storeType: VersionControlStoreType.Working
+          });
+
+          const s2 = XReducer(s1, {
+            type: "selectedView",
+            fullPath: s1.appStore.selectedFile,
+            revision: c.revision,
+            text: c.text,
+            readOnly: false,
+            label: ""
+          });
+
+          return {
+            ...s2,
+            vcStore
+          };
+        case VersionControlStoreType.Working:
+          return {
+            ...state,
+            wsStore: versionControlReducer(state.wsStore, event)
+          };
+      }
+  }
+  return state;
+};

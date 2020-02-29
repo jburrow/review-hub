@@ -5,13 +5,12 @@ import {
   ReviewCommentEvent
 } from "monaco-review";
 import * as React from "react";
-import { SelectedView } from "../store";
-import { VersionControlEvent } from "../events-version-control";
+import { SelectedView, XEvent, VersionControlStoreType } from "../store";
 
 export const Editor = (props: {
   currentUser: string;
   view: SelectedView;
-  wsDispatch(e: VersionControlEvent): void;
+  dispatch(e: XEvent): void;
 }) => {
   const [text, setText] = React.useState<string>(null);
   const [comments, setComments] = React.useState<ReviewCommentEvent[]>(null);
@@ -60,37 +59,40 @@ export const Editor = (props: {
 
       <button
         onClick={() => {
-          props.wsDispatch({
+          props.dispatch({
+            storeType: VersionControlStoreType.Working,
             type: "commit",
             author: props.currentUser,
             events: [{ type: "delete", fullPath: props.view.fullPath }]
           });
         }}
       >
-        delete
+        stage - delete
       </button>
       <button
         onClick={() => {
-          props.wsDispatch({
+          props.dispatch({
+            storeType: VersionControlStoreType.Working,
             type: "commit",
             author: props.currentUser,
             events: [
               {
                 type: "rename",
-                fullPath: props.view.fullPath,
+                oldFullPath: props.view.fullPath,
                 text: text,
-                newFullPath: props.view.fullPath + ".renamed"
+                fullPath: props.view.fullPath + ".renamed"
               }
             ]
           });
         }}
       >
-        rename
+        stage - rename
       </button>
       {text !== props.view.text ? (
         <button
           onClick={() => {
-            props.wsDispatch({
+            props.dispatch({
+              storeType: VersionControlStoreType.Working,
               type: "commit",
               author: props.currentUser,
               events: [
@@ -99,7 +101,7 @@ export const Editor = (props: {
             });
           }}
         >
-          Stage Change
+          stage - change
         </button>
       ) : (
         <span>not modified text</span>
@@ -108,7 +110,8 @@ export const Editor = (props: {
       {(comments || []).length ? (
         <button
           onClick={() => {
-            props.wsDispatch({
+            props.dispatch({
+              storeType: VersionControlStoreType.Working,
               type: "commit",
               author: props.currentUser,
               events: [

@@ -16,7 +16,7 @@ export declare type FileCommentEvent = {
 export declare type FileRenameEvent = {
     type: "rename";
     fullPath: string;
-    newFullPath: string;
+    oldFullPath: string;
     text: string;
 };
 export declare type FileEvents = FileEditEvent | FileDeleteEvent | FileRenameEvent | FileCommentEvent;

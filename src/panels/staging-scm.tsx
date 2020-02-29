@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AppDispatch } from "../store";
+import { AppDispatch, VersionControlStoreType } from "../store";
 import {
   FileState,
   isReadonly,
@@ -14,16 +14,15 @@ export const StagingSCM = (props: {
   wsfiles: Record<string, FileState>;
   vcfiles: Record<string, FileState>;
   events: VersionControlEvent[];
-  wsDispatch: VCDispatch;
-  vcDispatch: VCDispatch;
-  appDispatch: AppDispatch;
+
+  dispatch(XEvent): void;
   selectedFile: string;
 }) => {
   return (
     <div>
       <h3>working set</h3>
       <SCM
-        appDispatch={props.appDispatch}
+        appDispatch={props.dispatch}
         files={props.wsfiles}
         selectedFile={props.selectedFile}
       />
@@ -37,13 +36,13 @@ export const StagingSCM = (props: {
             }
           }
 
-          props.vcDispatch({
+          const x = props.dispatch({
+            storeType: VersionControlStoreType.VersionControl,
             type: "commit",
             author: "james",
             id: v4(),
             events: events
           });
-          props.wsDispatch({ type: "reset" });
         }}
         disabled={props.events.length == 0}
       >
@@ -52,7 +51,10 @@ export const StagingSCM = (props: {
 
       <button
         onClick={() => {
-          props.wsDispatch({ type: "reset" });
+          props.dispatch({
+            type: "reset",
+            storeType: VersionControlStoreType.Working
+          });
         }}
         disabled={props.events.length == 0}
       >

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { VersionControlState, FileEditEvent, FileCommentEvent } from "../events-version-control";
+import { VersionControlState, FileEditEvent, FileCommentEvent, FileRenameEvent } from "../events-version-control";
 import { AppDispatch, SelectedView } from "../store";
 export declare const VCHistory: (props: {
     vcStore: VersionControlState;
@@ -18,7 +18,7 @@ export declare const SelectEditButton: React.ComponentType<Pick<{
     commitId: string;
     vcStore: VersionControlState;
     appDispatch: AppDispatch;
-    editEvent: FileEditEvent | FileCommentEvent;
+    editEvent: FileEditEvent | FileCommentEvent | FileRenameEvent;
     selectedView: SelectedView;
 } & {
     classes: Record<"selectedItem" | "inactiveItem", string>;
