@@ -82,27 +82,30 @@ export const XReducer = (state: XState, event: XEvent): XState => {
     case "reset":
       switch (event.storeType) {
         case VersionControlStoreType.VersionControl:
-          const vcStore = versionControlReducer(state.vcStore, event);
-          const c = vcStore.files[state.appStore.selectedFile];
+          const s2 = XReducer(
+            {
+              ...state,
+              vcStore: versionControlReducer(state.vcStore, event)
+            },
+            {
+              type: "reset",
+              storeType: VersionControlStoreType.Working
+            }
+          );
 
-          const s1 = XReducer(state, {
-            type: "reset",
-            storeType: VersionControlStoreType.Working
-          });
+          if (s2.appStore.selectedFile) {
+            const c = s2.vcStore.files[state.appStore.selectedFile];
+            return XReducer(s2, {
+              type: "selectedView",
+              fullPath: s2.appStore.selectedFile,
+              revision: c.revision,
+              text: c.text,
+              readOnly: false,
+              label: ""
+            });
+          }
 
-          const s2 = XReducer(s1, {
-            type: "selectedView",
-            fullPath: s1.appStore.selectedFile,
-            revision: c.revision,
-            text: c.text,
-            readOnly: false,
-            label: ""
-          });
-
-          return {
-            ...s2,
-            vcStore
-          };
+          return s2;
         case VersionControlStoreType.Working:
           return {
             ...state,
