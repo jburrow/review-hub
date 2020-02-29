@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AppDispatch, SelectedView } from "../store";
+import { Dispatch } from "../store";
 import {
   FileState,
   FileStateX,
@@ -8,13 +8,14 @@ import {
 } from "../events-version-control";
 import { withStyles, WithStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
+import { SelectedView } from "../app-store";
 
 export const FileHistory = withStyles(SelectedStyles)(
   (
     props: {
       file: FileState;
       selectedView: SelectedView;
-      appDispatch: AppDispatch;
+      dispatch: Dispatch;
     } & WithStyles<typeof SelectedStyles>
   ) => {
     const [selected, setSelected] = React.useState<number[]>([]);
@@ -55,10 +56,7 @@ export const FileHistory = withStyles(SelectedStyles)(
               >
                 {selected.indexOf(idx) > -1 ? "deselect" : "select"}
               </button>
-              <ViewButton
-                appDispatch={props.appDispatch}
-                history={h}
-              ></ViewButton>
+              <ViewButton dispatch={props.dispatch} history={h}></ViewButton>
 
               {convert(h.fileState)}
             </div>
@@ -69,7 +67,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                 onClick={() => {
                   const m = props.file.history[selected[1]].fileState;
                   const original = props.file.history[selected[0]].fileState;
-                  props.appDispatch({
+                  props.dispatch({
                     type: "selectedView",
                     fullPath: props.file.fullPath,
                     label: `base:${original.revision} v other:${m.revision}`,
@@ -92,7 +90,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                     h => h.fileState.revision === props.selectedView.revision
                   )[0]?.fileState;
 
-                  props.appDispatch({
+                  props.dispatch({
                     type: "selectedView",
                     fullPath: props.file.fullPath,
                     readOnly: isReadonly(props.file.history, m.revision),
@@ -115,13 +113,13 @@ export const FileHistory = withStyles(SelectedStyles)(
 );
 
 const ViewButton: React.FunctionComponent<{
-  appDispatch: AppDispatch;
+  dispatch: Dispatch;
   history: FileStateHistory;
 }> = props => {
   return (
     <button
       onClick={() =>
-        props.appDispatch({
+        props.dispatch({
           type: "selectedView",
           fullPath: props.history.fileState.fullPath,
           label: "todo",

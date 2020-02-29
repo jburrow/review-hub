@@ -177,7 +177,7 @@ export const App = withStyles(AppStyles)(
           </h3>
 
           <SCM
-            appDispatch={dispatch}
+            dispatch={dispatch}
             files={activeFiles}
             selectedFile={store.appStore.selectedFile}
             filter={i => {
@@ -233,7 +233,7 @@ export const App = withStyles(AppStyles)(
                 store.vcStore.files[store.appStore.selectedFile]
               }
               selectedView={store.appStore.selectedView}
-              appDispatch={dispatch}
+              dispatch={dispatch}
             />
           </div>
         </div>
@@ -246,7 +246,7 @@ export const App = withStyles(AppStyles)(
           <div className={props.classes.panel_content}>
             <VCHistory
               vcStore={store.vcStore}
-              appDispatch={dispatch}
+              dispatch={dispatch}
               selectedCommitId={store.appStore.selectedCommitId}
               selectedView={store.appStore.selectedView}
             />

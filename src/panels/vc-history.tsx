@@ -7,13 +7,14 @@ import {
   isReadonly,
   FileRenameEvent
 } from "../events-version-control";
-import { AppDispatch, SelectedView } from "../store";
+import { Dispatch } from "../store";
 import { SelectedStyles } from "../styles";
 import { withStyles, WithStyles } from "@material-ui/core";
+import { SelectedView } from "../app-store";
 
 export const VCHistory = (props: {
   vcStore: VersionControlState;
-  appDispatch: AppDispatch;
+  dispatch: Dispatch;
   selectedCommitId: string;
   selectedView: SelectedView;
 }) => {
@@ -28,7 +29,7 @@ export const VCHistory = (props: {
         <div key={idx}>
           <SelectCommitButton
             commitId={ce.id}
-            appDispatch={props.appDispatch}
+            dispatch={props.dispatch}
             selected={scid === ce.id}
           ></SelectCommitButton>
           {ce.events.map((e, idx) => (
@@ -41,7 +42,7 @@ export const VCHistory = (props: {
                   commitId={ce.id}
                   selectedView={props.selectedView}
                   vcStore={props.vcStore}
-                  appDispatch={props.appDispatch}
+                  dispatch={props.dispatch}
                   editEvent={e}
                 ></SelectEditButton>
               )}
@@ -59,14 +60,14 @@ export const SelectCommitButton = withStyles(SelectedStyles)(
   (
     props: {
       commitId: string;
-      appDispatch: AppDispatch;
+      dispatch: Dispatch;
       selected: boolean;
     } & WithStyles<typeof SelectedStyles>
   ) => (
     <React.Fragment>
       <button
         onClick={() => {
-          props.appDispatch({ type: "selectCommit", commitId: props.commitId });
+          props.dispatch({ type: "selectCommit", commitId: props.commitId });
         }}
       >
         Select Commit
@@ -89,7 +90,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
     props: {
       commitId: string;
       vcStore: VersionControlState;
-      appDispatch: AppDispatch;
+      dispatch: Dispatch;
       editEvent: FileEditEvent | FileCommentEvent | FileRenameEvent;
       selectedView: SelectedView;
     } & WithStyles<typeof SelectedStyles>
@@ -108,11 +109,11 @@ export const SelectEditButton = withStyles(SelectedStyles)(
           onClick={() => {
             const f =
               props.vcStore.commits[props.commitId][props.editEvent.fullPath];
-            props.appDispatch({
+            props.dispatch({
               type: "selectCommit",
               commitId: props.commitId
             });
-            props.appDispatch({
+            props.dispatch({
               type: "selectedView",
               fullPath: f.fullPath,
               revision: f.revision,

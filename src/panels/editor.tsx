@@ -5,12 +5,13 @@ import {
   ReviewCommentEvent
 } from "monaco-review";
 import * as React from "react";
-import { SelectedView, XEvent, VersionControlStoreType } from "../store";
+import { Dispatch, VersionControlStoreType } from "../store";
+import { SelectedView } from "../app-store";
 
 export const Editor = (props: {
   currentUser: string;
   view: SelectedView;
-  dispatch(e: XEvent): void;
+  dispatch: Dispatch;
 }) => {
   const [text, setText] = React.useState<string>(null);
   const [comments, setComments] = React.useState<ReviewCommentEvent[]>(null);

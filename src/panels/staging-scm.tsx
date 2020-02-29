@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AppDispatch, VersionControlStoreType } from "../store";
+import { VersionControlStoreType, Dispatch } from "../store";
 import {
   FileState,
   isReadonly,
@@ -14,15 +14,14 @@ export const StagingSCM = (props: {
   wsfiles: Record<string, FileState>;
   vcfiles: Record<string, FileState>;
   events: VersionControlEvent[];
-
-  dispatch(XEvent): void;
+  dispatch: Dispatch;
   selectedFile: string;
 }) => {
   return (
     <div>
       <h3>working set</h3>
       <SCM
-        appDispatch={props.dispatch}
+        dispatch={props.dispatch}
         files={props.wsfiles}
         selectedFile={props.selectedFile}
       />
@@ -66,14 +65,14 @@ export const StagingSCM = (props: {
 
 export const SCM = (props: {
   files: Record<string, FileState>;
-  appDispatch: AppDispatch;
+  dispatch: Dispatch;
   selectedFile: string;
   filter?(any): boolean;
 }) => {
   const handleClick = (fullPath: string) => {
     const value = props.files[fullPath];
 
-    props.appDispatch({
+    props.dispatch({
       type: "selectedView",
       fullPath: value.fullPath,
       label: "todo",
