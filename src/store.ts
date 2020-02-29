@@ -4,10 +4,14 @@ import {
   VersionControlCommitReset,
   versionControlReducer
 } from "./events-version-control";
-import { AppStateEvents, AppState, reducer } from "./app-store";
+import {
+  InteractionStateEvents,
+  InteractionState,
+  interactionReducer
+} from "./interaction-store";
 
-export type XEvent =
-  | AppStateEvents
+export type AppEvents =
+  | InteractionStateEvents
   | ({ storeType: VersionControlStoreType } & VersionControlCommitEvent)
   | ({ storeType: VersionControlStoreType } & VersionControlCommitReset);
 
@@ -15,27 +19,27 @@ export enum VersionControlStoreType {
   Working,
   VersionControl
 }
-export type Dispatch = (event: XEvent) => void;
+export type Dispatch = (event: AppEvents) => void;
 
-export interface XState {
-  appStore: AppState;
+export interface AppState {
+  interactionStore: InteractionState;
   vcStore: VersionControlState;
   wsStore: VersionControlState;
 }
 
-export const XReducer = (state: XState, event: XEvent): XState => {
+export const appReducer = (state: AppState, event: AppEvents): AppState => {
   switch (event.type) {
     case "selectCommit":
     case "selectedView":
       return {
         ...state,
-        appStore: reducer(state.appStore, event)
+        interactionStore: interactionReducer(state.interactionStore, event)
       };
     case "commit":
     case "reset":
       switch (event.storeType) {
         case VersionControlStoreType.VersionControl:
-          const s2 = XReducer(
+          const s2 = appReducer(
             {
               ...state,
               vcStore: versionControlReducer(state.vcStore, event)
@@ -46,11 +50,11 @@ export const XReducer = (state: XState, event: XEvent): XState => {
             }
           );
 
-          if (s2.appStore.selectedFile) {
-            const c = s2.vcStore.files[state.appStore.selectedFile];
-            return XReducer(s2, {
+          if (s2.interactionStore.selectedFile) {
+            const c = s2.vcStore.files[state.interactionStore.selectedFile];
+            return appReducer(s2, {
               type: "selectedView",
-              fullPath: s2.appStore.selectedFile,
+              fullPath: s2.interactionStore.selectedFile,
               revision: c.revision,
               text: c.text,
               readOnly: false,

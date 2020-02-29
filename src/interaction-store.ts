@@ -1,6 +1,6 @@
 import { ReviewCommentStore } from "monaco-review";
 
-export interface AppState {
+export interface InteractionState {
   selectedCommitId?: string;
   selectedFile?: string;
   selectedView?: SelectedView;
@@ -16,11 +16,14 @@ export interface SelectedView {
   originalRevision?: number;
   readOnly: boolean;
 }
-export type AppStateEvents =
+export type InteractionStateEvents =
   | { type: "selectCommit"; commitId: string }
   | ({ type: "selectedView" } & SelectedView);
 
-export const reducer = (state: AppState, event: AppStateEvents): AppState => {
+export const interactionReducer = (
+  state: InteractionState,
+  event: InteractionStateEvents
+): InteractionState => {
   switch (event.type) {
     case "selectCommit":
       return { ...state, selectedCommitId: event.commitId };

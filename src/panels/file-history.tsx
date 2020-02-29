@@ -8,7 +8,7 @@ import {
 } from "../events-version-control";
 import { withStyles, WithStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
-import { SelectedView } from "../app-store";
+import { SelectedView } from "../interaction-store";
 
 export const FileHistory = withStyles(SelectedStyles)(
   (

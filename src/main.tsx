@@ -16,7 +16,7 @@ import { Editor } from "./panels/editor";
 import { FileHistory } from "./panels/file-history";
 import { VCHistory } from "./panels/vc-history";
 import { StagingSCM, SCM } from "./panels/staging-scm";
-import { XReducer } from "./store";
+import { appReducer } from "./store";
 import { withStyles, WithStyles } from "@material-ui/core";
 import { AppStyles } from "./styles";
 
@@ -132,17 +132,17 @@ function loadVersionControlStore(): VersionControlState {
 
 export const App = withStyles(AppStyles)(
   (props: WithStyles<typeof AppStyles>) => {
-    const [store, dispatch] = React.useReducer(XReducer, {
-      appStore: {},
+    const [store, dispatch] = React.useReducer(appReducer, {
+      interactionStore: {},
       wsStore: initialVersionControlState(),
       vcStore: loadVersionControlStore()
     });
 
-    const activeFiles = store.appStore.selectedCommitId
-      ? store.vcStore.commits[store.appStore.selectedCommitId]
+    const activeFiles = store.interactionStore.selectedCommitId
+      ? store.vcStore.commits[store.interactionStore.selectedCommitId]
       : store.vcStore.files;
 
-    console.log("appStore.selectedCommitId", store.appStore.selectedCommitId);
+    console.log("appStore.selectedCommitId", store.interactionStore.selectedCommitId);
     const currentUser = "xyz-user";
 
     return (
@@ -162,10 +162,10 @@ export const App = withStyles(AppStyles)(
         >
           <h3>
             version-control{" "}
-            {store.appStore.selectedCommitId
-              ? store.appStore.selectedCommitId
+            {store.interactionStore.selectedCommitId
+              ? store.interactionStore.selectedCommitId
               : "HEAD"}
-            {store.appStore.selectedCommitId && (
+            {store.interactionStore.selectedCommitId && (
               <button
                 onClick={() =>
                   dispatch({ type: "selectCommit", commitId: null })
@@ -179,7 +179,7 @@ export const App = withStyles(AppStyles)(
           <SCM
             dispatch={dispatch}
             files={activeFiles}
-            selectedFile={store.appStore.selectedFile}
+            selectedFile={store.interactionStore.selectedFile}
             filter={i => {
               debugger;
               return i[1].status === FileStateStatus.active;
@@ -192,7 +192,7 @@ export const App = withStyles(AppStyles)(
             events={store.wsStore.events}
             wsfiles={store.wsStore.files}
             vcfiles={store.vcStore.files}
-            selectedFile={store.appStore.selectedFile}
+            selectedFile={store.interactionStore.selectedFile}
           ></StagingSCM>
         </div>
         {/* <DataGridItem
@@ -208,14 +208,14 @@ export const App = withStyles(AppStyles)(
           className={props.classes.editor}
         >
           <div>
-            Editor - {store.appStore.selectedView?.fullPath} -{" "}
-            {store.appStore.selectedView?.label}
+            Editor - {store.interactionStore.selectedView?.fullPath} -{" "}
+            {store.interactionStore.selectedView?.label}
           </div>
 
           <div className={props.classes.panel_content}>
             <Editor
               currentUser={currentUser}
-              view={store.appStore.selectedView}
+              view={store.interactionStore.selectedView}
               dispatch={dispatch}
             />
           </div>
@@ -225,14 +225,14 @@ export const App = withStyles(AppStyles)(
           data-grid={{ x: 9, y: 0, w: 3, h: 8 }}
           className={props.classes.script_history}
         >
-          <h3>File History {store.appStore.selectedFile}</h3>
+          <h3>File History {store.interactionStore.selectedFile}</h3>
           <div className={props.classes.panel_content}>
             <FileHistory
               file={
-                store.appStore.selectedFile &&
-                store.vcStore.files[store.appStore.selectedFile]
+                store.interactionStore.selectedFile &&
+                store.vcStore.files[store.interactionStore.selectedFile]
               }
-              selectedView={store.appStore.selectedView}
+              selectedView={store.interactionStore.selectedView}
               dispatch={dispatch}
             />
           </div>
@@ -247,8 +247,8 @@ export const App = withStyles(AppStyles)(
             <VCHistory
               vcStore={store.vcStore}
               dispatch={dispatch}
-              selectedCommitId={store.appStore.selectedCommitId}
-              selectedView={store.appStore.selectedView}
+              selectedCommitId={store.interactionStore.selectedCommitId}
+              selectedView={store.interactionStore.selectedView}
             />
             <div>{store.vcStore.version}</div>
           </div>

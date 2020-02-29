@@ -10,7 +10,7 @@ import {
 import { Dispatch } from "../store";
 import { SelectedStyles } from "../styles";
 import { withStyles, WithStyles } from "@material-ui/core";
-import { SelectedView } from "../app-store";
+import { SelectedView } from "../interaction-store";
 
 export const VCHistory = (props: {
   vcStore: VersionControlState;

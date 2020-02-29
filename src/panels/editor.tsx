@@ -6,7 +6,7 @@ import {
 } from "monaco-review";
 import * as React from "react";
 import { Dispatch, VersionControlStoreType } from "../store";
-import { SelectedView } from "../app-store";
+import { SelectedView } from "../interaction-store";
 
 export const Editor = (props: {
   currentUser: string;
