@@ -1,7 +1,8 @@
 /// <reference types="react" />
-import { SelectedView, XEvent } from "../store";
+import { Dispatch } from "../store";
+import { SelectedView } from "../interaction-store";
 export declare const Editor: (props: {
     currentUser: string;
     view: SelectedView;
-    dispatch(e: XEvent): void;
+    dispatch: Dispatch;
 }) => JSX.Element;

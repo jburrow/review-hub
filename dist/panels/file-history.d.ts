@@ -1,10 +1,11 @@
 import * as React from "react";
-import { AppDispatch, SelectedView } from "../store";
+import { Dispatch } from "../store";
 import { FileState } from "../events-version-control";
+import { SelectedView } from "../interaction-store";
 export declare const FileHistory: React.ComponentType<Pick<{
     file: FileState;
     selectedView: SelectedView;
-    appDispatch: AppDispatch;
+    dispatch: Dispatch;
 } & {
     classes: Record<"selectedItem" | "inactiveItem", string>;
-}, "selectedView" | "file" | "appDispatch"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+}, "selectedView" | "file" | "dispatch"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
