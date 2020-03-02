@@ -173,24 +173,54 @@ export const SCM = (props: {
       <ul>
         {Object.values(props.comments.comments)
           .filter(v => v.comment.parentId === null)
-          .map(v => xxx(v, props.comments.comments, 0))}
+          .map(v => Comment(v, props.comments.comments, 0, props.dispatch))}
       </ul>
     </div>
   );
 };
 
-const xxx = (
+const Comment = (
   comment: ReviewCommentState,
   comments: Record<string, ReviewCommentState>,
-  depth: number
+  depth: number,
+  dispatch: Dispatch
 ) => {
   return (
     <li>
-      {depth} - {comment.comment.text}{" "}
+      {depth} - {comment.comment.text} {comment.comment.author}{" "}
+      {comment.comment.dt}
+      <button
+        onClick={() => {
+          dispatch({
+            type: "commit",
+            storeType: VersionControlStoreType.Working,
+            author: "props.currentUser",
+            id: v4(),
+            events: [
+              {
+                type: "general-comment",
+                commentEvents: [
+                  {
+                    type: "create",
+                    text: "reply" + comment.comment.text,
+                    lineNumber: 0,
+                    createdAt: "",
+                    createdBy: "props.currentUser",
+                    id: v4(),
+                    targetId: comment.comment.id
+                  }
+                ]
+              }
+            ]
+          });
+        }}
+      >
+        reply
+      </button>
       <ul>
         {Object.values(comments)
           .filter(c => c.comment.parentId === comment.comment.id)
-          .map(c => xxx(c, comments, depth + 1))}
+          .map(c => Comment(c, comments, depth + 1, dispatch))}
       </ul>
     </li>
   );

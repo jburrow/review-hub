@@ -128,7 +128,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
     } & WithStyles<typeof SelectedStyles>
   ) => {
     const selected =
-      (props.editEvent.type === "comment" ||
+      (props.editEvent.type === "comment" || //TODO - pull this out into a 'types with filename'
         props.editEvent.type === "edit" ||
         props.editEvent.type === "rename" ||
         props.editEvent.type === "delete") &&

@@ -3,8 +3,8 @@ import { createStyles } from "@material-ui/core";
 export const AppStyles = createStyles({
   layout: {
     fontSize: "12px",
-    backgroundColor: "#f9f4f633"
-    //margin: 5
+    backgroundColor: "#f9f4f633",
+    overflow: "hidden"
   },
   version_control: {
     backgroundColor: "#D28C1F33"
