@@ -5,7 +5,7 @@ import {
   isReadonly,
   FileStateStatus
 } from "../events-version-control";
-import { VersionControlEvent, VCDispatch } from "../events-version-control";
+import { VersionControlEvent } from "../events-version-control";
 import { WithStyles, withStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { v4 } from "uuid";
