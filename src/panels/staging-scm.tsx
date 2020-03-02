@@ -11,6 +11,7 @@ import { SelectedStyles } from "../styles";
 import { v4 } from "uuid";
 
 export const StagingSCM = (props: {
+  currentUser: string;
   wsfiles: Record<string, FileState>;
   vcfiles: Record<string, FileState>;
   events: VersionControlEvent[];
@@ -25,6 +26,25 @@ export const StagingSCM = (props: {
         files={props.wsfiles}
         selectedFile={props.selectedFile}
       />
+      <button
+        onClick={() => {
+          props.dispatch({
+            type: "commit",
+            storeType: VersionControlStoreType.Working,
+            author: props.currentUser,
+            id: v4(),
+            events: [
+              {
+                type: "edit",
+                fullPath: `new_file_${new Date().toISOString()}.py`,
+                text: "new file"
+              }
+            ]
+          });
+        }}
+      >
+        New File
+      </button>
 
       <button
         onClick={() => {
@@ -38,7 +58,7 @@ export const StagingSCM = (props: {
           const x = props.dispatch({
             storeType: VersionControlStoreType.VersionControl,
             type: "commit",
-            author: "james",
+            author: props.currentUser,
             id: v4(),
             events: events
           });
@@ -75,7 +95,7 @@ export const SCM = (props: {
     props.dispatch({
       type: "selectedView",
       fullPath: value.fullPath,
-      label: "todo",
+      label: "todo", //TODO
       readOnly: isReadonly(value.history, value.revision),
       text: value.text,
       comments: value.commentStore,

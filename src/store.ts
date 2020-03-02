@@ -39,6 +39,14 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
     case "reset":
       switch (event.storeType) {
         case VersionControlStoreType.VersionControl:
+          const vcSelectedFile =
+            state.vcStore.files[state.interactionStore.selectedFile];
+          const isSelectedHead =
+            state.interactionStore.selectedFile &&
+            vcSelectedFile &&
+            vcSelectedFile.revision ===
+              state.interactionStore.selectedView.revision;
+
           const s2 = appReducer(
             {
               ...state,
@@ -50,7 +58,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
             }
           );
 
-          if (s2.interactionStore.selectedFile) {
+          if (isSelectedHead) {
             const c = s2.vcStore.files[state.interactionStore.selectedFile];
             return appReducer(s2, {
               type: "selectedView",

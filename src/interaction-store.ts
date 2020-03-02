@@ -4,6 +4,7 @@ export interface InteractionState {
   selectedCommitId?: string;
   selectedFile?: string;
   selectedView?: SelectedView;
+  currentUser: string;
 }
 
 export interface SelectedView {

@@ -3,6 +3,7 @@ import { Dispatch } from "../store";
 import { FileState } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
 export declare const StagingSCM: (props: {
+    currentUser: string;
     wsfiles: Record<string, FileState>;
     vcfiles: Record<string, FileState>;
     events: VersionControlEvent[];

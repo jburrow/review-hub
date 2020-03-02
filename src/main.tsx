@@ -133,7 +133,7 @@ function loadVersionControlStore(): VersionControlState {
 export const App = withStyles(AppStyles)(
   (props: WithStyles<typeof AppStyles>) => {
     const [store, dispatch] = React.useReducer(appReducer, {
-      interactionStore: {},
+      interactionStore: { currentUser: "xyz-user" },
       wsStore: initialVersionControlState(),
       vcStore: loadVersionControlStore()
     });
@@ -142,8 +142,10 @@ export const App = withStyles(AppStyles)(
       ? store.vcStore.commits[store.interactionStore.selectedCommitId]
       : store.vcStore.files;
 
-    console.log("appStore.selectedCommitId", store.interactionStore.selectedCommitId);
-    const currentUser = "xyz-user";
+    console.log(
+      "appStore.selectedCommitId",
+      store.interactionStore.selectedCommitId
+    );
 
     return (
       <ReactGridLayout
@@ -181,7 +183,6 @@ export const App = withStyles(AppStyles)(
             files={activeFiles}
             selectedFile={store.interactionStore.selectedFile}
             filter={i => {
-              debugger;
               return i[1].status === FileStateStatus.active;
             }}
           />
@@ -189,6 +190,7 @@ export const App = withStyles(AppStyles)(
 
           <StagingSCM
             dispatch={dispatch}
+            currentUser={store.interactionStore.currentUser}
             events={store.wsStore.events}
             wsfiles={store.wsStore.files}
             vcfiles={store.vcStore.files}
@@ -214,7 +216,7 @@ export const App = withStyles(AppStyles)(
 
           <div className={props.classes.panel_content}>
             <Editor
-              currentUser={currentUser}
+              currentUser={store.interactionStore.currentUser}
               view={store.interactionStore.selectedView}
               dispatch={dispatch}
             />

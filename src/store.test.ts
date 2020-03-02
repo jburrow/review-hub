@@ -5,7 +5,7 @@ import { appReducer, VersionControlStoreType } from "./store";
 test("reduceVersionControl: edit=>edit=>edit", () => {
   let store = appReducer(
     {
-      interactionStore: {},
+      interactionStore: { currentUser: "unit-test" },
       vcStore: initialVersionControlState(),
       wsStore: initialVersionControlState()
     },
@@ -16,28 +16,27 @@ test("reduceVersionControl: edit=>edit=>edit", () => {
       events: [{ type: "edit", fullPath: "/script1.py", text: "t1" }]
     }
   );
-  console.log("hello");
 
-  // expect(store.files["/script1.py"].text).toBe("t1");
+  expect(store.vcStore.files["/script1.py"].revision).toBe(0);
 
-  // actions = [
-  //   {
-  //     type: "commit",
-  //     author: "author.one",
-  //     events: [{ type: "edit", fullPath: "/script1.py", text: "t2" }]
-  //   }
-  // ];
-  // store = reduceVersionControl(actions, store);
-  // expect(store.files["/script1.py"].text).toBe("t2");
+  let s1 = appReducer(store, {
+    type: "selectedView",
+    fullPath: "/script1.py",
+    label: "",
+    revision: store.vcStore.files["/script1.py"].revision,
+    readOnly: false,
+    text: ""
+  });
 
-  // actions = [
-  //   {
-  //     type: "commit",
-  //     author: "author.one",
-  //     events: [{ type: "edit", fullPath: "/script1.py", text: "t3" }]
-  //   }
-  // ];
-  // store = reduceVersionControl(actions, store);
-  // expect(store.files["/script1.py"].text).toBe("t3");
-  // expect(store.files["/script1.py"].history.length).toBe(3);
+  let s2 = appReducer(s1, {
+    type: "commit",
+    storeType: VersionControlStoreType.VersionControl,
+    author: "a1",
+    events: [{ type: "edit", fullPath: "/script1.py", text: "t2" }]
+  });
+
+  expect(s2.interactionStore.selectedView.text).toBe("t2");
+  expect(s2.interactionStore.selectedView.revision).toBe(
+    s2.vcStore.files["/script1.py"].revision
+  );
 });
