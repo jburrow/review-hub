@@ -4,6 +4,7 @@ export const AppStyles = createStyles({
   layout: {
     fontSize: "12px",
     backgroundColor: "#f9f4f633"
+    //margin: 5
   },
   version_control: {
     backgroundColor: "#D28C1F33"

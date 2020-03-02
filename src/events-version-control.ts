@@ -18,11 +18,18 @@ export type FileRenameEvent = {
   oldFullPath: string;
   text: string;
 };
+
+export type GeneralComment = {
+  type: "general-comment";
+  commentEvents: ReviewCommentEvent[];
+};
+
 export type FileEvents =
   | FileEditEvent
   | FileDeleteEvent
   | FileRenameEvent
-  | FileCommentEvent;
+  | FileCommentEvent
+  | GeneralComment;
 
 export type VersionControlCommitEvent = {
   type: "commit";
@@ -71,6 +78,7 @@ export interface VersionControlState {
   version: number;
   events: VersionControlEvent[];
   headCommitId: string;
+  commentStore: ReviewCommentStore;
 }
 
 function createFileState(
@@ -101,7 +109,8 @@ export function initialVersionControlState(): VersionControlState {
     version: -1,
     events: [],
     commits: {},
-    headCommitId: null
+    headCommitId: null,
+    commentStore: { comments: {} }
   };
 }
 
@@ -117,7 +126,16 @@ export function versionControlReducer(
 
     case "commit":
       const updates: { [fullPath: string]: FileState } = {};
+      let generateCommentStore = state.commentStore;
       for (const e of event.events) {
+        if (e.type === "general-comment") {
+          generateCommentStore = reduceComments(
+            e.commentEvents,
+            generateCommentStore
+          );
+          continue;
+        }
+
         const prev = (state.files[e.fullPath] || {
           fullPath: null,
           text: null,
@@ -187,7 +205,8 @@ export function versionControlReducer(
         commits: { ...state.commits, ...newCommit },
         events: [...state.events, event],
         version: state.version + 1,
-        headCommitId: event.id
+        headCommitId: event.id,
+        commentStore: generateCommentStore
       };
   }
 }

@@ -19,8 +19,15 @@ import { StagingSCM, SCM } from "./panels/staging-scm";
 import { appReducer } from "./store";
 import { withStyles, WithStyles } from "@material-ui/core";
 import { AppStyles } from "./styles";
+import * as GoldenLayout from "golden-layout";
+
+import "golden-layout/src/css/goldenlayout-base.css";
+import "golden-layout/src/css/default-theme.css";
 
 const ReactGridLayout = RGL.WidthProvider(RGL);
+
+// window.React = React;
+// window.ReactDOM = ReactDOM;
 
 monaco
   .init()
@@ -105,31 +112,6 @@ function loadVersionControlStore(): VersionControlState {
   return store;
 }
 
-// interface DataGridItemProps {
-//   key: string;
-//   dataGrid: any;
-//   className: string;
-//   style?: any;
-// }
-
-// const DataGridItem = withStyles(AppStyles)(
-//   (props: DataGridItemProps & WithStyles<typeof AppStyles>) => {
-//     return (
-//       <div
-//         key={props.key}
-//         data-grid={props.dataGrid}
-//         className={props.className}
-//         style={props.style}
-//       >
-//         {JSON.stringify(props.dataGrid)}
-//         <div className={props.classes.panel_content}>
-//           {(props as any).children}
-//         </div>
-//       </div>
-//     );
-//   }
-// );
-
 export const App = withStyles(AppStyles)(
   (props: WithStyles<typeof AppStyles>) => {
     const [store, dispatch] = React.useReducer(appReducer, {
@@ -157,7 +139,9 @@ export const App = withStyles(AppStyles)(
         maxRows={20}
         compactType={"vertical"}
         cols={12}
-        useCSSTransforms={false}
+        margin={[5, 5]}
+        containerPadding={[10, 10]}
+        useCSSTransforms={true}
         draggableCancel={props.classes.panel_content}
         className={props.classes.layout}
       >
@@ -184,6 +168,7 @@ export const App = withStyles(AppStyles)(
             dispatch={dispatch}
             files={activeFiles}
             selectedFile={store.interactionStore.selectedFile}
+            comments={store.vcStore.commentStore}
             filter={i => {
               return i[1].status === FileStateStatus.active;
             }}
@@ -192,7 +177,9 @@ export const App = withStyles(AppStyles)(
 
           <StagingSCM
             dispatch={dispatch}
+            isHeadCommit={isHeadCommit}
             currentUser={store.interactionStore.currentUser}
+            generalComments={store.wsStore.commentStore}
             events={store.wsStore.events}
             wsfiles={store.wsStore.files}
             vcfiles={store.vcStore.files}
@@ -263,7 +250,6 @@ export const App = withStyles(AppStyles)(
 );
 
 render(<App />, document.getElementById("root"));
-
 // .color-primary-0 { color: #D28C1F }	/* Main Primary color */
 // .color-primary-1 { color: #FFC56C }
 // .color-primary-2 { color: #E4B367 }
@@ -287,3 +273,44 @@ render(<App />, document.getElementById("root"));
 // .color-complement-2 { color: #4A6D95 }
 // .color-complement-3 { color: #1B2E44 }
 // .color-complement-4 { color: #042448 }
+
+// var myLayout = new GoldenLayout({
+//   content: [
+//     {
+//       type: "row",
+//       content: [
+//         {
+//           type: "react-component",
+//           component: "test-component",
+//           props: { label: "A" }
+//         },
+//         {
+//           type: "column",
+//           content: [
+//             {
+//               type: "react-component",
+//               component: "test-component",
+//               props: { label: "B" }
+//             },
+//             {
+//               type: "react-component",
+//               component: "test-component",
+//               props: { label: "C" }
+//             }
+//           ]
+//         }
+//       ]
+//     }
+//   ]
+// });
+
+// class TestComponent extends React.Component<{ label: string }, {}> {
+//   render() {
+//     return <div>{this.props.label}</div>;
+//   }
+// }
+
+// myLayout.registerComponent("test-component", TestComponent);
+
+// //Once all components are registered, call
+// myLayout.init();

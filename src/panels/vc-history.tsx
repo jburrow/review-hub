@@ -5,12 +5,14 @@ import {
   FileEditEvent,
   FileCommentEvent,
   isReadonly,
-  FileRenameEvent
+  FileRenameEvent,
+  FileEvents
 } from "../events-version-control";
 import { Dispatch } from "../store";
 import { SelectedStyles } from "../styles";
 import { withStyles, WithStyles } from "@material-ui/core";
 import { SelectedView } from "../interaction-store";
+import { ReviewCommentEvent } from "monaco-review";
 
 export const VCHistory = (props: {
   vcStore: VersionControlState;
@@ -34,7 +36,7 @@ export const VCHistory = (props: {
           ></SelectCommitButton>
           {ce.events.map((e, idx) => (
             <div key={idx}>
-              {e.type} - {e.fullPath}
+              {renderFileEvent(e)}
               {(e.type === "edit" ||
                 e.type == "comment" ||
                 e.type == "rename") && (
@@ -54,6 +56,36 @@ export const VCHistory = (props: {
     });
 
   return <div>{elements}</div>;
+};
+
+export const renderFileEvent = (e: FileEvents) => {
+  switch (e.type) {
+    case "comment":
+      return (
+        <ul>
+          Comments:
+          {e.commentEvents.map((c, idx) => (
+            <li key={idx}>{renderCommentEvent(c)}</li>
+          ))}
+        </ul>
+      );
+    default:
+      return <div>{e.type}</div>;
+  }
+};
+
+export const renderCommentEvent = (e: ReviewCommentEvent) => {
+  switch (e.type) {
+    case "create":
+      return (
+        <div>
+          {e.text} by {e.createdBy}
+        </div>
+      );
+
+    default:
+      return <div>{e.type}</div>;
+  }
 };
 
 export const SelectCommitButton = withStyles(SelectedStyles)(
@@ -91,11 +123,15 @@ export const SelectEditButton = withStyles(SelectedStyles)(
       commitId: string;
       vcStore: VersionControlState;
       dispatch: Dispatch;
-      editEvent: FileEditEvent | FileCommentEvent | FileRenameEvent;
+      editEvent: FileEvents;
       selectedView: SelectedView;
     } & WithStyles<typeof SelectedStyles>
   ) => {
     const selected =
+      (props.editEvent.type === "comment" ||
+        props.editEvent.type === "edit" ||
+        props.editEvent.type === "rename" ||
+        props.editEvent.type === "delete") &&
       props.vcStore.commits[props.commitId] &&
       props.selectedView?.fullPath == props.editEvent.fullPath &&
       props.selectedView?.revision ==
@@ -107,23 +143,30 @@ export const SelectEditButton = withStyles(SelectedStyles)(
         <button
           style={{ marginLeft: 50 }}
           onClick={() => {
-            const f =
-              props.vcStore.commits[props.commitId][props.editEvent.fullPath];
-            props.dispatch({
-              type: "selectCommit",
-              commitId: props.commitId
-            });
-            props.dispatch({
-              type: "selectedView",
-              fullPath: f.fullPath,
-              revision: f.revision,
-              label: "todo",
-              readOnly: isReadonly(
-                props.vcStore.files[f.fullPath].history,
-                f.revision
-              ),
-              text: f.text
-            });
+            if (
+              props.editEvent.type === "comment" ||
+              props.editEvent.type === "edit" ||
+              props.editEvent.type === "rename" ||
+              props.editEvent.type === "delete"
+            ) {
+              const f =
+                props.vcStore.commits[props.commitId][props.editEvent.fullPath];
+              props.dispatch({
+                type: "selectCommit",
+                commitId: props.commitId
+              });
+              props.dispatch({
+                type: "selectedView",
+                fullPath: f.fullPath,
+                revision: f.revision,
+                label: "todo",
+                readOnly: isReadonly(
+                  props.vcStore.files[f.fullPath].history,
+                  f.revision
+                ),
+                text: f.text
+              });
+            }
           }}
         >
           View Revision
