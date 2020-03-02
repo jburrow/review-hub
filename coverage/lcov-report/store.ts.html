@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.44% </span>
+                <span class="strong">90.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/18</span>
+                <span class='fraction'>19/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.31% </span>
+                <span class="strong">82.35% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/13</span>
+                <span class='fraction'>14/17</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.44% </span>
+                <span class="strong">90.48% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/18</span>
+                <span class='fraction'>19/21</span>
             </div>
         
             
@@ -139,7 +139,18 @@
 <a name='L80'></a><a href='#L80'>80</a>
 <a name='L81'></a><a href='#L81'>81</a>
 <a name='L82'></a><a href='#L82'>82</a>
-<a name='L83'></a><a href='#L83'>83</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,6 +199,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -211,7 +226,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -270,7 +292,11 @@ export const appReducer = (state: AppState, event: AppEvents): AppState =&gt; {
             vcSelectedFile.revision ===
               state.interactionStore.selectedView.revision;
 &nbsp;
-          const s2 = appReducer(
+          const isCommitIdHead =
+            state.interactionStore.selectedCommitId &amp;&amp;
+<span class="branch-1 cbranch-no" title="branch not covered" >            state.vcStore.headCommitId;</span>
+&nbsp;
+          let s2 = appReducer(
             {
               ...state,
               vcStore: versionControlReducer(state.vcStore, event)
@@ -283,13 +309,20 @@ export const appReducer = (state: AppState, event: AppEvents): AppState =&gt; {
 &nbsp;
           if (isSelectedHead) {
             const c = s2.vcStore.files[state.interactionStore.selectedFile];
-            return appReducer(s2, {
+            s2 = appReducer(s2, {
               type: "selectedView",
               fullPath: s2.interactionStore.selectedFile,
               revision: c.revision,
               text: c.text,
               readOnly: false,
               label: ""
+            });
+          }
+&nbsp;
+          <span class="missing-if-branch" title="if path not taken" >I</span>if (isCommitIdHead) {
+<span class="cstat-no" title="statement not covered" >            s2 = appReducer(s2, {</span>
+              type: "selectCommit",
+              commitId: null
             });
           }
 &nbsp;
@@ -310,7 +343,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Mar 02 2020 07:03:51 GMT+0000 (Greenwich Mean Time)
+                at Mon Mar 02 2020 07:28:33 GMT+0000 (Greenwich Mean Time)
             </div>
         </div>
         <script src="prettify.js"></script>

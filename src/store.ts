@@ -47,7 +47,11 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
             vcSelectedFile.revision ===
               state.interactionStore.selectedView.revision;
 
-          const s2 = appReducer(
+          const isCommitIdHead =
+            state.interactionStore.selectedCommitId &&
+            state.vcStore.headCommitId;
+
+          let s2 = appReducer(
             {
               ...state,
               vcStore: versionControlReducer(state.vcStore, event)
@@ -60,13 +64,20 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
 
           if (isSelectedHead) {
             const c = s2.vcStore.files[state.interactionStore.selectedFile];
-            return appReducer(s2, {
+            s2 = appReducer(s2, {
               type: "selectedView",
               fullPath: s2.interactionStore.selectedFile,
               revision: c.revision,
               text: c.text,
               readOnly: false,
               label: ""
+            });
+          }
+
+          if (isCommitIdHead) {
+            s2 = appReducer(s2, {
+              type: "selectCommit",
+              commitId: null
             });
           }
 

@@ -147,6 +147,10 @@ export const App = withStyles(AppStyles)(
       store.interactionStore.selectedCommitId
     );
 
+    const isHeadCommit =
+      store.interactionStore.selectedCommitId &&
+      store.vcStore.headCommitId != store.interactionStore.selectedCommitId;
+
     return (
       <ReactGridLayout
         rowHeight={30}
@@ -164,16 +168,14 @@ export const App = withStyles(AppStyles)(
         >
           <h3>
             version-control{" "}
-            {store.interactionStore.selectedCommitId
-              ? store.interactionStore.selectedCommitId
-              : "HEAD"}
-            {store.interactionStore.selectedCommitId && (
+            {isHeadCommit ? store.interactionStore.selectedCommitId : "HEAD"}
+            {isHeadCommit && (
               <button
                 onClick={() =>
                   dispatch({ type: "selectCommit", commitId: null })
                 }
               >
-                HEAD
+                Switch to HEAD
               </button>
             )}
           </h3>
