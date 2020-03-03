@@ -19,15 +19,8 @@ import { StagingSCM, SCM } from "./panels/staging-scm";
 import { appReducer } from "./store";
 import { withStyles, WithStyles } from "@material-ui/core";
 import { AppStyles } from "./styles";
-import * as GoldenLayout from "golden-layout";
-
-import "golden-layout/src/css/goldenlayout-base.css";
-import "golden-layout/src/css/default-theme.css";
 
 const ReactGridLayout = RGL.WidthProvider(RGL);
-
-// window.React = React;
-// window.ReactDOM = ReactDOM;
 
 monaco
   .init()
@@ -186,13 +179,7 @@ export const App = withStyles(AppStyles)(
             selectedFile={store.interactionStore.selectedFile}
           ></StagingSCM>
         </div>
-        {/* <DataGridItem
-          dataGrid={{ x: 3, y: 0, w: 6, h: 8 }}
-          key={"unique"}
-          className={props.classes.vc_history}
-        >
-          HELLO
-        </DataGridItem> */}
+
         <div
           key="0.2"
           data-grid={{ x: 3, y: 0, w: 6, h: 8 }}
@@ -250,67 +237,3 @@ export const App = withStyles(AppStyles)(
 );
 
 render(<App />, document.getElementById("root"));
-// .color-primary-0 { color: #D28C1F }	/* Main Primary color */
-// .color-primary-1 { color: #FFC56C }
-// .color-primary-2 { color: #E4B367 }
-// .color-primary-3 { color: #684D25 }
-// .color-primary-4 { color: #6E4300 }
-
-// .color-secondary-1-0 { color: #D2C71F }	/* Main Secondary color (1) */
-// .color-secondary-1-1 { color: #FFF66C }
-// .color-secondary-1-2 { color: #E4DC67 }
-// .color-secondary-1-3 { color: #686325 }
-// .color-secondary-1-4 { color: #6E6800 }
-
-// .color-secondary-2-0 { color: #561E8E }	/* Main Secondary color (2) */
-// .color-secondary-2-1 { color: #8D5AC1 }
-// .color-secondary-2-2 { color: #734C9A }
-// .color-secondary-2-3 { color: #311C46 }
-// .color-secondary-2-4 { color: #27044B }
-
-// .color-complement-0 { color: #1E5189 }	/* Main Complement color */
-// .color-complement-1 { color: #5887BC }
-// .color-complement-2 { color: #4A6D95 }
-// .color-complement-3 { color: #1B2E44 }
-// .color-complement-4 { color: #042448 }
-
-// var myLayout = new GoldenLayout({
-//   content: [
-//     {
-//       type: "row",
-//       content: [
-//         {
-//           type: "react-component",
-//           component: "test-component",
-//           props: { label: "A" }
-//         },
-//         {
-//           type: "column",
-//           content: [
-//             {
-//               type: "react-component",
-//               component: "test-component",
-//               props: { label: "B" }
-//             },
-//             {
-//               type: "react-component",
-//               component: "test-component",
-//               props: { label: "C" }
-//             }
-//           ]
-//         }
-//       ]
-//     }
-//   ]
-// });
-
-// class TestComponent extends React.Component<{ label: string }, {}> {
-//   render() {
-//     return <div>{this.props.label}</div>;
-//   }
-// }
-
-// myLayout.registerComponent("test-component", TestComponent);
-
-// //Once all components are registered, call
-// myLayout.init();
