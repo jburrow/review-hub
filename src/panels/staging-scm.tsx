@@ -44,7 +44,7 @@ export const StagingSCM = (props: {
             events: [
               {
                 type: "edit",
-                fullPath: `new_file_${new Date().toISOString()}.py`,
+                fullPath: `new_file_${new Date().toISOString()}.py`, //TODO - dialog needed
                 text: "new file"
               }
             ]
@@ -91,7 +91,7 @@ export const StagingSCM = (props: {
       <button
         onClick={() => {
           const x = v4();
-
+          // TODO - component needed and dialog for this?
           props.dispatch({
             type: "commit",
             storeType: VersionControlStoreType.Working,
