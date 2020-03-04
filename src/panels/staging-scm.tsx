@@ -12,7 +12,8 @@ import { v4 } from "uuid";
 import { ReviewCommentStore } from "monaco-review";
 import {
   CommentState,
-  ReviewCommentState
+  ReviewCommentState,
+  ReviewComment
 } from "monaco-review/dist/events-comments-reducers";
 
 export const StagingSCM = (props: {
@@ -167,14 +168,35 @@ export const SCM = (props: {
       selected={props.selectedFile === value.fullPath}
     />
   ));
+
+  const renderedCommentIds = new Set<string>();
+
+  let x = Object.values(props.comments.comments)
+    .filter(v => v.comment.parentId === null)
+    .map(v =>
+      Comment(v, props.comments.comments, renderedCommentIds, 0, props.dispatch)
+    );
+
+  const notRenderedIds = Object.values(props.comments.comments).filter(
+    c => !renderedCommentIds.has(c.comment.id)
+  );
+
+  x = x.concat(
+    notRenderedIds.map(cs =>
+      Comment(
+        cs,
+        props.comments.comments,
+        renderedCommentIds,
+        0,
+        props.dispatch
+      )
+    )
+  );
+
   return (
     <div>
       <ul>{items}</ul>
-      <ul>
-        {Object.values(props.comments.comments)
-          .filter(v => v.comment.parentId === null)
-          .map(v => Comment(v, props.comments.comments, 0, props.dispatch))}
-      </ul>
+      <ul>{x}</ul>
     </div>
   );
 };
@@ -182,9 +204,11 @@ export const SCM = (props: {
 const Comment = (
   comment: ReviewCommentState,
   comments: Record<string, ReviewCommentState>,
+  renderedCommentIds: Set<string>,
   depth: number,
   dispatch: Dispatch
 ) => {
+  renderedCommentIds.add(comment.comment.id);
   return (
     <li>
       {depth} - {comment.comment.text} {comment.comment.author}{" "}
@@ -220,7 +244,9 @@ const Comment = (
       <ul>
         {Object.values(comments)
           .filter(c => c.comment.parentId === comment.comment.id)
-          .map(c => Comment(c, comments, depth + 1, dispatch))}
+          .map(c =>
+            Comment(c, comments, renderedCommentIds, depth + 1, dispatch)
+          )}
       </ul>
     </li>
   );

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1583184498310" clover="3.2.0">
-  <project timestamp="1583184498310" name="All files">
+<coverage generated="1583305396419" clover="3.2.0">
+  <project timestamp="1583305396420" name="All files">
     <metrics statements="75" coveredstatements="65" conditionals="40" coveredconditionals="32" methods="9" coveredmethods="8" elements="124" coveredelements="105" complexity="0" loc="75" ncloc="75" packages="1" files="3" classes="3"/>
     <file name="events-version-control.ts" path="/Users/jamesburrow/review-hub/src/events-version-control.ts">
       <metrics statements="49" coveredstatements="42" conditionals="21" coveredconditionals="16" methods="6" coveredmethods="5"/>

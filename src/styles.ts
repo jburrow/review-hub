@@ -1,5 +1,7 @@
 import { createStyles } from "@material-ui/core";
 
+const panelHeadingHeight = "20px";
+
 export const AppStyles = createStyles({
   layout: {
     fontSize: "12px",
@@ -19,8 +21,11 @@ export const AppStyles = createStyles({
     backgroundColor: "#684D2533"
   },
   panel_content: {
-    backgroundColor: "lilac",
-    height: "100%"
+    height: `calc(100% - ${panelHeadingHeight})`,
+    overflow: "auto"
+  },
+  panel_heading: {
+    height: panelHeadingHeight
   }
 });
 

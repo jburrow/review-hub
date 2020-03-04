@@ -117,11 +117,6 @@ export const App = withStyles(AppStyles)(
       ? store.vcStore.commits[store.interactionStore.selectedCommitId]
       : store.vcStore.files;
 
-    console.log(
-      "appStore.selectedCommitId",
-      store.interactionStore.selectedCommitId
-    );
-
     const isHeadCommit =
       store.interactionStore.selectedCommitId &&
       store.vcStore.headCommitId != store.interactionStore.selectedCommitId;
@@ -139,11 +134,21 @@ export const App = withStyles(AppStyles)(
         className={props.classes.layout}
       >
         <div
-          key="0.1"
-          data-grid={{ x: 0, y: 0, w: 3, h: 8 }}
+          key="0.0"
+          data-grid={{ x: 0, y: 0, w: 12, h: 1 }}
           className={props.classes.version_control}
         >
-          <h3>
+          <button>Load</button>
+          <button>Save</button>
+          <button>Export Code</button>
+          <button>Rebase</button>
+        </div>
+        <div
+          key="0.1"
+          data-grid={{ x: 0, y: 1, w: 3, h: 8 }}
+          className={props.classes.version_control}
+        >
+          <div className={props.classes.panel_heading}>
             version-control{" "}
             {isHeadCommit ? store.interactionStore.selectedCommitId : "HEAD"}
             {isHeadCommit && (
@@ -155,37 +160,38 @@ export const App = withStyles(AppStyles)(
                 Switch to HEAD
               </button>
             )}
-          </h3>
-
-          <SCM
-            dispatch={dispatch}
-            files={activeFiles}
-            selectedFile={store.interactionStore.selectedFile}
-            comments={store.vcStore.commentStore}
-            filter={i => {
-              return i[1].status === FileStateStatus.active;
-            }}
-          />
-          {store.vcStore.events.length}
-
-          <StagingSCM
-            dispatch={dispatch}
-            isHeadCommit={isHeadCommit}
-            currentUser={store.interactionStore.currentUser}
-            generalComments={store.wsStore.commentStore}
-            events={store.wsStore.events}
-            wsfiles={store.wsStore.files}
-            vcfiles={store.vcStore.files}
-            selectedFile={store.interactionStore.selectedFile}
-          ></StagingSCM>
+          </div>
+          <div className={props.classes.panel_content}>
+            <SCM
+              dispatch={dispatch}
+              files={activeFiles}
+              selectedFile={store.interactionStore.selectedFile}
+              comments={store.vcStore.commentStore}
+              filter={i => {
+                return i[1].status === FileStateStatus.active;
+              }}
+            />
+            Events: #{store.vcStore.events.length}
+            <StagingSCM
+              dispatch={dispatch}
+              isHeadCommit={isHeadCommit}
+              currentUser={store.interactionStore.currentUser}
+              generalComments={store.wsStore.commentStore}
+              events={store.wsStore.events}
+              wsfiles={store.wsStore.files}
+              vcfiles={store.vcStore.files}
+              selectedFile={store.interactionStore.selectedFile}
+            ></StagingSCM>
+            Events: #{store.wsStore.events.length}
+          </div>
         </div>
 
         <div
           key="0.2"
-          data-grid={{ x: 3, y: 0, w: 6, h: 8 }}
+          data-grid={{ x: 3, y: 1, w: 6, h: 8 }}
           className={props.classes.editor}
         >
-          <div>
+          <div className={props.classes.panel_heading}>
             Editor - {store.interactionStore.selectedView?.fullPath} -{" "}
             {store.interactionStore.selectedView?.label}
           </div>
@@ -200,10 +206,12 @@ export const App = withStyles(AppStyles)(
         </div>
         <div
           key="0.3"
-          data-grid={{ x: 9, y: 0, w: 3, h: 8 }}
+          data-grid={{ x: 9, y: 1, w: 3, h: 8 }}
           className={props.classes.script_history}
         >
-          <h3>File History {store.interactionStore.selectedFile}</h3>
+          <div className={props.classes.panel_heading}>
+            File History {store.interactionStore.selectedFile}
+          </div>
           <div className={props.classes.panel_content}>
             <FileHistory
               file={
@@ -217,10 +225,10 @@ export const App = withStyles(AppStyles)(
         </div>
         <div
           key="1.1"
-          data-grid={{ x: 0, y: 1, w: 12, h: 10 }}
+          data-grid={{ x: 0, y: 2, w: 12, h: 10 }}
           className={props.classes.vc_history}
         >
-          <h3>VC History</h3>
+          <div className={props.classes.panel_heading}>VC History</div>
           <div className={props.classes.panel_content}>
             <VCHistory
               vcStore={store.vcStore}
