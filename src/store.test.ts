@@ -22,7 +22,6 @@ test("reduceVersionControl: edit=>edit=>edit", () => {
   let s1 = appReducer(store, {
     type: "selectedView",
     fullPath: "/script1.py",
-    label: "",
     revision: store.vcStore.files["/script1.py"].revision,
     readOnly: false,
     text: ""

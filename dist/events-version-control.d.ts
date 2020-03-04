@@ -19,7 +19,11 @@ export declare type FileRenameEvent = {
     oldFullPath: string;
     text: string;
 };
-export declare type FileEvents = FileEditEvent | FileDeleteEvent | FileRenameEvent | FileCommentEvent;
+export declare type GeneralComment = {
+    type: "general-comment";
+    commentEvents: ReviewCommentEvent[];
+};
+export declare type FileEvents = FileEditEvent | FileDeleteEvent | FileRenameEvent | FileCommentEvent | GeneralComment;
 export declare type VersionControlCommitEvent = {
     type: "commit";
     id?: string;
@@ -56,6 +60,7 @@ export interface VersionControlState {
     version: number;
     events: VersionControlEvent[];
     headCommitId: string;
+    commentStore: ReviewCommentStore;
 }
 export declare function initialVersionControlState(): VersionControlState;
 export declare type VCDispatch = (event: VersionControlEvent) => void;

@@ -146,7 +146,6 @@ export const SCM = (props: {
     props.dispatch({
       type: "selectedView",
       fullPath: value.fullPath,
-      label: "todo", //TODO
       readOnly: isReadonly(value.history, value.revision),
       text: value.text,
       comments: value.commentStore,
@@ -171,7 +170,7 @@ export const SCM = (props: {
 
   const renderedCommentIds = new Set<string>();
 
-  let x = Object.values(props.comments.comments)
+  let comments = Object.values(props.comments.comments)
     .filter(v => v.comment.parentId === null)
     .map(v =>
       Comment(v, props.comments.comments, renderedCommentIds, 0, props.dispatch)
@@ -181,7 +180,7 @@ export const SCM = (props: {
     c => !renderedCommentIds.has(c.comment.id)
   );
 
-  x = x.concat(
+  comments = comments.concat(
     notRenderedIds.map(cs =>
       Comment(
         cs,
@@ -196,7 +195,7 @@ export const SCM = (props: {
   return (
     <div>
       <ul>{items}</ul>
-      <ul>{x}</ul>
+      <ul>{comments}</ul>
     </div>
   );
 };

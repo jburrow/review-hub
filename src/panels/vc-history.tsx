@@ -159,7 +159,6 @@ export const SelectEditButton = withStyles(SelectedStyles)(
                 type: "selectedView",
                 fullPath: f.fullPath,
                 revision: f.revision,
-                label: "todo",
                 readOnly: isReadonly(
                   props.vcStore.files[f.fullPath].history,
                   f.revision

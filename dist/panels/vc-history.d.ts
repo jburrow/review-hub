@@ -1,13 +1,16 @@
 import * as React from "react";
-import { VersionControlState, FileEditEvent, FileCommentEvent, FileRenameEvent } from "../events-version-control";
+import { VersionControlState, FileEvents } from "../events-version-control";
 import { Dispatch } from "../store";
 import { SelectedView } from "../interaction-store";
+import { ReviewCommentEvent } from "monaco-review";
 export declare const VCHistory: (props: {
     vcStore: VersionControlState;
     dispatch: Dispatch;
     selectedCommitId: string;
     selectedView: SelectedView;
 }) => JSX.Element;
+export declare const renderFileEvent: (e: FileEvents) => JSX.Element;
+export declare const renderCommentEvent: (e: ReviewCommentEvent) => JSX.Element;
 export declare const SelectCommitButton: React.ComponentType<Pick<{
     commitId: string;
     dispatch: Dispatch;
@@ -19,7 +22,7 @@ export declare const SelectEditButton: React.ComponentType<Pick<{
     commitId: string;
     vcStore: VersionControlState;
     dispatch: Dispatch;
-    editEvent: FileEditEvent | FileCommentEvent | FileRenameEvent;
+    editEvent: FileEvents;
     selectedView: SelectedView;
 } & {
     classes: Record<"selectedItem" | "inactiveItem", string>;

@@ -48,15 +48,11 @@ export const Editor = (props: {
 
   return props.view && props.view.fullPath ? (
     <div style={{ height: "calc(100% - 20px)" }}>
-      <span>
-        * {props.view?.fullPath} - {props.view?.revision} - {props.view?.label}-{" "}
-        {props.view.readOnly ? (
-          <span style={{ backgroundColor: "red" }}>READ-ONLY</span>
-        ) : (
-          <span style={{ backgroundColor: "green" }}>EDITABLE</span>
-        )}
-        *
-      </span>
+      {props.view.readOnly ? (
+        <span style={{ backgroundColor: "red" }}>READ-ONLY</span>
+      ) : (
+        <span style={{ backgroundColor: "green" }}>EDITABLE</span>
+      )}
 
       <button
         onClick={() => {
@@ -107,7 +103,6 @@ export const Editor = (props: {
       ) : (
         <span>not modified text</span>
       )}
-
       {(comments || []).length ? (
         <button
           onClick={() => {
@@ -131,7 +126,6 @@ export const Editor = (props: {
       ) : (
         <span>not modified comments</span>
       )}
-
       {(comments || []).length && (
         <button
           onClick={() => {
@@ -149,7 +143,6 @@ export const Editor = (props: {
           Discard Comments
         </button>
       )}
-
       {props.view.original ? (
         <DiffEditor
           editorDidMount={(_modified, _original, editor) => {

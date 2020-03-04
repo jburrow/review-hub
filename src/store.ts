@@ -69,8 +69,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
               fullPath: s2.interactionStore.selectedFile,
               revision: c.revision,
               text: c.text,
-              readOnly: false,
-              label: ""
+              readOnly: false
             });
           }
 

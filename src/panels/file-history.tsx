@@ -94,7 +94,6 @@ export const FileHistory = withStyles(SelectedStyles)(
                     type: "selectedView",
                     fullPath: props.file.fullPath,
                     readOnly: isReadonly(props.file.history, m.revision),
-                    label: "todo",
                     text: m.text,
                     revision: m.revision,
                     comments: m.commentStore
@@ -122,7 +121,6 @@ const ViewButton: React.FunctionComponent<{
         props.dispatch({
           type: "selectedView",
           fullPath: props.history.fileState.fullPath,
-          label: "todo",
           readOnly: true, //todo isEditable(props.history, props.history.fileState.revision),
           text: props.history.fileState.text,
           comments: props.history.fileState.commentStore,

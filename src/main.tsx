@@ -138,10 +138,10 @@ export const App = withStyles(AppStyles)(
           data-grid={{ x: 0, y: 0, w: 12, h: 1 }}
           className={props.classes.version_control}
         >
-          <button>Load</button>
-          <button>Save</button>
-          <button>Export Code</button>
-          <button>Rebase</button>
+          <button disabled>Load</button>
+          <button disabled>Save</button>
+          <button disabled>Export Code</button>
+          <button disabled>Rebase</button>
         </div>
         <div
           key="0.1"
@@ -192,7 +192,8 @@ export const App = withStyles(AppStyles)(
           className={props.classes.editor}
         >
           <div className={props.classes.panel_heading}>
-            Editor - {store.interactionStore.selectedView?.fullPath} -{" "}
+            Editor - {store.interactionStore.selectedView?.fullPath} @
+            {store.interactionStore.selectedView?.revision}
             {store.interactionStore.selectedView?.label}
           </div>
 

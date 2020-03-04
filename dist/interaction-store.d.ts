@@ -7,7 +7,7 @@ export interface InteractionState {
 }
 export interface SelectedView {
     fullPath: string;
-    label: string;
+    label?: string;
     text: string;
     original?: string;
     comments?: ReviewCommentStore;
