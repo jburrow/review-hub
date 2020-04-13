@@ -38,6 +38,6 @@ The view is written with react, and everything is a functional component with ho
 
 NOTE: I am using the "domain language" of git but it has no parity with git in terms of version-control features. The event-source|reducers for version control only support a very simple linear flow. The conclusion of a review cycle, a developer would download|export their code-change and commit them back to SVN.
 
-NOTE: This tool is client-side only, you will need to implement a simple interface for persistence and implement the end-point yourself. This avoids much of the complexity around intelligentual property and ownership associated with code in corportate environments
+NOTE: This tool is client-side only, you will need to implement a simple interface for persistence and implement the end-point yourself. This avoids much of the complexity around intellilectual property and ownership associated with code in corporate environments
 
 In due course, i will publish a reference implementation of the API.

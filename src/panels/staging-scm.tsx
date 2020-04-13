@@ -3,18 +3,15 @@ import { VersionControlStoreType, Dispatch } from "../store";
 import {
   FileState,
   isReadonly,
-  FileStateStatus
+  FileStateStatus,
+  FileEvents,
 } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
 import { WithStyles, withStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { v4 } from "uuid";
 import { ReviewCommentStore } from "monaco-review";
-import {
-  CommentState,
-  ReviewCommentState,
-  ReviewComment
-} from "monaco-review/dist/events-comments-reducers";
+import { ReviewCommentState } from "monaco-review/dist/events-comments-reducers";
 
 export const StagingSCM = (props: {
   currentUser: string;
@@ -46,9 +43,9 @@ export const StagingSCM = (props: {
               {
                 type: "edit",
                 fullPath: `new_file_${new Date().toISOString()}.py`, //TODO - dialog needed
-                text: "new file"
-              }
-            ]
+                text: "new file",
+              },
+            ],
           });
         }}
       >
@@ -57,19 +54,22 @@ export const StagingSCM = (props: {
 
       <button
         onClick={() => {
-          let events = [];
-          for (const e of props.events) {
-            if (e.type == "commit") {
-              events = events.concat(e.events);
-            }
-          }
-
+          const events = props.events
+            .filter((e) => e.type === "commit")
+            .reduce<FileEvents[]>((acc, e) => {
+              if (e.type === "commit") {
+                return acc.concat(e.events);
+              } else {
+                return acc;
+              }
+            }, []);
+          debugger;
           const x = props.dispatch({
             storeType: VersionControlStoreType.VersionControl,
             type: "commit",
             author: props.currentUser,
             id: v4(),
-            events: events
+            events: events,
           });
         }}
         disabled={props.events.length == 0}
@@ -81,7 +81,7 @@ export const StagingSCM = (props: {
         onClick={() => {
           props.dispatch({
             type: "reset",
-            storeType: VersionControlStoreType.Working
+            storeType: VersionControlStoreType.Working,
           });
         }}
         disabled={props.events.length == 0}
@@ -109,7 +109,7 @@ export const StagingSCM = (props: {
                     createdAt: "",
                     createdBy: props.currentUser,
                     id: x,
-                    targetId: null
+                    targetId: null,
                   },
                   {
                     type: "create",
@@ -118,11 +118,11 @@ export const StagingSCM = (props: {
                     createdAt: "",
                     createdBy: props.currentUser,
                     id: v4(),
-                    targetId: x
-                  }
-                ]
-              }
-            ]
+                    targetId: x,
+                  },
+                ],
+              },
+            ],
           });
         }}
         disabled={props.isHeadCommit}
@@ -149,7 +149,7 @@ export const SCM = (props: {
       readOnly: isReadonly(value.history, value.revision),
       text: value.text,
       comments: value.commentStore,
-      revision: value.revision
+      revision: value.revision,
     });
   };
 
@@ -157,7 +157,7 @@ export const SCM = (props: {
     ? Object.entries(props.files).filter(props.filter)
     : Object.entries(props.files);
 
-  const items = filteredItems.map(([key, value]) => (
+  const items = filteredItems.map(([, value]) => (
     <SCMItem
       key={value.fullPath}
       fullPath={value.fullPath}
@@ -171,17 +171,17 @@ export const SCM = (props: {
   const renderedCommentIds = new Set<string>();
 
   let comments = Object.values(props.comments.comments)
-    .filter(v => v.comment.parentId === null)
-    .map(v =>
+    .filter((v) => v.comment.parentId === null)
+    .map((v) =>
       Comment(v, props.comments.comments, renderedCommentIds, 0, props.dispatch)
     );
 
   const notRenderedIds = Object.values(props.comments.comments).filter(
-    c => !renderedCommentIds.has(c.comment.id)
+    (c) => !renderedCommentIds.has(c.comment.id)
   );
 
   comments = comments.concat(
-    notRenderedIds.map(cs =>
+    notRenderedIds.map((cs) =>
       Comment(
         cs,
         props.comments.comments,
@@ -230,11 +230,11 @@ const Comment = (
                     createdAt: "",
                     createdBy: "props.currentUser",
                     id: v4(),
-                    targetId: comment.comment.id
-                  }
-                ]
-              }
-            ]
+                    targetId: comment.comment.id,
+                  },
+                ],
+              },
+            ],
           });
         }}
       >
@@ -242,8 +242,8 @@ const Comment = (
       </button>
       <ul>
         {Object.values(comments)
-          .filter(c => c.comment.parentId === comment.comment.id)
-          .map(c =>
+          .filter((c) => c.comment.parentId === comment.comment.id)
+          .map((c) =>
             Comment(c, comments, renderedCommentIds, depth + 1, dispatch)
           )}
       </ul>

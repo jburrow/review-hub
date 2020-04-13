@@ -1,7 +1,7 @@
 import {
   ReviewCommentStore,
   ReviewCommentEvent,
-  reduceComments
+  reduceComments,
 } from "monaco-review";
 import { v4 } from "uuid";
 
@@ -49,7 +49,7 @@ export type VersionControlEvent =
 
 export enum FileStateStatus {
   active = 1,
-  deleted = 2
+  deleted = 2,
 }
 
 export type FileState = {
@@ -94,12 +94,12 @@ function createFileState(
     status: status,
     text: text,
     revision: prev.revision + 1,
-    commentStore: commentStore || { comments: {} }
+    commentStore: commentStore || { comments: {} },
   };
 
   return {
     ...current,
-    history: [...prev.history, { event: event, fileState: current }]
+    history: [...prev.history, { event: event, fileState: current }],
   };
 }
 
@@ -110,7 +110,7 @@ export function initialVersionControlState(): VersionControlState {
     events: [],
     commits: {},
     headCommitId: null,
-    commentStore: { comments: {} }
+    commentStore: { comments: {} },
   };
 }
 
@@ -126,12 +126,12 @@ export function versionControlReducer(
 
     case "commit":
       const updates: { [fullPath: string]: FileState } = {};
-      let generateCommentStore = state.commentStore;
+      let generalCommentStore = state.commentStore;
       for (const e of event.events) {
         if (e.type === "general-comment") {
-          generateCommentStore = reduceComments(
+          generalCommentStore = reduceComments(
             e.commentEvents,
-            generateCommentStore
+            generalCommentStore
           );
           continue;
         }
@@ -142,7 +142,7 @@ export function versionControlReducer(
           status: FileStateStatus.active,
           history: [],
           commentStore: { comments: {} },
-          revision: -1
+          revision: -1,
         }) as FileState;
 
         let status = FileStateStatus.active;
@@ -179,6 +179,8 @@ export function versionControlReducer(
             );
 
             break;
+          default:
+            throw `unknown type`;
         }
 
         updates[e.fullPath] = createFileState(
@@ -193,7 +195,7 @@ export function versionControlReducer(
 
       const files = {
         ...state.files,
-        ...updates
+        ...updates,
       };
 
       const commitId = event.id || v4();
@@ -206,7 +208,7 @@ export function versionControlReducer(
         events: [...state.events, event],
         version: state.version + 1,
         headCommitId: event.id,
-        commentStore: generateCommentStore
+        commentStore: generalCommentStore,
       };
   }
 }

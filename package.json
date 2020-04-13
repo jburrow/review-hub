@@ -1,6 +1,6 @@
 {
   "name": "review-hub",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,8 +11,8 @@
     "test": "jest --coverage",
     "testpub": "jest --coverage --coverageReporters=text-lcov | coveralls"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "James Burrow",
+  "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.8.4",
     "@babel/types": "^7.8.3",
@@ -22,6 +22,8 @@
     "@types/react-dom": "^16.9.5",
     "@types/react-grid-layout": "^0.17.0",
     "@types/uuid": "^3.4.5",
+    "file-saver": "^2.0.2",
+    "jszip": "^3.2.2",
     "moment": "^2.24.0",
     "monaco-editor": "^0.20.0",
     "monaco-review": "file:../monaco-editor-code-review",
