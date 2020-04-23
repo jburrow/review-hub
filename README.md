@@ -2,6 +2,8 @@
 
 a browser based, version control agnostic, code review tool
 
+[![Coverage Status](https://coveralls.io/repos/github/jburrow/review-hub/badge.svg?branch=master)](https://coveralls.io/github/jburrow/review-hub?branch=master)
+
 # Why?
 
 Great quesiton, been pondering this myself. In world where github exists this amy seem a bit odd, pointless. It is, in some regards.
