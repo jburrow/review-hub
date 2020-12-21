@@ -60,17 +60,18 @@ export const App = withStyles(AppStyles)(
         <div
           key="0.0"
           data-grid={{ x: 0, y: 0, w: 12, h: 1 }}
-          className={props.classes.version_control}
+          className={props.classes.header_bar}
         >
+          Review-Hub
           {/* <button onClick={() => persistence.load}>Load</button> */}
-          <button onClick={() => persistence.save(store.vcStore)}>Save</button>
+          {/* <button onClick={() => persistence.save(store.vcStore)}>Save</button>
           <button
             onClick={() => {
               generateZip(store.vcStore);
             }}
           >
             Export Code
-          </button>
+          </button> */}
           {/* <button disabled>Rebase</button> */}
         </div>
         <div

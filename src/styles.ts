@@ -8,6 +8,7 @@ export const AppStyles = createStyles({
     backgroundColor: "#f9f4f633",
     overflow: "hidden"
   },
+  header_bar: {backgroundColor:"#224D2533"},
   version_control: {
     backgroundColor: "#D28C1F33"
   },

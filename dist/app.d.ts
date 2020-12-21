@@ -5,7 +5,7 @@ export interface Persistence {
     load: () => VersionControlState;
 }
 export declare const App: React.ComponentType<Pick<{
-    classes: Record<"layout" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
+    classes: Record<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
 } & {
     persistence?: Persistence;
-}, "persistence"> & import("@material-ui/core").StyledComponentProps<"layout" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+}, "persistence"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
