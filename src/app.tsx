@@ -14,6 +14,8 @@ import { appReducer } from "./store";
 import { AppStyles } from "./styles";
 import React = require("react");
 
+import useWindowSize from "@rooks/use-window-size";
+
 const ReactGridLayout = RGL.WidthProvider(RGL);
 
 export interface Persistence {
@@ -37,6 +39,8 @@ export const App = withStyles(AppStyles)(
       vcStore: persistence.load(),
     });
 
+    const { innerHeight } = useWindowSize();
+
     const activeFiles = store.interactionStore.selectedCommitId
       ? store.vcStore.commits[store.interactionStore.selectedCommitId]
       : store.vcStore.files;
@@ -47,12 +51,12 @@ export const App = withStyles(AppStyles)(
 
     return (
       <ReactGridLayout
-        rowHeight={30}
+        rowHeight={(innerHeight - 70) / 20}
         maxRows={20}
         compactType={"vertical"}
         cols={12}
         margin={[5, 5]}
-        containerPadding={[10, 10]}
+        containerPadding={[5, 5]}
         useCSSTransforms={true}
         draggableCancel={props.classes.panel_content}
         className={props.classes.layout}
