@@ -2,12 +2,14 @@ import {
   VersionControlState,
   VersionControlCommitEvent,
   VersionControlCommitReset,
-  versionControlReducer
+  versionControlReducer,
+  VersionControlEvent,
+  isReadonly,
 } from "./events-version-control";
 import {
   InteractionStateEvents,
   InteractionState,
-  interactionReducer
+  interactionReducer,
 } from "./interaction-store";
 
 export type AppEvents =
@@ -17,7 +19,7 @@ export type AppEvents =
 
 export enum VersionControlStoreType {
   Working,
-  VersionControl
+  VersionControl,
 }
 export type Dispatch = (event: AppEvents) => void;
 
@@ -33,7 +35,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
     case "selectedView":
       return {
         ...state,
-        interactionStore: interactionReducer(state.interactionStore, event)
+        interactionStore: interactionReducer(state.interactionStore, event),
       };
     case "commit":
     case "reset":
@@ -54,11 +56,11 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
           let s2 = appReducer(
             {
               ...state,
-              vcStore: versionControlReducer(state.vcStore, event)
+              vcStore: versionControlReducer(state.vcStore, event),
             },
             {
               type: "reset",
-              storeType: VersionControlStoreType.Working
+              storeType: VersionControlStoreType.Working,
             }
           );
 
@@ -69,22 +71,65 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
               fullPath: s2.interactionStore.selectedFile,
               revision: c.revision,
               text: c.text,
-              readOnly: false
+              readOnly: false,
             });
           }
 
           if (isCommitIdHead) {
             s2 = appReducer(s2, {
               type: "selectCommit",
-              commitId: null
+              commitId: null,
             });
           }
 
           return s2;
         case VersionControlStoreType.Working:
+          let newSelectedPath = state.interactionStore.selectedFile;
+          let interactionStore = state.interactionStore;
+
+          if (event.type === "commit") {
+            const rename = event.events.filter(
+              (e) =>
+                e.type === "rename" &&
+                e.oldFullPath === state.interactionStore.selectedFile
+            );
+
+            if (rename.length > 0 && rename[0].type == "rename") {
+              newSelectedPath = rename[0].fullPath;
+            }
+            if (
+              event.events.filter(
+                (e) =>
+                  e.type === "delete" &&
+                  e.fullPath === state.interactionStore.selectedFile
+              ).length
+            ) {
+              newSelectedPath = null;
+            }
+          }
+          const wsStore = versionControlReducer(state.wsStore, event);
+
+          if (state.interactionStore.selectedFile !== newSelectedPath) {
+            const value = wsStore.files[newSelectedPath];
+
+            interactionStore = interactionReducer(state.interactionStore, {
+              type: "selectedView",
+              fullPath: value?.fullPath,
+              readOnly: value && isReadonly(value.history, value.revision),
+              text: value?.text,
+              comments: value?.commentStore,
+              revision: value?.revision,
+            });
+          }
+
+          //should handle whne you commit
+          // should handle when viewing a deleted script
+          // should disable buttons for rename and delete when you edit.
+
           return {
             ...state,
-            wsStore: versionControlReducer(state.wsStore, event)
+            wsStore,
+            interactionStore,
           };
       }
   }

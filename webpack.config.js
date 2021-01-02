@@ -10,7 +10,8 @@ const baseConfig = (mode, target) => {
     mode,
     devtool: "source-map",
     devServer: {
-      publicPath: "/dist/"
+      contentBase: path.join(__dirname, 'dist'),
+      compress: true,
     },
     plugins: [
       new MonacoWebpackPlugin({
@@ -25,7 +26,7 @@ const baseConfig = (mode, target) => {
           exclude: [/node_modules/],
           loader: "ts-loader",
           options: {
-            experimentalWatchApi: true,
+            
             compilerOptions: {
               target
             }
@@ -58,7 +59,7 @@ const baseConfig = (mode, target) => {
 function getConfigs(mode) {
   const ext = mode === 'production' ? 'min.js' : 'js';
   const common_es6 = {
-    ...baseConfig(mode, "es6"),
+    ...baseConfig(mode, "ES2017"),
     output: {
       filename: "[name]-commonjs-es6." + ext,
       path: path.join(__dirname, "dist")
@@ -68,9 +69,10 @@ function getConfigs(mode) {
 }
 
 module.exports = (env, argv) => {
-  if (!argv.mode || argv.mode === "development") {
-    return getConfigs("development");
-  } else {
-    return getConfigs("development").concat(getConfigs("production"));
-  }
+  return getConfigs("development")[0];
+  // if (!argv.mode || argv.mode === "development") {
+  //   return getConfigs("development");
+  // } else {
+  //   return getConfigs("development").concat(getConfigs("production"));
+  // }
 };

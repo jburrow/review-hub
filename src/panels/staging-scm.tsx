@@ -63,7 +63,6 @@ export const StagingSCM = (props: {
                 return acc;
               }
             }, []);
-          debugger;
           const x = props.dispatch({
             storeType: VersionControlStoreType.VersionControl,
             type: "commit",
