@@ -7,6 +7,10 @@ import {
 import * as React from "react";
 import { Dispatch, VersionControlStoreType } from "../store";
 import { SelectedView } from "../interaction-store";
+import { RenameDialog } from "../dialogs/rename";
+import { Button } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 export const Editor = (props: {
   currentUser: string;
@@ -46,6 +50,10 @@ export const Editor = (props: {
     setReviewManager(rm);
   }
 
+  const [renameDialogOpen, setRenameDialogOpen] = React.useState<boolean>(
+    false
+  );
+
   const editorHeight = "calc(100% - 25px)";
 
   return props.view && props.view.fullPath ? (
@@ -56,7 +64,9 @@ export const Editor = (props: {
         <span style={{ backgroundColor: "green" }}>EDITABLE</span>
       )}
 
-      <button
+      <Button
+        aria-label="delete"
+        size="small"
         disabled={text !== props.view.text}
         onClick={() => {
           props.dispatch({
@@ -66,32 +76,48 @@ export const Editor = (props: {
             events: [{ type: "delete", fullPath: props.view.fullPath }],
           });
         }}
+        startIcon={<DeleteIcon fontSize="small" />}
       >
-        stage - delete
-      </button>
-      <button
+        Stage - Delete
+      </Button>
+
+      <Button
+        size="small"
         disabled={text !== props.view.text}
         onClick={() => {
-          props.dispatch({
-            storeType: VersionControlStoreType.Working,
-            type: "commit",
-            author: props.currentUser,
-            events: [
-              {
-                type: "rename",
-                oldFullPath: props.view.fullPath,
-                text: text,
-                fullPath: props.view.fullPath + ".renamed",
-              },
-            ],
-          });
+          setRenameDialogOpen(true);
         }}
       >
         stage - rename
-      </button>
+      </Button>
+      <RenameDialog
+        fullPath={props.view.fullPath}
+        onClose={({ newFullPath, rename }) => {
+          setRenameDialogOpen(false);
+          rename &&
+            props.dispatch({
+              storeType: VersionControlStoreType.Working,
+              type: "commit",
+              author: props.currentUser,
+              events: [
+                {
+                  type: "rename",
+                  oldFullPath: props.view.fullPath,
+                  text: text,
+                  fullPath: newFullPath,
+                },
+              ],
+            });
+        }}
+        open={renameDialogOpen}
+      >
+        x
+      </RenameDialog>
+
       {text !== props.view.text ? (
         <React.Fragment>
-          <button
+          <Button
+            size="small"
             onClick={() => {
               props.dispatch({
                 storeType: VersionControlStoreType.Working,
@@ -104,21 +130,23 @@ export const Editor = (props: {
             }}
           >
             stage - change
-          </button>
-          <button
+          </Button>
+          <Button
+            size="small"
             onClick={() => {
               setText(props.view.text);
               e.getModel().setValue(props.view.text);
             }}
           >
             undo change
-          </button>
+          </Button>
         </React.Fragment>
       ) : (
         <span>not modified text</span>
       )}
       {(comments || []).length ? (
-        <button
+        <Button
+          size="small"
           onClick={() => {
             props.dispatch({
               storeType: VersionControlStoreType.Working,
@@ -136,12 +164,13 @@ export const Editor = (props: {
           }}
         >
           Stage Comments {`${comments.length}`}
-        </button>
+        </Button>
       ) : (
         <span>not modified comments</span>
       )}
       {(comments || []).length && (
-        <button
+        <Button
+          size="small"
           onClick={() => {
             setComments([]);
             reviewManager.loadFromStore(
@@ -155,7 +184,7 @@ export const Editor = (props: {
           }}
         >
           Discard Comments
-        </button>
+        </Button>
       )}
       {props.view.original ? (
         <DiffEditor

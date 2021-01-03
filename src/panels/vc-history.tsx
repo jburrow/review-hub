@@ -6,11 +6,17 @@ import {
   FileCommentEvent,
   isReadonly,
   FileRenameEvent,
-  FileEvents
+  FileEvents,
 } from "../events-version-control";
 import { Dispatch } from "../store";
 import { SelectedStyles } from "../styles";
-import { withStyles, WithStyles } from "@material-ui/core";
+import {
+  Button,
+  Chip,
+  Divider,
+  withStyles,
+  WithStyles,
+} from "@material-ui/core";
 import { SelectedView } from "../interaction-store";
 import { ReviewCommentEvent } from "monaco-review";
 
@@ -25,7 +31,7 @@ export const VCHistory = (props: {
     : props.vcStore.headCommitId;
 
   const elements = props.vcStore.events
-    .filter(e => e.type === "commit")
+    .filter((e) => e.type === "commit")
     .map((ce: VersionControlCommitEvent, idx) => {
       return (
         <div key={idx}>
@@ -51,6 +57,7 @@ export const VCHistory = (props: {
               {/* <div style={{ fontSize: 10 }}>{JSON.stringify(e)}</div> */}
             </div>
           ))}
+          <Divider />
         </div>
       );
     });
@@ -70,7 +77,11 @@ export const renderFileEvent = (e: FileEvents) => {
         </ul>
       );
     default:
-      return <div>{e.type}</div>;
+      return (
+        <Chip
+          label={`${e.type} - ${(e as any).fullPath} @ ${(e as any).revision}`}
+        />
+      );
   }
 };
 
@@ -84,7 +95,7 @@ export const renderCommentEvent = (e: ReviewCommentEvent) => {
       );
 
     default:
-      return <div>{e.type}</div>;
+      return <Chip label={e.type} />;
   }
 };
 
@@ -97,13 +108,14 @@ export const SelectCommitButton = withStyles(SelectedStyles)(
     } & WithStyles<typeof SelectedStyles>
   ) => (
     <React.Fragment>
-      <button
+      <Button
+        size="small"
         onClick={() => {
           props.dispatch({ type: "selectCommit", commitId: props.commitId });
         }}
       >
         Select Commit
-      </button>
+      </Button>
       <span
         className={
           props.selected
@@ -127,6 +139,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
       selectedView: SelectedView;
     } & WithStyles<typeof SelectedStyles>
   ) => {
+    //Dodgy
     const selected =
       (props.editEvent.type === "comment" || //TODO - pull this out into a 'types with filename'
         props.editEvent.type === "edit" ||
@@ -140,10 +153,12 @@ export const SelectEditButton = withStyles(SelectedStyles)(
 
     return (
       <React.Fragment>
-        <button
+        <Button
+          size="small"
           style={{ marginLeft: 50 }}
           onClick={() => {
             if (
+              //Dodgy
               props.editEvent.type === "comment" ||
               props.editEvent.type === "edit" ||
               props.editEvent.type === "rename" ||
@@ -153,7 +168,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
                 props.vcStore.commits[props.commitId][props.editEvent.fullPath];
               props.dispatch({
                 type: "selectCommit",
-                commitId: props.commitId
+                commitId: props.commitId,
               });
               props.dispatch({
                 type: "selectedView",
@@ -163,13 +178,13 @@ export const SelectEditButton = withStyles(SelectedStyles)(
                   props.vcStore.files[f.fullPath].history,
                   f.revision
                 ),
-                text: f.text
+                text: f.text,
               });
             }
           }}
         >
           View Revision
-        </button>
+        </Button>
         {selected && (
           <span
             className={

@@ -41,8 +41,8 @@ export const interactionReducer = (
           readOnly: event.readOnly,
           comments: event.comments,
           revision: event.revision,
-          originalRevision: event.originalRevision
-        }
+          originalRevision: event.originalRevision,
+        },
       };
   }
   return state;

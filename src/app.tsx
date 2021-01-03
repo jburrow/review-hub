@@ -32,6 +32,7 @@ class LocalStoragePersistence implements Persistence {
 export const App = withStyles(AppStyles)(
   (props: WithStyles<typeof AppStyles> & { persistence?: Persistence }) => {
     const persistence = props.persistence || new LocalStoragePersistence();
+
     const [store, dispatch] = React.useReducer(appReducer, {
       interactionStore: { currentUser: "xyz-user" },
       wsStore: initialVersionControlState(),
