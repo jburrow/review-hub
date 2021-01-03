@@ -192,7 +192,10 @@ export const SCM = (props: {
   );
 
   return (
-    <div>
+    <div
+      onMouseDown={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
+    >
       <ul>{items}</ul>
       <ul>{comments}</ul>
     </div>
@@ -263,7 +266,11 @@ const SCMItem = withStyles(SelectedStyles)(
     return (
       <li
         style={props.status === 2 ? { textDecoration: "line-through" } : {}}
-        onClick={() => props.onClick(props.fullPath)}
+        onClick={(e) => {
+          props.onClick(props.fullPath);
+          e.stopPropagation();
+          console.log("here");
+        }}
         className={
           props.selected
             ? props.classes.selectedItem

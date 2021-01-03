@@ -2,7 +2,7 @@ import { DiffEditor, ControlledEditor } from "@monaco-editor/react";
 import {
   createReviewManager,
   ReviewManager,
-  ReviewCommentEvent
+  ReviewCommentEvent,
 } from "monaco-review";
 import * as React from "react";
 import { Dispatch, VersionControlStoreType } from "../store";
@@ -14,6 +14,7 @@ export const Editor = (props: {
   dispatch: Dispatch;
 }) => {
   const [text, setText] = React.useState<string>(null);
+  const [e, setE] = React.useState<any>(null);
   const [comments, setComments] = React.useState<ReviewCommentEvent[]>(null);
   const [reviewManager, setReviewManager] = React.useState<ReviewManager>(null);
 
@@ -31,7 +32,7 @@ export const Editor = (props: {
         props.view.comments || {
           comments: {},
           deletedCommentIds: new Set(),
-          dirtyCommentIds: new Set()
+          dirtyCommentIds: new Set(),
         },
         []
       );
@@ -39,6 +40,7 @@ export const Editor = (props: {
   }, [reviewManager, props.view]);
 
   function setEditor(editor) {
+    setE(editor);
     //: monaco.editor.IStandaloneCodeEditor
     const rm = createReviewManager(editor, props.currentUser, [], setComments);
     setReviewManager(rm);
@@ -55,18 +57,20 @@ export const Editor = (props: {
       )}
 
       <button
+        disabled={text !== props.view.text}
         onClick={() => {
           props.dispatch({
             storeType: VersionControlStoreType.Working,
             type: "commit",
             author: props.currentUser,
-            events: [{ type: "delete", fullPath: props.view.fullPath }]
+            events: [{ type: "delete", fullPath: props.view.fullPath }],
           });
         }}
       >
         stage - delete
       </button>
       <button
+        disabled={text !== props.view.text}
         onClick={() => {
           props.dispatch({
             storeType: VersionControlStoreType.Working,
@@ -77,29 +81,39 @@ export const Editor = (props: {
                 type: "rename",
                 oldFullPath: props.view.fullPath,
                 text: text,
-                fullPath: props.view.fullPath + ".renamed"
-              }
-            ]
+                fullPath: props.view.fullPath + ".renamed",
+              },
+            ],
           });
         }}
       >
         stage - rename
       </button>
       {text !== props.view.text ? (
-        <button
-          onClick={() => {
-            props.dispatch({
-              storeType: VersionControlStoreType.Working,
-              type: "commit",
-              author: props.currentUser,
-              events: [
-                { type: "edit", fullPath: props.view.fullPath, text: text }
-              ]
-            });
-          }}
-        >
-          stage - change
-        </button>
+        <React.Fragment>
+          <button
+            onClick={() => {
+              props.dispatch({
+                storeType: VersionControlStoreType.Working,
+                type: "commit",
+                author: props.currentUser,
+                events: [
+                  { type: "edit", fullPath: props.view.fullPath, text: text },
+                ],
+              });
+            }}
+          >
+            stage - change
+          </button>
+          <button
+            onClick={() => {
+              setText(props.view.text);
+              e.getModel().setValue(props.view.text);
+            }}
+          >
+            undo change
+          </button>
+        </React.Fragment>
       ) : (
         <span>not modified text</span>
       )}
@@ -114,9 +128,9 @@ export const Editor = (props: {
                 {
                   type: "comment",
                   fullPath: props.view.fullPath,
-                  commentEvents: comments
-                }
-              ]
+                  commentEvents: comments,
+                },
+              ],
             });
             setComments([]);
           }}
@@ -134,7 +148,7 @@ export const Editor = (props: {
               props.view.comments || {
                 comments: {},
                 deletedCommentIds: new Set(),
-                dirtyCommentIds: new Set()
+                dirtyCommentIds: new Set(),
               },
               []
             );

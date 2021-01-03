@@ -5,7 +5,6 @@ import {
   initialVersionControlState,
   VersionControlState,
 } from "./events-version-control";
-import { generateZip } from "./import-export";
 import { Editor } from "./panels/editor";
 import { FileHistory } from "./panels/file-history";
 import { SCM, StagingSCM } from "./panels/staging-scm";
@@ -66,7 +65,8 @@ export const App = withStyles(AppStyles)(
           data-grid={{ x: 0, y: 0, w: 12, h: 1 }}
           className={props.classes.header_bar}
         >
-          Review-Hub
+          <PanelHeading>Review-Hub</PanelHeading>
+
           {/* <button onClick={() => persistence.load}>Load</button> */}
           {/* <button onClick={() => persistence.save(store.vcStore)}>Save</button>
           <button
@@ -83,7 +83,7 @@ export const App = withStyles(AppStyles)(
           data-grid={{ x: 0, y: 1, w: 3, h: 8 }}
           className={props.classes.version_control}
         >
-          <div className={props.classes.panel_heading}>
+          <PanelHeading>
             version-control{" "}
             {isHeadCommit ? store.interactionStore.selectedCommitId : "HEAD"}
             {isHeadCommit && (
@@ -95,8 +95,8 @@ export const App = withStyles(AppStyles)(
                 Switch to HEAD
               </button>
             )}
-          </div>
-          <div className={props.classes.panel_content}>
+          </PanelHeading>
+          <PanelContent>
             <SCM
               dispatch={dispatch}
               files={activeFiles}
@@ -118,7 +118,7 @@ export const App = withStyles(AppStyles)(
               selectedFile={store.interactionStore.selectedFile}
             ></StagingSCM>
             Events: #{store.wsStore.events.length}
-          </div>
+          </PanelContent>
         </div>
 
         <div
@@ -126,29 +126,30 @@ export const App = withStyles(AppStyles)(
           data-grid={{ x: 3, y: 1, w: 6, h: 8 }}
           className={props.classes.editor}
         >
-          <div className={props.classes.panel_heading}>
+          <PanelHeading>
             Editor - {store.interactionStore.selectedView?.fullPath} @
             {store.interactionStore.selectedView?.revision}
             {store.interactionStore.selectedView?.label}
-          </div>
+          </PanelHeading>
 
-          <div className={props.classes.panel_content}>
+          <PanelContent>
             <Editor
               currentUser={store.interactionStore.currentUser}
               view={store.interactionStore.selectedView}
               dispatch={dispatch}
             />
-          </div>
+          </PanelContent>
         </div>
         <div
           key="0.3"
           data-grid={{ x: 9, y: 1, w: 3, h: 8 }}
           className={props.classes.script_history}
         >
-          <div className={props.classes.panel_heading}>
+          <PanelHeading>
             File History {store.interactionStore.selectedFile}
-          </div>
-          <div className={props.classes.panel_content}>
+          </PanelHeading>
+
+          <PanelContent>
             <FileHistory
               file={
                 store.interactionStore.selectedFile &&
@@ -157,15 +158,15 @@ export const App = withStyles(AppStyles)(
               selectedView={store.interactionStore.selectedView}
               dispatch={dispatch}
             />
-          </div>
+          </PanelContent>
         </div>
         <div
           key="1.1"
           data-grid={{ x: 0, y: 2, w: 12, h: 10 }}
           className={props.classes.vc_history}
         >
-          <div className={props.classes.panel_heading}>VC History</div>
-          <div className={props.classes.panel_content}>
+          <PanelHeading>VC History</PanelHeading>
+          <PanelContent>
             <VCHistory
               vcStore={store.vcStore}
               dispatch={dispatch}
@@ -173,9 +174,28 @@ export const App = withStyles(AppStyles)(
               selectedView={store.interactionStore.selectedView}
             />
             <div>{store.vcStore.version}</div>
-          </div>
+          </PanelContent>
         </div>
       </ReactGridLayout>
     );
+  }
+);
+
+const PanelContent = withStyles(AppStyles)(
+  (props: WithStyles<typeof AppStyles> & { children: any }) => {
+    return (
+      <div
+        className={props.classes.panel_content}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {props.children}
+      </div>
+    );
+  }
+);
+const PanelHeading = withStyles(AppStyles)(
+  (props: WithStyles<typeof AppStyles> & { children: any }) => {
+    return <div className={props.classes.panel_heading}>{props.children}</div>;
   }
 );
