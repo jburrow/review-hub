@@ -87,6 +87,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
           let newSelectedPath = state.interactionStore.selectedFile;
           let interactionStore = state.interactionStore;
 
+          // if we are renaming of a revision ::  and it isn't in the working set... then do we need to seed it?
           if (event.type === "commit") {
             const rename = event.events.filter(
               (e) =>
