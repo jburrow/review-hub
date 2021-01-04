@@ -123,7 +123,7 @@ export const App = withStyles(AppStyles)(
 
         <div
           key="0.1"
-          data-grid={{ x: 0, y: 1, w: 3, h: 8 }}
+          data-grid={{ x: 0, y: 1, w: 3, h: 13 }}
           className={props.classes.version_control}
         >
           <PanelHeading>
@@ -150,7 +150,7 @@ export const App = withStyles(AppStyles)(
 
         <div
           key="0.2"
-          data-grid={{ x: 3, y: 1, w: 6, h: 8 }}
+          data-grid={{ x: 3, y: 1, w: 6, h: 13 }}
           className={props.classes.editor}
         >
           <PanelHeading>
@@ -171,7 +171,7 @@ export const App = withStyles(AppStyles)(
         </div>
         <div
           key="0.3"
-          data-grid={{ x: 9, y: 1, w: 3, h: 8 }}
+          data-grid={{ x: 9, y: 1, w: 3, h: 13 }}
           className={props.classes.script_history}
         >
           <PanelHeading>
@@ -191,7 +191,7 @@ export const App = withStyles(AppStyles)(
         </div>
         <div
           key="1.1"
-          data-grid={{ x: 0, y: 2, w: 12, h: 10 }}
+          data-grid={{ x: 0, y: 2, w: 12, h: 5 }}
           className={props.classes.vc_history}
         >
           <PanelHeading>VC History</PanelHeading>
