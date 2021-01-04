@@ -12,6 +12,7 @@ import { SelectedStyles } from "../styles";
 import { v4 } from "uuid";
 import { ReviewCommentStore } from "monaco-review";
 import { ReviewCommentState } from "monaco-review/dist/events-comments-reducers";
+import { TextInputDialog } from "../dialogs/text-input";
 
 export const StagingSCM = (props: {
   currentUser: string;
@@ -23,6 +24,8 @@ export const StagingSCM = (props: {
   selectedFile: string;
   isHeadCommit: boolean;
 }) => {
+  const [textInputOpen, setTextInputOpen] = React.useState<boolean>(false);
+
   return (
     <div>
       <Tooltip title="Changes that have not been merged to main">
@@ -98,44 +101,44 @@ export const StagingSCM = (props: {
       <Button
         size="small"
         onClick={() => {
-          const x = v4();
-          // TODO - component needed and dialog for this?
-          props.dispatch({
-            type: "commit",
-            storeType: VersionControlStoreType.Working,
-            author: props.currentUser,
-            id: v4(),
-            events: [
-              {
-                type: "general-comment",
-                commentEvents: [
-                  {
-                    type: "create",
-                    text: "good morning",
-                    lineNumber: 0,
-                    createdAt: "",
-                    createdBy: props.currentUser,
-                    id: x,
-                    targetId: null,
-                  },
-                  {
-                    type: "create",
-                    text: "good morning to you",
-                    lineNumber: 0,
-                    createdAt: "",
-                    createdBy: props.currentUser,
-                    id: v4(),
-                    targetId: x,
-                  },
-                ],
-              },
-            ],
-          });
+          setTextInputOpen(true);
         }}
         disabled={props.isHeadCommit}
       >
         Make General Comment
       </Button>
+
+      <TextInputDialog
+        open={textInputOpen}
+        title="Enter general comment"
+        onClose={(c) => {
+          setTextInputOpen(false);
+
+          c.confirm &&
+            props.dispatch({
+              type: "commit",
+              storeType: VersionControlStoreType.Working,
+              author: props.currentUser,
+              id: v4(),
+              events: [
+                {
+                  type: "general-comment",
+                  commentEvents: [
+                    {
+                      type: "create",
+                      text: c.text,
+                      lineNumber: 0,
+                      createdAt: "",
+                      createdBy: props.currentUser,
+                      id: v4(),
+                      targetId: null,
+                    },
+                  ],
+                },
+              ],
+            });
+        }}
+      ></TextInputDialog>
     </div>
   );
 };
@@ -147,6 +150,9 @@ export const SCM = (props: {
   selectedFile: string;
   filter?(any): boolean;
 }) => {
+  const [textInputOpen, setTextInputOpen] = React.useState<boolean>(false);
+  const [messageId, setMessageId] = React.useState<string>(null);
+
   const handleClick = (fullPath: string) => {
     const value = props.files[fullPath];
 
@@ -176,11 +182,15 @@ export const SCM = (props: {
   ));
 
   const renderedCommentIds = new Set<string>();
-
-  let comments = Object.values(props.comments.comments)
+  const onReply = (messageId: string) => {
+    setMessageId(messageId);
+    setTextInputOpen(true);
+  };
+  const comments = Object.values(props.comments.comments)
     .filter((v) => v.comment.parentId === null)
     .map((v) => (
       <Comment
+        onReply={onReply}
         key={v.comment.id}
         comment={v}
         comments={props.comments.comments}
@@ -189,34 +199,79 @@ export const SCM = (props: {
       />
     ));
 
-  //const notRenderedIds = Object.values(props.comments.comments).filter(
-  //  (c) => !renderedCommentIds.has(c.comment.id)
-  //);
+  //Finds all the comments that are already rendered [ replies without parents ]
+  const recurseComments = (cs, fn) => {
+    cs.filter(fn).map((c) => {
+      renderedCommentIds.add(c.comment.id);
+      recurseComments(cs, (cc) => cc.comment.parentId == c.comment.id);
+    });
+  };
+  recurseComments(
+    Object.values(props.comments.comments),
+    (v) => v.comment.parentId === null
+  );
 
-  // comments = comments.concat(
-  //   notRenderedIds.map((cs) =>
-  //     Comment(
-  //       cs,
-  //       props.comments.comments,
-  //       renderedCommentIds,
-  //       0,
-  //       props.dispatch
-  //     )
-  //   )
-  // );
+  const notRenderedIds = Object.values(props.comments.comments).filter(
+    (c) => !renderedCommentIds.has(c.comment.id)
+  );
+
+  const replyComments = notRenderedIds.map((cs) => (
+    <Comment
+      onReply={null}
+      key={cs.comment.id}
+      comment={cs}
+      comments={{}}
+      depth={0}
+      dispatch={null}
+    />
+  ));
+
+  const onClose = React.useCallback(
+    (c) => {
+      setTextInputOpen(false);
+
+      c.confirm &&
+        props.dispatch({
+          type: "commit",
+          storeType: VersionControlStoreType.Working,
+          author: "props.currentUser",
+          id: v4(),
+          events: [
+            {
+              type: "general-comment",
+              commentEvents: [
+                {
+                  type: "create",
+                  text: c.text,
+                  lineNumber: 0,
+                  createdAt: new Date().toISOString(),
+                  createdBy: "current user",
+                  id: v4(),
+                  targetId: messageId,
+                },
+              ],
+            },
+          ],
+        });
+    },
+    [messageId]
+  );
 
   return (
-    <div
-      onMouseDown={(e) => e.stopPropagation()}
-      onClick={(e) => e.stopPropagation()}
-    >
+    <div>
       <ul>{items}</ul>
-      <ul>{comments}</ul>
+      <ul>{comments.concat(replyComments)}</ul>
+      <TextInputDialog
+        open={textInputOpen}
+        title="Reply to comment"
+        onClose={onClose}
+      ></TextInputDialog>
     </div>
   );
 };
 
 const Comment = (props: {
+  onReply(messageId: string): void;
   comment: ReviewCommentState;
   comments: Record<string, ReviewCommentState>;
   depth: number;
@@ -229,28 +284,7 @@ const Comment = (props: {
       <Button
         size="small"
         onClick={() => {
-          props.dispatch({
-            type: "commit",
-            storeType: VersionControlStoreType.Working,
-            author: "props.currentUser",
-            id: v4(),
-            events: [
-              {
-                type: "general-comment",
-                commentEvents: [
-                  {
-                    type: "create",
-                    text: "reply" + props.comment.comment.text,
-                    lineNumber: 0,
-                    createdAt: "",
-                    createdBy: "props.currentUser",
-                    id: v4(),
-                    targetId: props.comment.comment.id,
-                  },
-                ],
-              },
-            ],
-          });
+          props.onReply(props.comment.comment.id);
         }}
       >
         reply
@@ -260,6 +294,7 @@ const Comment = (props: {
           .filter((c) => c.comment.parentId === props.comment.comment.id)
           .map((c) => (
             <Comment
+              onReply={props.onReply}
               key={c.comment.id}
               comment={c}
               comments={props.comments}
