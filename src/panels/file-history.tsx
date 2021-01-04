@@ -4,9 +4,9 @@ import {
   FileState,
   FileStateX,
   FileStateHistory,
-  isReadonly
+  isReadonly,
 } from "../events-version-control";
-import { withStyles, WithStyles } from "@material-ui/core";
+import { Button, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { SelectedView } from "../interaction-store";
 
@@ -45,17 +45,18 @@ export const FileHistory = withStyles(SelectedStyles)(
         <div>
           {props.file.history.map((h, idx) => (
             <div key={idx}>
-              <button
+              <Button
+                size="small"
                 onClick={() => {
                   if (selected.indexOf(idx) > -1) {
-                    setSelected(selected.filter(i => i !== idx));
+                    setSelected(selected.filter((i) => i !== idx));
                   } else {
                     setSelected(selected.concat(idx));
                   }
                 }}
               >
                 {selected.indexOf(idx) > -1 ? "deselect" : "select"}
-              </button>
+              </Button>
               <ViewButton dispatch={props.dispatch} history={h}></ViewButton>
 
               {convert(h.fileState)}
@@ -63,7 +64,8 @@ export const FileHistory = withStyles(SelectedStyles)(
           ))}
           {selected.length == 2 && (
             <React.Fragment>
-              <button
+              <Button
+                size="small"
                 onClick={() => {
                   const m = props.file.history[selected[1]].fileState;
                   const original = props.file.history[selected[0]].fileState;
@@ -76,18 +78,19 @@ export const FileHistory = withStyles(SelectedStyles)(
                     revision: m.revision,
                     original: original.text,
                     originalRevision: original.revision,
-                    comments: m.commentStore
+                    comments: m.commentStore,
                   });
                 }}
               >
                 diff
-              </button>
-              <button
+              </Button>
+              <Button
+                size="small"
                 onClick={() => {
                   setSelected([]);
 
                   const m = props.file.history.filter(
-                    h => h.fileState.revision === props.selectedView.revision
+                    (h) => h.fileState.revision === props.selectedView.revision
                   )[0]?.fileState;
 
                   props.dispatch({
@@ -96,12 +99,12 @@ export const FileHistory = withStyles(SelectedStyles)(
                     readOnly: isReadonly(props.file.history, m.revision),
                     text: m.text,
                     revision: m.revision,
-                    comments: m.commentStore
+                    comments: m.commentStore,
                   });
                 }}
               >
                 clear
-              </button>
+              </Button>
             </React.Fragment>
           )}
         </div>
@@ -114,9 +117,10 @@ export const FileHistory = withStyles(SelectedStyles)(
 const ViewButton: React.FunctionComponent<{
   dispatch: Dispatch;
   history: FileStateHistory;
-}> = props => {
+}> = (props) => {
   return (
-    <button
+    <Button
+      size="small"
       onClick={() =>
         props.dispatch({
           type: "selectedView",
@@ -124,11 +128,11 @@ const ViewButton: React.FunctionComponent<{
           readOnly: true, //todo isEditable(props.history, props.history.fileState.revision),
           text: props.history.fileState.text,
           comments: props.history.fileState.commentStore,
-          revision: props.history.fileState.revision
+          revision: props.history.fileState.revision,
         })
       }
     >
       view
-    </button>
+    </Button>
   );
 };

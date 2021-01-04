@@ -157,7 +157,7 @@ export const Editor = (props: {
           </Button>
         </React.Fragment>
       ) : (
-        <span>not modified text</span>
+        <span>not modified text </span>
       )}
       {(comments || []).length ? (
         <Button

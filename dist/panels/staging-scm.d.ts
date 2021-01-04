@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { Dispatch } from "../store";
+import { Dispatch, AppState } from "../store";
 import { FileState } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
 import { ReviewCommentStore } from "monaco-review";
@@ -18,5 +18,11 @@ export declare const SCM: (props: {
     comments: ReviewCommentStore;
     dispatch: Dispatch;
     selectedFile: string;
+    currentUser: string;
     filter?(any: any): boolean;
+}) => JSX.Element;
+export declare const SCMPanel: (props: {
+    dispatch: Dispatch;
+    store: AppState;
+    isHeadCommit: boolean;
 }) => JSX.Element;

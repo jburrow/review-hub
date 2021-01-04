@@ -7,7 +7,7 @@ import {
 } from "./events-version-control";
 import { Editor } from "./panels/editor";
 import { FileHistory } from "./panels/file-history";
-import { SCM, StagingSCM } from "./panels/staging-scm";
+import { SCM, SCMPanel, StagingSCM } from "./panels/staging-scm";
 import { VCHistory } from "./panels/vc-history";
 import { appReducer } from "./store";
 import { AppStyles } from "./styles";
@@ -61,10 +61,6 @@ export const App = withStyles(AppStyles)(
       }
     }, [props.currentUser]);
 
-    const activeFiles = store.interactionStore.selectedCommitId
-      ? store.vcStore.commits[store.interactionStore.selectedCommitId]
-      : store.vcStore.files;
-
     const isHeadCommit =
       store.interactionStore.selectedCommitId &&
       store.vcStore.headCommitId != store.interactionStore.selectedCommitId;
@@ -75,7 +71,7 @@ export const App = withStyles(AppStyles)(
       items.push(
         <div
           key="0.0"
-          data-grid={{ x: 0, y: 0, w: 12, h: 2 }}
+          data-grid={{ x: 0, y: 0, w: 12, h: 1.2 }}
           className={props.classes.header_bar}
         >
           <PanelHeading>Review-Hub</PanelHeading>
@@ -144,27 +140,11 @@ export const App = withStyles(AppStyles)(
             )}
           </PanelHeading>
           <PanelContent>
-            <SCM
-              dispatch={dispatch}
-              files={activeFiles}
-              selectedFile={store.interactionStore.selectedFile}
-              comments={store.vcStore.commentStore}
-              filter={(i) => {
-                return i[1].status === FileStateStatus.active;
-              }}
-            />
-            Events: #{store.vcStore.events.length}
-            <StagingSCM
-              dispatch={dispatch}
+            <SCMPanel
+              store={store}
               isHeadCommit={isHeadCommit}
-              currentUser={store.interactionStore.currentUser}
-              generalComments={store.wsStore.commentStore}
-              events={store.wsStore.events}
-              wsfiles={store.wsStore.files}
-              vcfiles={store.vcStore.files}
-              selectedFile={store.interactionStore.selectedFile}
-            ></StagingSCM>
-            Events: #{store.wsStore.events.length}
+              dispatch={dispatch}
+            />
           </PanelContent>
         </div>
 

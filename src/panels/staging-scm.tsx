@@ -1,5 +1,5 @@
 import * as React from "react";
-import { VersionControlStoreType, Dispatch } from "../store";
+import { VersionControlStoreType, Dispatch, AppState } from "../store";
 import {
   FileState,
   isReadonly,
@@ -7,7 +7,15 @@ import {
   FileEvents,
 } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
-import { Button, Tooltip, WithStyles, withStyles } from "@material-ui/core";
+import {
+  Button,
+  Chip,
+  Divider,
+  Link,
+  Tooltip,
+  WithStyles,
+  withStyles,
+} from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { v4 } from "uuid";
 import { ReviewCommentStore } from "monaco-review";
@@ -24,15 +32,19 @@ export const StagingSCM = (props: {
   selectedFile: string;
   isHeadCommit: boolean;
 }) => {
-  const [textInputOpen, setTextInputOpen] = React.useState<boolean>(false);
+  const [generalCommentOpen, setGeneralCommentOpen] = React.useState<boolean>(
+    false
+  );
+  const [newFileOpen, setNewFileOpen] = React.useState<boolean>(false);
 
   return (
     <div>
       <Tooltip title="Changes that have not been merged to main">
-        <h3>working set</h3>
+        <h3>Working set</h3>
       </Tooltip>
       <SCM
         dispatch={props.dispatch}
+        currentUser={props.currentUser}
         files={props.wsfiles}
         comments={props.generalComments}
         selectedFile={props.selectedFile}
@@ -40,22 +52,20 @@ export const StagingSCM = (props: {
       <Button
         size="small"
         onClick={() => {
-          props.dispatch({
-            type: "commit",
-            storeType: VersionControlStoreType.Working,
-            author: props.currentUser,
-            id: v4(),
-            events: [
-              {
-                type: "edit",
-                fullPath: `new_file_${new Date().toISOString()}.py`, //TODO - dialog needed
-                text: "new file",
-              },
-            ],
-          });
+          setNewFileOpen(true);
         }}
       >
-        New File
+        Create New File
+      </Button>
+
+      <Button
+        size="small"
+        onClick={() => {
+          setGeneralCommentOpen(true);
+        }}
+        disabled={props.isHeadCommit}
+      >
+        Comment
       </Button>
 
       <Button
@@ -82,7 +92,7 @@ export const StagingSCM = (props: {
         }}
         disabled={props.events.length == 0}
       >
-        Commit
+        Save All
       </Button>
 
       <Button
@@ -98,21 +108,11 @@ export const StagingSCM = (props: {
         Discard Changes
       </Button>
 
-      <Button
-        size="small"
-        onClick={() => {
-          setTextInputOpen(true);
-        }}
-        disabled={props.isHeadCommit}
-      >
-        Make General Comment
-      </Button>
-
       <TextInputDialog
-        open={textInputOpen}
+        open={generalCommentOpen}
         title="Enter general comment"
         onClose={(c) => {
-          setTextInputOpen(false);
+          setGeneralCommentOpen(false);
 
           c.confirm &&
             props.dispatch({
@@ -138,7 +138,30 @@ export const StagingSCM = (props: {
               ],
             });
         }}
-      ></TextInputDialog>
+      />
+
+      <TextInputDialog
+        open={newFileOpen}
+        title="Create a new file"
+        onClose={(c) => {
+          setNewFileOpen(false);
+
+          c.confirm &&
+            props.dispatch({
+              type: "commit",
+              storeType: VersionControlStoreType.Working,
+              author: props.currentUser,
+              id: v4(),
+              events: [
+                {
+                  type: "edit",
+                  fullPath: c.text,
+                  text: "",
+                },
+              ],
+            });
+        }}
+      />
     </div>
   );
 };
@@ -148,6 +171,7 @@ export const SCM = (props: {
   comments: ReviewCommentStore;
   dispatch: Dispatch;
   selectedFile: string;
+  currentUser: string;
   filter?(any): boolean;
 }) => {
   const [textInputOpen, setTextInputOpen] = React.useState<boolean>(false);
@@ -234,7 +258,7 @@ export const SCM = (props: {
         props.dispatch({
           type: "commit",
           storeType: VersionControlStoreType.Working,
-          author: "props.currentUser",
+          author: props.currentUser,
           id: v4(),
           events: [
             {
@@ -245,7 +269,7 @@ export const SCM = (props: {
                   text: c.text,
                   lineNumber: 0,
                   createdAt: new Date().toISOString(),
-                  createdBy: "current user",
+                  createdBy: props.currentUser,
                   id: v4(),
                   targetId: messageId,
                 },
@@ -260,6 +284,7 @@ export const SCM = (props: {
   return (
     <div>
       <ul>{items}</ul>
+      {(comments.length || replyComments.length) && <h3>General Comments</h3>}
       <ul>{comments.concat(replyComments)}</ul>
       <TextInputDialog
         open={textInputOpen}
@@ -281,14 +306,13 @@ const Comment = (props: {
     <li>
       {props.depth} - {props.comment.comment.text}{" "}
       {props.comment.comment.author} {props.comment.comment.dt}
-      <Button
-        size="small"
+      <Link
         onClick={() => {
           props.onReply(props.comment.comment.id);
         }}
       >
         reply
-      </Button>
+      </Link>
       <ul>
         {Object.values(props.comments)
           .filter((c) => c.comment.parentId === props.comment.comment.id)
@@ -340,3 +364,47 @@ const SCMItem = withStyles(SelectedStyles)(
     );
   }
 );
+
+export const SCMPanel = (props: {
+  dispatch: Dispatch;
+  store: AppState;
+  isHeadCommit: boolean;
+}) => {
+  const activeFiles = props.store.interactionStore.selectedCommitId
+    ? props.store.vcStore.commits[props.store.interactionStore.selectedCommitId]
+    : props.store.vcStore.files;
+
+  return (
+    <React.Fragment>
+      <SCM
+        dispatch={props.dispatch}
+        files={activeFiles}
+        currentUser={props.store.interactionStore.currentUser}
+        selectedFile={props.store.interactionStore.selectedFile}
+        comments={props.store.vcStore.commentStore}
+        filter={(i) => {
+          return i[1].status === FileStateStatus.active;
+        }}
+      />
+      <Chip
+        label={`Events: #${props.store.vcStore.events.length}`}
+        size="small"
+      />
+      <Divider />
+      <StagingSCM
+        dispatch={props.dispatch}
+        isHeadCommit={props.isHeadCommit}
+        currentUser={props.store.interactionStore.currentUser}
+        generalComments={props.store.wsStore.commentStore}
+        events={props.store.wsStore.events}
+        wsfiles={props.store.wsStore.files}
+        vcfiles={props.store.vcStore.files}
+        selectedFile={props.store.interactionStore.selectedFile}
+      ></StagingSCM>
+      <Chip
+        label={`Events: #${props.store.wsStore.events.length}`}
+        size="small"
+      />
+    </React.Fragment>
+  );
+};

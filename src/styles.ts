@@ -28,7 +28,10 @@ export const AppStyles = createStyles({
   panel_heading: {
     height: panelHeadingHeight,
     backgroundColor: "#33333355",
-    marginBottom: 5,
+    paddingBottom: 2,
+    margin: 0,
+    paddingLeft: 5,
+    paddingTop: 2,
     cursor: "grab",
   },
 });
