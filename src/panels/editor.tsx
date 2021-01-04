@@ -9,8 +9,8 @@ import { Dispatch, VersionControlStoreType } from "../store";
 import { SelectedView } from "../interaction-store";
 import { RenameDialog } from "../dialogs/rename";
 import { Button } from "@material-ui/core";
-import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { ConfirmDialog } from "../dialogs/confirm";
 
 export const Editor = (props: {
   currentUser: string;
@@ -54,6 +54,10 @@ export const Editor = (props: {
     false
   );
 
+  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState<boolean>(
+    false
+  );
+
   const editorHeight = "calc(100% - 25px)";
 
   return props.view && props.view.fullPath ? (
@@ -69,12 +73,7 @@ export const Editor = (props: {
         size="small"
         disabled={text !== props.view.text}
         onClick={() => {
-          props.dispatch({
-            storeType: VersionControlStoreType.Working,
-            type: "commit",
-            author: props.currentUser,
-            events: [{ type: "delete", fullPath: props.view.fullPath }],
-          });
+          setConfirmDialogOpen(true);
         }}
         startIcon={<DeleteIcon fontSize="small" />}
       >
@@ -90,6 +89,7 @@ export const Editor = (props: {
       >
         stage - rename
       </Button>
+
       <RenameDialog
         fullPath={props.view.fullPath}
         onClose={({ newFullPath, rename }) => {
@@ -110,9 +110,24 @@ export const Editor = (props: {
             });
         }}
         open={renameDialogOpen}
-      >
-        x
-      </RenameDialog>
+      />
+
+      <ConfirmDialog
+        open={confirmDialogOpen}
+        title="Confirm Delete"
+        message={`Do you wish to stage the deletion '${props.view.fullPath}' ?`}
+        onClose={(confirm) => {
+          setConfirmDialogOpen(false);
+
+          confirm &&
+            props.dispatch({
+              storeType: VersionControlStoreType.Working,
+              type: "commit",
+              author: props.currentUser,
+              events: [{ type: "delete", fullPath: props.view.fullPath }],
+            });
+        }}
+      />
 
       {text !== props.view.text ? (
         <React.Fragment>
