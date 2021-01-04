@@ -7,7 +7,7 @@ import {
   FileEvents,
 } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
-import { WithStyles, withStyles } from "@material-ui/core";
+import { Button, WithStyles, withStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { v4 } from "uuid";
 import { ReviewCommentStore } from "monaco-review";
@@ -32,7 +32,8 @@ export const StagingSCM = (props: {
         comments={props.generalComments}
         selectedFile={props.selectedFile}
       />
-      <button
+      <Button
+        size="small"
         onClick={() => {
           props.dispatch({
             type: "commit",
@@ -50,9 +51,12 @@ export const StagingSCM = (props: {
         }}
       >
         New File
-      </button>
+      </Button>
 
-      <button
+      <Button
+        size="small"
+        variant="contained"
+        color="primary"
         onClick={() => {
           const events = props.events
             .filter((e) => e.type === "commit")
@@ -74,9 +78,10 @@ export const StagingSCM = (props: {
         disabled={props.events.length == 0}
       >
         Commit
-      </button>
+      </Button>
 
-      <button
+      <Button
+        size="small"
         onClick={() => {
           props.dispatch({
             type: "reset",
@@ -86,9 +91,10 @@ export const StagingSCM = (props: {
         disabled={props.events.length == 0}
       >
         Discard Changes
-      </button>
+      </Button>
 
-      <button
+      <Button
+        size="small"
         onClick={() => {
           const x = v4();
           // TODO - component needed and dialog for this?
@@ -127,7 +133,7 @@ export const StagingSCM = (props: {
         disabled={props.isHeadCommit}
       >
         Make General Comment
-      </button>
+      </Button>
     </div>
   );
 };
@@ -214,7 +220,8 @@ const Comment = (
     <li>
       {depth} - {comment.comment.text} {comment.comment.author}{" "}
       {comment.comment.dt}
-      <button
+      <Button
+        size="small"
         onClick={() => {
           dispatch({
             type: "commit",
@@ -241,7 +248,7 @@ const Comment = (
         }}
       >
         reply
-      </button>
+      </Button>
       <ul>
         {Object.values(comments)
           .filter((c) => c.comment.parentId === comment.comment.id)
@@ -265,7 +272,11 @@ const SCMItem = withStyles(SelectedStyles)(
   ) => {
     return (
       <li
-        style={props.status === 2 ? { textDecoration: "line-through" } : {}}
+        style={
+          props.status === 2
+            ? { textDecoration: "line-through" }
+            : { cursor: "pointer" }
+        }
         onClick={(e) => {
           props.onClick(props.fullPath);
           e.stopPropagation();

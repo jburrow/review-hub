@@ -128,9 +128,11 @@ export const App = withStyles(AppStyles)(
           className={props.classes.editor}
         >
           <PanelHeading>
-            Editor - {store.interactionStore.selectedView?.fullPath} @
-            {store.interactionStore.selectedView?.revision}
-            {store.interactionStore.selectedView?.label}
+            {!store.interactionStore.selectedView?.fullPath
+              ? "Editor"
+              : `Editor - ${store.interactionStore.selectedView?.fullPath} @ ${
+                  store.interactionStore.selectedView?.revision
+                } ${store.interactionStore.selectedView?.label || ""}`}
           </PanelHeading>
 
           <PanelContent>
