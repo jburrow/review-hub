@@ -3,8 +3,8 @@ import {
   VersionControlCommitEvent,
   VersionControlCommitReset,
   versionControlReducer,
-  VersionControlEvent,
   isReadonly,
+  initialVersionControlState,
 } from "./events-version-control";
 import {
   InteractionStateEvents,
@@ -15,7 +15,8 @@ import {
 export type AppEvents =
   | InteractionStateEvents
   | ({ storeType: VersionControlStoreType } & VersionControlCommitEvent)
-  | ({ storeType: VersionControlStoreType } & VersionControlCommitReset);
+  | ({ storeType: VersionControlStoreType } & VersionControlCommitReset)
+  | { type: "load"; vcStore: VersionControlState };
 
 export enum VersionControlStoreType {
   Working,
@@ -33,9 +34,16 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
   switch (event.type) {
     case "selectCommit":
     case "selectedView":
+    case "setCurrentUser":
       return {
         ...state,
         interactionStore: interactionReducer(state.interactionStore, event),
+      };
+    case "load":
+      return {
+        ...state,
+        vcStore: event.vcStore,
+        wsStore: initialVersionControlState(),
       };
     case "commit":
     case "reset":

@@ -1,4 +1,4 @@
-import { withStyles, WithStyles } from "@material-ui/core";
+import { Button, withStyles, WithStyles } from "@material-ui/core";
 import * as RGL from "react-grid-layout";
 import {
   FileStateStatus,
@@ -12,8 +12,10 @@ import { VCHistory } from "./panels/vc-history";
 import { appReducer } from "./store";
 import { AppStyles } from "./styles";
 import React = require("react");
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 import useWindowSize from "@rooks/use-window-size";
+import { generateZip } from "./import-export";
 
 const ReactGridLayout = RGL.WidthProvider(RGL);
 
@@ -29,17 +31,35 @@ class LocalStoragePersistence implements Persistence {
   }
 }
 
+const initialState = {
+  interactionStore: { currentUser: "xyz-user" },
+  wsStore: initialVersionControlState(),
+  vcStore: initialVersionControlState(),
+};
+
 export const App = withStyles(AppStyles)(
-  (props: WithStyles<typeof AppStyles> & { persistence?: Persistence }) => {
+  (
+    props: WithStyles<typeof AppStyles> & {
+      persistence?: Persistence;
+      currentUser?: string;
+      options?: { loadOnStartup: boolean };
+    }
+  ) => {
     const persistence = props.persistence || new LocalStoragePersistence();
-
-    const [store, dispatch] = React.useReducer(appReducer, {
-      interactionStore: { currentUser: "xyz-user" },
-      wsStore: initialVersionControlState(),
-      vcStore: persistence.load(),
-    });
-
+    const [store, dispatch] = React.useReducer(appReducer, initialState);
     const { innerHeight } = useWindowSize();
+
+    React.useEffect(() => {
+      if (props.options.loadOnStartup) {
+        dispatch({ type: "load", vcStore: persistence.load() });
+      }
+    }, [props.options?.loadOnStartup]);
+
+    React.useEffect(() => {
+      if (props.currentUser) {
+        dispatch({ type: "setCurrentUser", user: props.currentUser });
+      }
+    }, [props.currentUser]);
 
     const activeFiles = store.interactionStore.selectedCommitId
       ? store.vcStore.commits[store.interactionStore.selectedCommitId]
@@ -63,21 +83,37 @@ export const App = withStyles(AppStyles)(
       >
         <div
           key="0.0"
-          data-grid={{ x: 0, y: 0, w: 12, h: 1 }}
+          data-grid={{ x: 0, y: 0, w: 12, h: 2 }}
           className={props.classes.header_bar}
         >
           <PanelHeading>Review-Hub</PanelHeading>
+          <PanelContent>
+            <Button
+              size="small"
+              onClick={() =>
+                dispatch({ type: "load", vcStore: persistence.load() })
+              }
+            >
+              (Persistence) Load
+            </Button>
+            <Button
+              size="small"
+              onClick={() => persistence.save(store.vcStore)}
+            >
+              (Persistence) Save
+            </Button>
+            <Button
+              size="small"
+              onClick={() => {
+                generateZip({ ...store.vcStore.files, ...store.wsStore.files });
+              }}
+              startIcon={<GetAppIcon />}
+            >
+              Download Code As Zip
+            </Button>
 
-          {/* <button onClick={() => persistence.load}>Load</button> */}
-          {/* <button onClick={() => persistence.save(store.vcStore)}>Save</button>
-          <button
-            onClick={() => {
-              generateZip(store.vcStore);
-            }}
-          >
-            Export Code
-          </button> */}
-          {/* <button disabled>Rebase</button> */}
+            {/* <button disabled>Rebase</button> */}
+          </PanelContent>
         </div>
         <div
           key="0.1"

@@ -7,7 +7,7 @@ import {
   FileEvents,
 } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
-import { Button, WithStyles, withStyles } from "@material-ui/core";
+import { Button, Tooltip, WithStyles, withStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { v4 } from "uuid";
 import { ReviewCommentStore } from "monaco-review";
@@ -25,7 +25,9 @@ export const StagingSCM = (props: {
 }) => {
   return (
     <div>
-      <h3>working set</h3>
+      <Tooltip title="Changes that have not been merged to main">
+        <h3>working set</h3>
+      </Tooltip>
       <SCM
         dispatch={props.dispatch}
         files={props.wsfiles}

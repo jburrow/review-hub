@@ -20,5 +20,8 @@ export declare type InteractionStateEvents = {
     commitId: string;
 } | ({
     type: "selectedView";
-} & SelectedView);
+} & SelectedView) | {
+    type: "setCurrentUser";
+    user: string;
+};
 export declare const interactionReducer: (state: InteractionState, event: InteractionStateEvents) => InteractionState;

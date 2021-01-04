@@ -8,4 +8,8 @@ export declare const App: React.ComponentType<Pick<{
     classes: Record<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
 } & {
     persistence?: Persistence;
-}, "persistence"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+    currentUser?: string;
+    options?: {
+        loadOnStartup: boolean;
+    };
+}, "persistence" | "currentUser" | "options"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;

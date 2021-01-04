@@ -9,4 +9,7 @@ import "./index.css";
 
 monaco.init().then(() => console.debug("Monaco has initialized..."));
 
-render(<App persistence={demoStore} />, document.getElementById("root"));
+render(
+  <App persistence={demoStore} options={{ loadOnStartup: true }} />,
+  document.getElementById("root")
+);

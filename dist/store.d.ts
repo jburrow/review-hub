@@ -4,7 +4,10 @@ export declare type AppEvents = InteractionStateEvents | ({
     storeType: VersionControlStoreType;
 } & VersionControlCommitEvent) | ({
     storeType: VersionControlStoreType;
-} & VersionControlCommitReset);
+} & VersionControlCommitReset) | {
+    type: "load";
+    vcStore: VersionControlState;
+};
 export declare enum VersionControlStoreType {
     Working = 0,
     VersionControl = 1
