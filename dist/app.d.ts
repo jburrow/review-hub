@@ -11,5 +11,6 @@ export declare const App: React.ComponentType<Pick<{
     currentUser?: string;
     options?: {
         loadOnStartup: boolean;
+        showToolbar: boolean;
     };
 }, "persistence" | "currentUser" | "options"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;

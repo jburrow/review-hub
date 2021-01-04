@@ -69,7 +69,7 @@ export const StagingSCM = (props: {
                 return acc;
               }
             }, []);
-          const x = props.dispatch({
+          props.dispatch({
             storeType: VersionControlStoreType.VersionControl,
             type: "commit",
             author: props.currentUser,
@@ -179,25 +179,31 @@ export const SCM = (props: {
 
   let comments = Object.values(props.comments.comments)
     .filter((v) => v.comment.parentId === null)
-    .map((v) =>
-      Comment(v, props.comments.comments, renderedCommentIds, 0, props.dispatch)
-    );
+    .map((v) => (
+      <Comment
+        key={v.comment.id}
+        comment={v}
+        comments={props.comments.comments}
+        depth={0}
+        dispatch={props.dispatch}
+      />
+    ));
 
-  const notRenderedIds = Object.values(props.comments.comments).filter(
-    (c) => !renderedCommentIds.has(c.comment.id)
-  );
+  //const notRenderedIds = Object.values(props.comments.comments).filter(
+  //  (c) => !renderedCommentIds.has(c.comment.id)
+  //);
 
-  comments = comments.concat(
-    notRenderedIds.map((cs) =>
-      Comment(
-        cs,
-        props.comments.comments,
-        renderedCommentIds,
-        0,
-        props.dispatch
-      )
-    )
-  );
+  // comments = comments.concat(
+  //   notRenderedIds.map((cs) =>
+  //     Comment(
+  //       cs,
+  //       props.comments.comments,
+  //       renderedCommentIds,
+  //       0,
+  //       props.dispatch
+  //     )
+  //   )
+  // );
 
   return (
     <div
@@ -210,22 +216,20 @@ export const SCM = (props: {
   );
 };
 
-const Comment = (
-  comment: ReviewCommentState,
-  comments: Record<string, ReviewCommentState>,
-  renderedCommentIds: Set<string>,
-  depth: number,
-  dispatch: Dispatch
-) => {
-  renderedCommentIds.add(comment.comment.id);
+const Comment = (props: {
+  comment: ReviewCommentState;
+  comments: Record<string, ReviewCommentState>;
+  depth: number;
+  dispatch: Dispatch;
+}) => {
   return (
     <li>
-      {depth} - {comment.comment.text} {comment.comment.author}{" "}
-      {comment.comment.dt}
+      {props.depth} - {props.comment.comment.text}{" "}
+      {props.comment.comment.author} {props.comment.comment.dt}
       <Button
         size="small"
         onClick={() => {
-          dispatch({
+          props.dispatch({
             type: "commit",
             storeType: VersionControlStoreType.Working,
             author: "props.currentUser",
@@ -236,12 +240,12 @@ const Comment = (
                 commentEvents: [
                   {
                     type: "create",
-                    text: "reply" + comment.comment.text,
+                    text: "reply" + props.comment.comment.text,
                     lineNumber: 0,
                     createdAt: "",
                     createdBy: "props.currentUser",
                     id: v4(),
-                    targetId: comment.comment.id,
+                    targetId: props.comment.comment.id,
                   },
                 ],
               },
@@ -252,11 +256,17 @@ const Comment = (
         reply
       </Button>
       <ul>
-        {Object.values(comments)
-          .filter((c) => c.comment.parentId === comment.comment.id)
-          .map((c) =>
-            Comment(c, comments, renderedCommentIds, depth + 1, dispatch)
-          )}
+        {Object.values(props.comments)
+          .filter((c) => c.comment.parentId === props.comment.comment.id)
+          .map((c) => (
+            <Comment
+              key={c.comment.id}
+              comment={c}
+              comments={props.comments}
+              depth={props.depth + 1}
+              dispatch={props.dispatch}
+            />
+          ))}
       </ul>
     </li>
   );

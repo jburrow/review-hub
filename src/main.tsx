@@ -10,6 +10,10 @@ import "./index.css";
 monaco.init().then(() => console.debug("Monaco has initialized..."));
 
 render(
-  <App persistence={demoStore} options={{ loadOnStartup: true }} />,
+  <App
+    persistence={demoStore}
+    currentUser="current-user"
+    options={{ loadOnStartup: true, showToolbar: true }}
+  />,
   document.getElementById("root")
 );

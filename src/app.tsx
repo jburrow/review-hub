@@ -42,7 +42,7 @@ export const App = withStyles(AppStyles)(
     props: WithStyles<typeof AppStyles> & {
       persistence?: Persistence;
       currentUser?: string;
-      options?: { loadOnStartup: boolean };
+      options?: { loadOnStartup: boolean; showToolbar: boolean };
     }
   ) => {
     const persistence = props.persistence || new LocalStoragePersistence();
@@ -69,18 +69,10 @@ export const App = withStyles(AppStyles)(
       store.interactionStore.selectedCommitId &&
       store.vcStore.headCommitId != store.interactionStore.selectedCommitId;
 
-    return (
-      <ReactGridLayout
-        rowHeight={(innerHeight - 70) / 20}
-        maxRows={20}
-        compactType={"vertical"}
-        cols={12}
-        margin={[5, 5]}
-        containerPadding={[5, 5]}
-        useCSSTransforms={true}
-        draggableCancel={props.classes.panel_content}
-        className={props.classes.layout}
-      >
+    const items = [];
+
+    if (props.options.showToolbar) {
+      items.push(
         <div
           key="0.0"
           data-grid={{ x: 0, y: 0, w: 12, h: 2 }}
@@ -105,16 +97,34 @@ export const App = withStyles(AppStyles)(
             <Button
               size="small"
               onClick={() => {
-                generateZip({ ...store.vcStore.files, ...store.wsStore.files });
+                generateZip({
+                  ...store.vcStore.files,
+                  ...store.wsStore.files,
+                });
               }}
               startIcon={<GetAppIcon />}
             >
               Download Code As Zip
             </Button>
-
-            {/* <button disabled>Rebase</button> */}
           </PanelContent>
         </div>
+      );
+    }
+
+    return (
+      <ReactGridLayout
+        rowHeight={(innerHeight - 70) / 20}
+        maxRows={20}
+        compactType={"vertical"}
+        cols={12}
+        margin={[5, 5]}
+        containerPadding={[5, 5]}
+        useCSSTransforms={true}
+        draggableCancel={props.classes.panel_content}
+        className={props.classes.layout}
+      >
+        {items}
+
         <div
           key="0.1"
           data-grid={{ x: 0, y: 1, w: 3, h: 8 }}
