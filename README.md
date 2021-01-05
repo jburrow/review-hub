@@ -16,7 +16,7 @@ With a thin API to initialize a "pull request", and similiar api to "rebase it".
 
 # Demo
 
-Check out the demo page - https://jburrow.github.io/review-hub/dist/
+Check out the demo page - https://jburrow.github.io/review-hub/example/
 
 # Features
 
