@@ -1,4 +1,5 @@
 import { VersionControlState } from "./events-version-control";
+import { AppState, Dispatch } from "./store";
 import React = require("react");
 export interface Persistence {
     save: (store: VersionControlState) => void;
@@ -13,4 +14,15 @@ export declare const App: React.ComponentType<Pick<{
         loadOnStartup: boolean;
         showToolbar: boolean;
     };
-}, "persistence" | "currentUser" | "options"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+    panels?(dispatch: Dispatch, store: AppState, persistence: Persistence): any[];
+}, "persistence" | "currentUser" | "options" | "panels"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+export declare const PanelContent: React.ComponentType<Pick<{
+    classes: Record<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
+} & {
+    children: any;
+}, "children"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+export declare const PanelHeading: React.ComponentType<Pick<{
+    classes: Record<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
+} & {
+    children: any;
+}, "children"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
