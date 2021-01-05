@@ -21,6 +21,7 @@ export async function generateZip(files: Record<string, FileState>) {
 }
 
 export function rebaseScripts(
+  author: string,
   currentFiles: Record<string, FileState>,
   files: Record<string, FileState>
 ): AppCommitEvent {
@@ -42,7 +43,7 @@ export function rebaseScripts(
 
   return {
     type: "commit",
-    author: "",
+    author: author,
     storeType: VersionControlStoreType.VersionControl,
     events: editEvents.concat(deleteEvents),
   };
