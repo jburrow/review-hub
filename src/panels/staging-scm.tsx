@@ -284,7 +284,9 @@ export const SCM = (props: {
   return (
     <div>
       <ul>{items}</ul>
-      {(comments.length || replyComments.length) && <h3>General Comments</h3>}
+      {comments.length + replyComments.length ? (
+        <h3>General Comments</h3>
+      ) : null}
       <ul>{comments.concat(replyComments)}</ul>
       <TextInputDialog
         open={textInputOpen}
