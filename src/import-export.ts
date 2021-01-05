@@ -35,7 +35,10 @@ export function rebaseScripts(
     });
   const editEvents: FileEvents[] = Object.entries(files)
     .filter(([fullPath, v]) => {
-      currentFiles[fullPath].text !== v.text;
+      return (
+        currentFiles[fullPath] == undefined ||
+        currentFiles[fullPath].text !== v.text
+      );
     })
     .map(([fullPath, v]) => {
       return { type: "edit", fullPath, text: v.text } as FileEditEvent;
