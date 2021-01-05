@@ -8,4 +8,4 @@ export declare const FileHistory: React.ComponentType<Pick<{
     dispatch: Dispatch;
 } & {
     classes: Record<"selectedItem" | "inactiveItem", string>;
-}, "dispatch" | "selectedView" | "file"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+}, "selectedView" | "file" | "dispatch"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
