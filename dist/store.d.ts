@@ -1,10 +1,12 @@
 import { VersionControlState, VersionControlCommitEvent, VersionControlCommitReset } from "./events-version-control";
 import { InteractionStateEvents, InteractionState } from "./interaction-store";
-export declare type AppEvents = InteractionStateEvents | ({
+export declare type AppCommitEvent = {
     storeType: VersionControlStoreType;
-} & VersionControlCommitEvent) | ({
+} & VersionControlCommitEvent;
+export declare type AppResetEvent = {
     storeType: VersionControlStoreType;
-} & VersionControlCommitReset) | {
+} & VersionControlCommitReset;
+export declare type AppEvents = InteractionStateEvents | AppCommitEvent | AppResetEvent | {
     type: "load";
     vcStore: VersionControlState;
 };

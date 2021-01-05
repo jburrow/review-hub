@@ -1,21 +1,20 @@
 import { Button, withStyles, WithStyles } from "@material-ui/core";
 import * as RGL from "react-grid-layout";
 import {
-  FileStateStatus,
   initialVersionControlState,
   VersionControlState,
 } from "./events-version-control";
 import { Editor } from "./panels/editor";
 import { FileHistory } from "./panels/file-history";
-import { SCM, SCMPanel, StagingSCM } from "./panels/staging-scm";
+import { SCMPanel } from "./panels/staging-scm";
 import { VCHistory } from "./panels/vc-history";
-import { appReducer } from "./store";
+import { appReducer, AppState, Dispatch } from "./store";
 import { AppStyles } from "./styles";
 import React = require("react");
-import GetAppIcon from "@material-ui/icons/GetApp";
 
 import useWindowSize from "@rooks/use-window-size";
 import { generateZip } from "./import-export";
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 const ReactGridLayout = RGL.WidthProvider(RGL);
 
@@ -43,6 +42,11 @@ export const App = withStyles(AppStyles)(
       persistence?: Persistence;
       currentUser?: string;
       options?: { loadOnStartup: boolean; showToolbar: boolean };
+      panels?(
+        dispatch: Dispatch,
+        store: AppState,
+        persistence: Persistence
+      ): any[];
     }
   ) => {
     const persistence = props.persistence || new LocalStoragePersistence();
@@ -65,13 +69,15 @@ export const App = withStyles(AppStyles)(
       store.interactionStore.selectedCommitId &&
       store.vcStore.headCommitId != store.interactionStore.selectedCommitId;
 
-    const items = [];
-
+    const panels = props.panels
+      ? props.panels(dispatch, store, persistence)
+      : [];
+    console.log(panels, "panels");
     if (props.options.showToolbar) {
-      items.push(
+      panels.push(
         <div
           key="0.0"
-          data-grid={{ x: 0, y: 0, w: 12, h: 1.2 }}
+          data-grid={{ x: 0, y: 0, w: 12, h: 2 }}
           className={props.classes.header_bar}
         >
           <PanelHeading>Review-Hub</PanelHeading>
@@ -119,7 +125,7 @@ export const App = withStyles(AppStyles)(
         draggableCancel={props.classes.panel_content}
         className={props.classes.layout}
       >
-        {items}
+        {panels}
 
         <div
           key="0.1"
@@ -191,7 +197,7 @@ export const App = withStyles(AppStyles)(
         </div>
         <div
           key="1.1"
-          data-grid={{ x: 0, y: 2, w: 12, h: 5 }}
+          data-grid={{ x: 0, y: 2, w: 12, h: 4 }}
           className={props.classes.vc_history}
         >
           <PanelHeading>VC History</PanelHeading>
@@ -210,7 +216,7 @@ export const App = withStyles(AppStyles)(
   }
 );
 
-const PanelContent = withStyles(AppStyles)(
+export const PanelContent = withStyles(AppStyles)(
   (props: WithStyles<typeof AppStyles> & { children: any }) => {
     return (
       <div
@@ -223,7 +229,7 @@ const PanelContent = withStyles(AppStyles)(
     );
   }
 );
-const PanelHeading = withStyles(AppStyles)(
+export const PanelHeading = withStyles(AppStyles)(
   (props: WithStyles<typeof AppStyles> & { children: any }) => {
     return <div className={props.classes.panel_heading}>{props.children}</div>;
   }
