@@ -6,7 +6,6 @@ import "react-resizable/css/styles.css";
 import { App } from "./app";
 import { demoStore } from "./demo-store";
 import "./index.css";
-import { Toolbar } from "./panels/toolbar";
 
 monaco.init().then(() => console.debug("Monaco has initialized..."));
 
@@ -15,11 +14,6 @@ render(
     persistence={demoStore}
     currentUser="current-user"
     options={{ loadOnStartup: true, showToolbar: true }}
-    panels={(dispatch, store, persistence) => {
-      return [
-        <Toolbar dispatch={dispatch} store={store} persistence={persistence} />,
-      ];
-    }}
   />,
   document.getElementById("root")
 );

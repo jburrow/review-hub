@@ -1,4 +1,4 @@
-import { withStyles, WithStyles } from "@material-ui/core";
+import { Button, withStyles, WithStyles } from "@material-ui/core";
 import * as RGL from "react-grid-layout";
 import {
   initialVersionControlState,
@@ -13,6 +13,8 @@ import { AppStyles } from "./styles";
 import React = require("react");
 
 import useWindowSize from "@rooks/use-window-size";
+import { generateZip } from "./import-export";
+import GetAppIcon from "@material-ui/icons/GetApp";
 
 const ReactGridLayout = RGL.WidthProvider(RGL);
 
@@ -71,45 +73,45 @@ export const App = withStyles(AppStyles)(
       ? props.panels(dispatch, store, persistence)
       : [];
     console.log(panels, "panels");
-    // if (props.options.showToolbar) {
-    //   panels.push(
-    //     <div
-    //       key="0.0"
-    //       data-grid={{ x: 0, y: 0, w: 12, h: 1.2 }}
-    //       className={props.classes.header_bar}
-    //     >
-    //       <PanelHeading>Review-Hub</PanelHeading>
-    //       <PanelContent>
-    //         <Button
-    //           size="small"
-    //           onClick={() =>
-    //             dispatch({ type: "load", vcStore: persistence.load() })
-    //           }
-    //         >
-    //           (Persistence) Load
-    //         </Button>
-    //         <Button
-    //           size="small"
-    //           onClick={() => persistence.save(store.vcStore)}
-    //         >
-    //           (Persistence) Save
-    //         </Button>
-    //         <Button
-    //           size="small"
-    //           onClick={() => {
-    //             generateZip({
-    //               ...store.vcStore.files,
-    //               ...store.wsStore.files,
-    //             });
-    //           }}
-    //           startIcon={<GetAppIcon />}
-    //         >
-    //           Download Code As Zip
-    //         </Button>
-    //       </PanelContent>
-    //     </div>
-    //   );
-    // }
+    if (props.options.showToolbar) {
+      panels.push(
+        <div
+          key="0.0"
+          data-grid={{ x: 0, y: 0, w: 12, h: 2 }}
+          className={props.classes.header_bar}
+        >
+          <PanelHeading>Review-Hub</PanelHeading>
+          <PanelContent>
+            <Button
+              size="small"
+              onClick={() =>
+                dispatch({ type: "load", vcStore: persistence.load() })
+              }
+            >
+              (Persistence) Load
+            </Button>
+            <Button
+              size="small"
+              onClick={() => persistence.save(store.vcStore)}
+            >
+              (Persistence) Save
+            </Button>
+            <Button
+              size="small"
+              onClick={() => {
+                generateZip({
+                  ...store.vcStore.files,
+                  ...store.wsStore.files,
+                });
+              }}
+              startIcon={<GetAppIcon />}
+            >
+              Download Code As Zip
+            </Button>
+          </PanelContent>
+        </div>
+      );
+    }
 
     return (
       <ReactGridLayout
@@ -195,7 +197,7 @@ export const App = withStyles(AppStyles)(
         </div>
         <div
           key="1.1"
-          data-grid={{ x: 0, y: 2, w: 12, h: 5 }}
+          data-grid={{ x: 0, y: 2, w: 12, h: 4 }}
           className={props.classes.vc_history}
         >
           <PanelHeading>VC History</PanelHeading>

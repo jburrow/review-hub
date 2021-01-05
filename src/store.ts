@@ -12,10 +12,18 @@ import {
   interactionReducer,
 } from "./interaction-store";
 
+export type AppCommitEvent = {
+  storeType: VersionControlStoreType;
+} & VersionControlCommitEvent;
+
+export type AppResetEvent = {
+  storeType: VersionControlStoreType;
+} & VersionControlCommitReset;
+
 export type AppEvents =
   | InteractionStateEvents
-  | ({ storeType: VersionControlStoreType } & VersionControlCommitEvent)
-  | ({ storeType: VersionControlStoreType } & VersionControlCommitReset)
+  | AppCommitEvent
+  | AppResetEvent
   | { type: "load"; vcStore: VersionControlState };
 
 export enum VersionControlStoreType {
