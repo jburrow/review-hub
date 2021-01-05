@@ -8,4 +8,4 @@ export declare const RenameDialog: React.ComponentType<Pick<{
     fullPath: string;
 } & {
     classes: Record<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
-}, "open" | "onClose" | "fullPath"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+}, "open" | "fullPath" | "onClose"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;

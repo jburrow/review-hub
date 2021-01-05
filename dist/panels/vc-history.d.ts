@@ -17,7 +17,7 @@ export declare const SelectCommitButton: React.ComponentType<Pick<{
     selected: boolean;
 } & {
     classes: Record<"selectedItem" | "inactiveItem", string>;
-}, "selected" | "dispatch" | "commitId"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+}, "dispatch" | "selected" | "commitId"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
 export declare const SelectEditButton: React.ComponentType<Pick<{
     commitId: string;
     vcStore: VersionControlState;
@@ -26,4 +26,4 @@ export declare const SelectEditButton: React.ComponentType<Pick<{
     selectedView: SelectedView;
 } & {
     classes: Record<"selectedItem" | "inactiveItem", string>;
-}, "selectedView" | "dispatch" | "commitId" | "vcStore" | "editEvent"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+}, "dispatch" | "selectedView" | "commitId" | "vcStore" | "editEvent"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;

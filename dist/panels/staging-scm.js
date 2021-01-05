@@ -155,7 +155,7 @@ const SCM = (props) => {
     }, [messageId]);
     return (React.createElement("div", null,
         React.createElement("ul", null, items),
-        (comments.length || replyComments.length) && React.createElement("h3", null, "General Comments"),
+        comments.length + replyComments.length ? (React.createElement("h3", null, "General Comments")) : null,
         React.createElement("ul", null, comments.concat(replyComments)),
         React.createElement(text_input_1.TextInputDialog, { open: textInputOpen, title: "Reply to comment", onClose: onClose })));
 };
