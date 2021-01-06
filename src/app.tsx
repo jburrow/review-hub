@@ -8,7 +8,7 @@ import { Editor } from "./panels/editor";
 import { FileHistory } from "./panels/file-history";
 import { SCMPanel } from "./panels/staging-scm";
 import { VCHistory } from "./panels/vc-history";
-import { appReducer, AppState, Dispatch } from "./store";
+import { appReducer, AppState, Dispatch, initialState } from "./store";
 import { AppStyles } from "./styles";
 import React = require("react");
 
@@ -19,22 +19,20 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 const ReactGridLayout = RGL.WidthProvider(RGL);
 
 export interface Persistence {
-  save: (store: VersionControlState) => void;
-  load: () => VersionControlState;
+  save: (store: VersionControlState) => Promise<boolean>;
+  load: () => Promise<VersionControlState>;
 }
 
 class LocalStoragePersistence implements Persistence {
-  save(store: VersionControlState) {}
-  load() {
-    return initialVersionControlState();
+  async save(store: VersionControlState): Promise<boolean> {
+    return new Promise<boolean>((resolve) => resolve(true));
+  }
+  async load(): Promise<VersionControlState> {
+    return new Promise<VersionControlState>((resolve) =>
+      resolve(initialVersionControlState())
+    );
   }
 }
-
-const initialState = {
-  interactionStore: { currentUser: "xyz-user" },
-  wsStore: initialVersionControlState(),
-  vcStore: initialVersionControlState(),
-};
 
 export const App = withStyles(AppStyles)(
   (
@@ -54,9 +52,13 @@ export const App = withStyles(AppStyles)(
     const { innerHeight } = useWindowSize();
 
     React.useEffect(() => {
-      if (props.options.loadOnStartup) {
-        dispatch({ type: "load", vcStore: persistence.load() });
-      }
+      const effect = async () => {
+        if (props.options.loadOnStartup) {
+          dispatch({ type: "load", vcStore: await persistence.load() });
+        }
+      };
+
+      effect();
     }, [props.options?.loadOnStartup]);
 
     React.useEffect(() => {
@@ -65,15 +67,11 @@ export const App = withStyles(AppStyles)(
       }
     }, [props.currentUser]);
 
-    const isHeadCommit =
-      store.interactionStore.selectedCommitId &&
-      store.vcStore.headCommitId != store.interactionStore.selectedCommitId;
-
     const panels = props.panels
       ? props.panels(dispatch, store, persistence)
       : [];
     console.log(panels, "panels");
-    if (props.options.showToolbar) {
+    if (props.options?.showToolbar) {
       panels.push(
         <div
           key="0.0"
@@ -84,8 +82,8 @@ export const App = withStyles(AppStyles)(
           <PanelContent>
             <Button
               size="small"
-              onClick={() =>
-                dispatch({ type: "load", vcStore: persistence.load() })
+              onClick={async () =>
+                dispatch({ type: "load", vcStore: await persistence.load() })
               }
             >
               (Persistence) Load
@@ -134,8 +132,10 @@ export const App = withStyles(AppStyles)(
         >
           <PanelHeading>
             version-control{" "}
-            {isHeadCommit ? store.interactionStore.selectedCommitId : "HEAD"}
-            {isHeadCommit && (
+            {store.isHeadCommit
+              ? store.interactionStore.selectedCommitId
+              : "HEAD"}
+            {store.isHeadCommit && (
               <button
                 onClick={() =>
                   dispatch({ type: "selectCommit", commitId: null })
@@ -146,11 +146,7 @@ export const App = withStyles(AppStyles)(
             )}
           </PanelHeading>
           <PanelContent>
-            <SCMPanel
-              store={store}
-              isHeadCommit={isHeadCommit}
-              dispatch={dispatch}
-            />
+            <SCMPanel store={store} dispatch={dispatch} />
           </PanelContent>
         </div>
 

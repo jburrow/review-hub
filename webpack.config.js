@@ -56,8 +56,9 @@ const baseConfig = (mode, target) => {
   };
 };
 
-module.exports = (env, argv) => {
+module.exports = ({ WEBPACK_SERVE }, argv) => {
+  const mode = WEBPACK_SERVE ? "development" : "production";
   return {
-    ...baseConfig("production", "ES2019"),
+    ...baseConfig(mode, "ES2017"),
   };
 };

@@ -367,11 +367,7 @@ const SCMItem = withStyles(SelectedStyles)(
   }
 );
 
-export const SCMPanel = (props: {
-  dispatch: Dispatch;
-  store: AppState;
-  isHeadCommit: boolean;
-}) => {
+export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
   const activeFiles = props.store.interactionStore.selectedCommitId
     ? props.store.vcStore.commits[props.store.interactionStore.selectedCommitId]
     : props.store.vcStore.files;
@@ -395,7 +391,7 @@ export const SCMPanel = (props: {
       <Divider />
       <StagingSCM
         dispatch={props.dispatch}
-        isHeadCommit={props.isHeadCommit}
+        isHeadCommit={props.store.isHeadCommit}
         currentUser={props.store.interactionStore.currentUser}
         generalComments={props.store.wsStore.commentStore}
         events={props.store.wsStore.events}

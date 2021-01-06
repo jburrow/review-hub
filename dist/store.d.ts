@@ -19,5 +19,7 @@ export interface AppState {
     interactionStore: InteractionState;
     vcStore: VersionControlState;
     wsStore: VersionControlState;
+    isHeadCommit: boolean;
 }
+export declare const initialState: AppState;
 export declare const appReducer: (state: AppState, event: AppEvents) => AppState;

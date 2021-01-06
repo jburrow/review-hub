@@ -36,16 +36,32 @@ export interface AppState {
   interactionStore: InteractionState;
   vcStore: VersionControlState;
   wsStore: VersionControlState;
+  isHeadCommit: boolean;
 }
 
+export const initialState: AppState = {
+  interactionStore: { currentUser: "xyz-user" },
+  wsStore: initialVersionControlState(),
+  vcStore: initialVersionControlState(),
+  isHeadCommit: false,
+};
+
 export const appReducer = (state: AppState, event: AppEvents): AppState => {
+  console.debug("appReducer:", event);
   switch (event.type) {
     case "selectCommit":
     case "selectedView":
     case "setCurrentUser":
+      const interactionStore = interactionReducer(
+        state.interactionStore,
+        event
+      );
       return {
         ...state,
-        interactionStore: interactionReducer(state.interactionStore, event),
+        interactionStore,
+        isHeadCommit:
+          interactionStore.selectedCommitId &&
+          state.vcStore.headCommitId != interactionStore.selectedCommitId,
       };
     case "load":
       return {
@@ -65,14 +81,17 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
             vcSelectedFile.revision ===
               state.interactionStore.selectedView.revision;
 
-          const isCommitIdHead =
+          const isHeadCommit: boolean =
             state.interactionStore.selectedCommitId &&
-            state.vcStore.headCommitId;
+            state.vcStore.headCommitId
+              ? true
+              : false;
 
           let s2 = appReducer(
             {
               ...state,
               vcStore: versionControlReducer(state.vcStore, event),
+              isHeadCommit,
             },
             {
               type: "reset",
@@ -91,7 +110,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
             });
           }
 
-          if (isCommitIdHead) {
+          if (isHeadCommit) {
             s2 = appReducer(s2, {
               type: "selectCommit",
               commitId: null,

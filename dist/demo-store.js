@@ -76,18 +76,23 @@ const loadVersionControlStore = () => {
     return store;
 };
 exports.demoStore = {
-    load: () => {
-        const v = window.localStorage.getItem("demo-persist") || "null";
-        const events = JSON.parse(v);
-        if (events) {
-            return events_version_control_1.reduceVersionControl(events);
-        }
-        else {
-            return loadVersionControlStore();
-        }
+    load: async () => {
+        return new Promise((resolve) => {
+            const v = window.localStorage.getItem("demo-persist") || "null";
+            const events = JSON.parse(v);
+            if (events) {
+                resolve(events_version_control_1.reduceVersionControl(events));
+            }
+            else {
+                resolve(loadVersionControlStore());
+            }
+        });
     },
-    save: (store) => {
-        window.localStorage.setItem("demo-persist", JSON.stringify(store.events));
+    save: async (store) => {
+        return new Promise((resolve) => {
+            window.localStorage.setItem("demo-persist", JSON.stringify(store.events));
+            resolve(true);
+        });
     },
 };
 //# sourceMappingURL=demo-store.js.map

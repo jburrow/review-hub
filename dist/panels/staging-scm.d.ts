@@ -24,5 +24,4 @@ export declare const SCM: (props: {
 export declare const SCMPanel: (props: {
     dispatch: Dispatch;
     store: AppState;
-    isHeadCommit: boolean;
 }) => JSX.Element;

@@ -14,6 +14,7 @@ test("reduceVersionControl: edit=>edit=>edit", () => {
       interactionStore: { currentUser: "unit-test" },
       vcStore: initialVersionControlState(),
       wsStore: initialVersionControlState(),
+      isHeadCommit: false,
     },
     {
       type: "commit",

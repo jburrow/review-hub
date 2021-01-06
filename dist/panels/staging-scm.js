@@ -202,7 +202,7 @@ const SCMPanel = (props) => {
             } }),
         React.createElement(core_1.Chip, { label: `Events: #${props.store.vcStore.events.length}`, size: "small" }),
         React.createElement(core_1.Divider, null),
-        React.createElement(exports.StagingSCM, { dispatch: props.dispatch, isHeadCommit: props.isHeadCommit, currentUser: props.store.interactionStore.currentUser, generalComments: props.store.wsStore.commentStore, events: props.store.wsStore.events, wsfiles: props.store.wsStore.files, vcfiles: props.store.vcStore.files, selectedFile: props.store.interactionStore.selectedFile }),
+        React.createElement(exports.StagingSCM, { dispatch: props.dispatch, isHeadCommit: props.store.isHeadCommit, currentUser: props.store.interactionStore.currentUser, generalComments: props.store.wsStore.commentStore, events: props.store.wsStore.events, wsfiles: props.store.wsStore.files, vcfiles: props.store.vcStore.files, selectedFile: props.store.interactionStore.selectedFile }),
         React.createElement(core_1.Chip, { label: `Events: #${props.store.wsStore.events.length}`, size: "small" })));
 };
 exports.SCMPanel = SCMPanel;

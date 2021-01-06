@@ -83,17 +83,22 @@ const loadVersionControlStore = (): VersionControlState => {
 };
 
 export const demoStore: Persistence = {
-  load: () => {
-    const v = window.localStorage.getItem("demo-persist") || "null";
-    const events = JSON.parse(v);
+  load: async () => {
+    return new Promise((resolve) => {
+      const v = window.localStorage.getItem("demo-persist") || "null";
+      const events = JSON.parse(v);
 
-    if (events) {
-      return reduceVersionControl(events);
-    } else {
-      return loadVersionControlStore();
-    }
+      if (events) {
+        resolve(reduceVersionControl(events));
+      } else {
+        resolve(loadVersionControlStore());
+      }
+    });
   },
-  save: (store) => {
-    window.localStorage.setItem("demo-persist", JSON.stringify(store.events));
+  save: async (store) => {
+    return new Promise((resolve) => {
+      window.localStorage.setItem("demo-persist", JSON.stringify(store.events));
+      resolve(true);
+    });
   },
 };

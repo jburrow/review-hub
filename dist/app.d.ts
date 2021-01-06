@@ -2,11 +2,11 @@ import { VersionControlState } from "./events-version-control";
 import { AppState, Dispatch } from "./store";
 import React = require("react");
 export interface Persistence {
-    save: (store: VersionControlState) => void;
-    load: () => VersionControlState;
+    save: (store: VersionControlState) => Promise<boolean>;
+    load: () => Promise<VersionControlState>;
 }
 export declare const App: React.ComponentType<Pick<{
-    classes: Record<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
+    classes: Record<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
 } & {
     persistence?: Persistence;
     currentUser?: string;
@@ -15,14 +15,14 @@ export declare const App: React.ComponentType<Pick<{
         showToolbar: boolean;
     };
     panels?(dispatch: Dispatch, store: AppState, persistence: Persistence): any[];
-}, "persistence" | "currentUser" | "options" | "panels"> & import("@material-ui/core").StyledComponentProps<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+}, "persistence" | "currentUser" | "options" | "panels"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
 export declare const PanelContent: React.ComponentType<Pick<{
-    classes: Record<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
+    classes: Record<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
 } & {
     children: any;
-}, "children"> & import("@material-ui/core").StyledComponentProps<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+}, "children"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
 export declare const PanelHeading: React.ComponentType<Pick<{
-    classes: Record<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
+    classes: Record<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
 } & {
     children: any;
-}, "children"> & import("@material-ui/core").StyledComponentProps<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+}, "children"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;

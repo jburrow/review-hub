@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1609772525349" clover="3.2.0">
-  <project timestamp="1609772525350" name="All files">
-    <metrics statements="92" coveredstatements="84" conditionals="76" coveredconditionals="68" methods="11" coveredmethods="11" elements="179" coveredelements="163" complexity="0" loc="92" ncloc="92" packages="1" files="3" classes="3"/>
-    <file name="events-version-control.ts" path="/Users/jamesburrow/review-hub/src/events-version-control.ts">
+<coverage generated="1609919171198" clover="3.2.0">
+  <project timestamp="1609919171198" name="All files">
+    <metrics statements="114" coveredstatements="100" conditionals="84" coveredconditionals="71" methods="17" coveredmethods="16" elements="215" coveredelements="187" complexity="0" loc="114" ncloc="114" packages="1" files="4" classes="4"/>
+    <file name="events-version-control.ts" path="C:\workspace-git\review-hub\src\events-version-control.ts">
       <metrics statements="50" coveredstatements="47" conditionals="22" coveredconditionals="19" methods="6" coveredmethods="6"/>
-      <line num="1" count="2" type="stmt"/>
-      <line num="6" count="2" type="stmt"/>
-      <line num="50" count="2" type="cond" truecount="2" falsecount="0"/>
-      <line num="51" count="2" type="stmt"/>
-      <line num="52" count="2" type="stmt"/>
+      <line num="1" count="3" type="stmt"/>
+      <line num="6" count="3" type="stmt"/>
+      <line num="50" count="3" type="cond" truecount="2" falsecount="0"/>
+      <line num="51" count="3" type="stmt"/>
+      <line num="52" count="3" type="stmt"/>
       <line num="92" count="20" type="stmt"/>
       <line num="100" count="20" type="stmt"/>
-      <line num="106" count="2" type="stmt"/>
-      <line num="107" count="9" type="stmt"/>
-      <line num="119" count="2" type="stmt"/>
+      <line num="106" count="3" type="stmt"/>
+      <line num="107" count="13" type="stmt"/>
+      <line num="119" count="3" type="stmt"/>
       <line num="123" count="20" type="stmt"/>
       <line num="125" count="3" type="stmt"/>
       <line num="128" count="17" type="stmt"/>
@@ -47,61 +47,86 @@
       <line num="202" count="17" type="stmt"/>
       <line num="203" count="17" type="stmt"/>
       <line num="205" count="17" type="stmt"/>
-      <line num="216" count="2" type="stmt"/>
+      <line num="216" count="3" type="stmt"/>
       <line num="220" count="8" type="cond" truecount="2" falsecount="0"/>
       <line num="222" count="8" type="stmt"/>
       <line num="223" count="14" type="stmt"/>
       <line num="226" count="8" type="stmt"/>
-      <line num="229" count="2" type="stmt"/>
+      <line num="229" count="3" type="stmt"/>
       <line num="230" count="1" type="stmt"/>
     </file>
-    <file name="interaction-store.ts" path="/Users/jamesburrow/review-hub/src/interaction-store.ts">
+    <file name="import-export.ts" path="C:\workspace-git\review-hub\src\import-export.ts">
+      <metrics statements="19" coveredstatements="13" conditionals="4" coveredconditionals="1" methods="6" coveredmethods="5"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="2" count="1" type="stmt"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="10" count="1" type="stmt"/>
+      <line num="12" count="1" type="stmt"/>
+      <line num="13" count="0" type="stmt"/>
+      <line num="14" count="0" type="stmt"/>
+      <line num="15" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="16" count="0" type="stmt"/>
+      <line num="19" count="0" type="stmt"/>
+      <line num="20" count="0" type="stmt"/>
+      <line num="23" count="1" type="stmt"/>
+      <line num="28" count="2" type="stmt"/>
+      <line num="29" count="1" type="stmt"/>
+      <line num="31" count="1" type="stmt"/>
+      <line num="36" count="2" type="stmt"/>
+      <line num="38" count="1" type="stmt"/>
+      <line num="44" count="1" type="stmt"/>
+      <line num="47" count="2" type="stmt"/>
+    </file>
+    <file name="interaction-store.ts" path="C:\workspace-git\review-hub\src\interaction-store.ts">
       <metrics statements="6" coveredstatements="4" conditionals="3" coveredconditionals="2" methods="1" coveredmethods="1"/>
-      <line num="25" count="2" type="stmt"/>
+      <line num="25" count="3" type="stmt"/>
       <line num="29" count="6" type="stmt"/>
       <line num="31" count="0" type="stmt"/>
       <line num="34" count="1" type="stmt"/>
       <line num="37" count="5" type="stmt"/>
       <line num="52" count="0" type="stmt"/>
     </file>
-    <file name="store.ts" path="/Users/jamesburrow/review-hub/src/store.ts">
-      <metrics statements="36" coveredstatements="33" conditionals="51" coveredconditionals="47" methods="4" coveredmethods="4"/>
-      <line num="1" count="1" type="stmt"/>
-      <line num="9" count="1" type="stmt"/>
-      <line num="21" count="1" type="cond" truecount="2" falsecount="0"/>
-      <line num="22" count="1" type="stmt"/>
-      <line num="23" count="1" type="stmt"/>
-      <line num="33" count="1" type="stmt"/>
-      <line num="34" count="8" type="stmt"/>
-      <line num="38" count="2" type="stmt"/>
-      <line num="43" count="0" type="stmt"/>
-      <line num="50" count="6" type="stmt"/>
-      <line num="53" count="2" type="stmt"/>
-      <line num="55" count="2" type="cond" truecount="3" falsecount="0"/>
-      <line num="61" count="2" type="cond" truecount="1" falsecount="1"/>
-      <line num="64" count="2" type="stmt"/>
-      <line num="75" count="2" type="cond" truecount="2" falsecount="0"/>
-      <line num="76" count="1" type="stmt"/>
-      <line num="77" count="1" type="stmt"/>
-      <line num="86" count="2" type="cond" truecount="1" falsecount="1"/>
-      <line num="87" count="0" type="stmt"/>
-      <line num="93" count="2" type="stmt"/>
-      <line num="95" count="4" type="stmt"/>
-      <line num="96" count="4" type="stmt"/>
-      <line num="99" count="4" type="cond" truecount="2" falsecount="0"/>
-      <line num="100" count="2" type="stmt"/>
+    <file name="store.ts" path="C:\workspace-git\review-hub\src\store.ts">
+      <metrics statements="39" coveredstatements="36" conditionals="55" coveredconditionals="49" methods="4" coveredmethods="4"/>
+      <line num="1" count="2" type="stmt"/>
+      <line num="9" count="2" type="stmt"/>
+      <line num="29" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="30" count="2" type="stmt"/>
+      <line num="31" count="2" type="stmt"/>
+      <line num="42" count="2" type="stmt"/>
+      <line num="49" count="2" type="stmt"/>
+      <line num="50" count="8" type="stmt"/>
+      <line num="51" count="8" type="stmt"/>
+      <line num="55" count="2" type="stmt"/>
+      <line num="59" count="2" type="stmt"/>
+      <line num="67" count="0" type="stmt"/>
+      <line num="74" count="6" type="stmt"/>
+      <line num="77" count="2" type="stmt"/>
+      <line num="79" count="2" type="cond" truecount="3" falsecount="0"/>
+      <line num="85" count="2" type="cond" truecount="1" falsecount="1"/>
+      <line num="90" count="2" type="stmt"/>
       <line num="102" count="2" type="cond" truecount="2" falsecount="0"/>
-      <line num="106" count="2" type="cond" truecount="4" falsecount="0"/>
-      <line num="107" count="1" type="stmt"/>
-      <line num="109" count="2" type="cond" truecount="2" falsecount="0"/>
-      <line num="112" count="2" type="cond" truecount="2" falsecount="0"/>
-      <line num="116" count="1" type="stmt"/>
-      <line num="119" count="4" type="stmt"/>
-      <line num="121" count="4" type="cond" truecount="2" falsecount="0"/>
-      <line num="122" count="2" type="stmt"/>
-      <line num="124" count="2" type="stmt"/>
-      <line num="138" count="4" type="stmt"/>
-      <line num="145" count="0" type="stmt"/>
+      <line num="103" count="1" type="stmt"/>
+      <line num="104" count="1" type="stmt"/>
+      <line num="113" count="2" type="cond" truecount="1" falsecount="1"/>
+      <line num="114" count="0" type="stmt"/>
+      <line num="120" count="2" type="stmt"/>
+      <line num="122" count="4" type="stmt"/>
+      <line num="123" count="4" type="stmt"/>
+      <line num="126" count="4" type="cond" truecount="2" falsecount="0"/>
+      <line num="127" count="2" type="stmt"/>
+      <line num="129" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="133" count="2" type="cond" truecount="4" falsecount="0"/>
+      <line num="134" count="1" type="stmt"/>
+      <line num="136" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="139" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="143" count="1" type="stmt"/>
+      <line num="146" count="4" type="stmt"/>
+      <line num="148" count="4" type="cond" truecount="2" falsecount="0"/>
+      <line num="149" count="2" type="stmt"/>
+      <line num="151" count="2" type="stmt"/>
+      <line num="165" count="4" type="stmt"/>
+      <line num="172" count="0" type="stmt"/>
     </file>
   </project>
 </coverage>

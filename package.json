@@ -1,6 +1,6 @@
 {
   "name": "review-hub",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,7 @@
     "react": "16.x || 17.x",
     "react-dom": "16.x || 17.x"
   },
-  "dependencies": {    
+  "dependencies": {
     "file-saver": "^2.0.5",
     "jszip": "^3.5.0",
     "moment": "^2.29.1",
@@ -31,6 +31,8 @@
     "zip-js": "0.0.2"
   },
   "devDependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "@babel/runtime": "^7.12.5",
     "@babel/types": "^7.12.12",
     "@material-ui/core": "^4.11.2",
@@ -41,8 +43,6 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-grid-layout": "^1.1.1",
     "@types/uuid": "^8.3.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
     "webpack-dev-server": "^3.11.1",
     "@types/jest": "^26.0.19",
     "coveralls": "^3.1.0",

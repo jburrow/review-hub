@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.appReducer = exports.VersionControlStoreType = void 0;
+exports.appReducer = exports.initialState = exports.VersionControlStoreType = void 0;
 const events_version_control_1 = require("./events-version-control");
 const interaction_store_1 = require("./interaction-store");
 var VersionControlStoreType;
@@ -8,14 +8,24 @@ var VersionControlStoreType;
     VersionControlStoreType[VersionControlStoreType["Working"] = 0] = "Working";
     VersionControlStoreType[VersionControlStoreType["VersionControl"] = 1] = "VersionControl";
 })(VersionControlStoreType = exports.VersionControlStoreType || (exports.VersionControlStoreType = {}));
+exports.initialState = {
+    interactionStore: { currentUser: "xyz-user" },
+    wsStore: events_version_control_1.initialVersionControlState(),
+    vcStore: events_version_control_1.initialVersionControlState(),
+    isHeadCommit: false,
+};
 const appReducer = (state, event) => {
+    console.debug("appReducer:", event);
     switch (event.type) {
         case "selectCommit":
         case "selectedView":
         case "setCurrentUser":
+            const interactionStore = interaction_store_1.interactionReducer(state.interactionStore, event);
             return {
                 ...state,
-                interactionStore: interaction_store_1.interactionReducer(state.interactionStore, event),
+                interactionStore,
+                isHeadCommit: interactionStore.selectedCommitId &&
+                    state.vcStore.headCommitId != interactionStore.selectedCommitId,
             };
         case "load":
             return {
@@ -32,11 +42,14 @@ const appReducer = (state, event) => {
                         vcSelectedFile &&
                         vcSelectedFile.revision ===
                             state.interactionStore.selectedView.revision;
-                    const isCommitIdHead = state.interactionStore.selectedCommitId &&
-                        state.vcStore.headCommitId;
+                    const isHeadCommit = state.interactionStore.selectedCommitId &&
+                        state.vcStore.headCommitId
+                        ? true
+                        : false;
                     let s2 = exports.appReducer({
                         ...state,
                         vcStore: events_version_control_1.versionControlReducer(state.vcStore, event),
+                        isHeadCommit,
                     }, {
                         type: "reset",
                         storeType: VersionControlStoreType.Working,
@@ -51,7 +64,7 @@ const appReducer = (state, event) => {
                             readOnly: false,
                         });
                     }
-                    if (isCommitIdHead) {
+                    if (isHeadCommit) {
                         s2 = exports.appReducer(s2, {
                             type: "selectCommit",
                             commitId: null,
