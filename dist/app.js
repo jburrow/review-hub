@@ -12,8 +12,6 @@ const store_1 = require("./store");
 const styles_1 = require("./styles");
 const React = require("react");
 const use_window_size_1 = require("@rooks/use-window-size");
-const import_export_1 = require("./import-export");
-const GetApp_1 = require("@material-ui/icons/GetApp");
 const ReactGridLayout = RGL.WidthProvider(RGL);
 class LocalStoragePersistence {
     async save(store) {
@@ -41,23 +39,12 @@ exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
             dispatch({ type: "setCurrentUser", user: props.currentUser });
         }
     }, [props.currentUser]);
-    const panels = props.panels
-        ? props.panels(dispatch, store, persistence)
-        : [];
-    console.log(panels, "panels");
-    if ((_b = props.options) === null || _b === void 0 ? void 0 : _b.showToolbar) {
-        panels.push(React.createElement("div", { key: "0.0", "data-grid": { x: 0, y: 0, w: 12, h: 2 }, className: props.classes.header_bar },
-            React.createElement(exports.PanelHeading, null, "Review-Hub"),
-            React.createElement(exports.PanelContent, null,
-                React.createElement(core_1.Button, { size: "small", onClick: async () => dispatch({ type: "load", vcStore: await persistence.load() }) }, "(Persistence) Load"),
-                React.createElement(core_1.Button, { size: "small", onClick: () => persistence.save(store.vcStore) }, "(Persistence) Save"),
-                React.createElement(core_1.Button, { size: "small", onClick: () => {
-                        import_export_1.generateZip({
-                            ...store.vcStore.files,
-                            ...store.wsStore.files,
-                        });
-                    }, startIcon: React.createElement(GetApp_1.default, null) }, "Download Code As Zip"))));
-    }
+    let panels = [];
+    panels.push(React.createElement("div", { key: "0.0", "data-grid": { x: 0, y: 0, w: 12, h: 2 }, className: props.classes.header_bar },
+        React.createElement(exports.PanelHeading, null,
+            "Review-Hub : ",
+            props.name),
+        React.createElement(exports.PanelContent, null, (_b = props.buttons) === null || _b === void 0 ? void 0 : _b.map((a) => (React.createElement(core_1.Button, { onClick: () => a.handleClick(dispatch, store, persistence, props.currentUser, props.name) }, a.title))))));
     return (React.createElement(ReactGridLayout, { rowHeight: (innerHeight - 70) / 20, maxRows: 20, compactType: "vertical", cols: 12, margin: [5, 5], containerPadding: [5, 5], useCSSTransforms: true, draggableCancel: props.classes.panel_content, className: props.classes.layout },
         panels,
         React.createElement("div", { key: "0.1", "data-grid": { x: 0, y: 1, w: 3, h: 13 }, className: props.classes.version_control },

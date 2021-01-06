@@ -1,5 +1,20 @@
-import { App } from "./app";
+import { App, Action, Persistence } from "./app";
 
-// import { initialVersionControlState } from "./events-version-control";
+import {
+  initialVersionControlState,
+  versionControlReducer,
+  VersionControlState,
+} from "./events-version-control";
 
-export {App};
+import { AppState, Dispatch } from "./store";
+
+export {
+  App,
+  Action,
+  Persistence,
+  initialVersionControlState,
+  versionControlReducer,
+  VersionControlState,
+  AppState,
+  Dispatch,
+};

@@ -34,17 +34,25 @@ class LocalStoragePersistence implements Persistence {
   }
 }
 
+export interface Action {
+  title: string;
+  handleClick(
+    dispatch: Dispatch,
+    store: AppState,
+    persistence: Persistence,
+    currentUser: string,
+    name: string
+  ): void;
+}
+
 export const App = withStyles(AppStyles)(
   (
     props: WithStyles<typeof AppStyles> & {
       persistence?: Persistence;
       currentUser?: string;
       options?: { loadOnStartup: boolean; showToolbar: boolean };
-      panels?(
-        dispatch: Dispatch,
-        store: AppState,
-        persistence: Persistence
-      ): any[];
+      buttons?: Action[];
+      name?: string;
     }
   ) => {
     const persistence = props.persistence || new LocalStoragePersistence();
@@ -67,49 +75,34 @@ export const App = withStyles(AppStyles)(
       }
     }, [props.currentUser]);
 
-    const panels = props.panels
-      ? props.panels(dispatch, store, persistence)
-      : [];
-    console.log(panels, "panels");
-    if (props.options?.showToolbar) {
-      panels.push(
-        <div
-          key="0.0"
-          data-grid={{ x: 0, y: 0, w: 12, h: 2 }}
-          className={props.classes.header_bar}
-        >
-          <PanelHeading>Review-Hub</PanelHeading>
-          <PanelContent>
+    let panels = [];
+
+    panels.push(
+      <div
+        key="0.0"
+        data-grid={{ x: 0, y: 0, w: 12, h: 2 }}
+        className={props.classes.header_bar}
+      >
+        <PanelHeading>Review-Hub : {props.name}</PanelHeading>
+        <PanelContent>
+          {props.buttons?.map((a) => (
             <Button
-              size="small"
-              onClick={async () =>
-                dispatch({ type: "load", vcStore: await persistence.load() })
+              onClick={() =>
+                a.handleClick(
+                  dispatch,
+                  store,
+                  persistence,
+                  props.currentUser,
+                  props.name
+                )
               }
             >
-              (Persistence) Load
+              {a.title}
             </Button>
-            <Button
-              size="small"
-              onClick={() => persistence.save(store.vcStore)}
-            >
-              (Persistence) Save
-            </Button>
-            <Button
-              size="small"
-              onClick={() => {
-                generateZip({
-                  ...store.vcStore.files,
-                  ...store.wsStore.files,
-                });
-              }}
-              startIcon={<GetAppIcon />}
-            >
-              Download Code As Zip
-            </Button>
-          </PanelContent>
-        </div>
-      );
-    }
+          ))}
+        </PanelContent>
+      </div>
+    );
 
     return (
       <ReactGridLayout

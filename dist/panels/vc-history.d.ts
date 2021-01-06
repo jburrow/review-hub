@@ -26,4 +26,4 @@ export declare const SelectEditButton: React.ComponentType<Pick<{
     selectedView: SelectedView;
 } & {
     classes: Record<"selectedItem" | "inactiveItem", string>;
-}, "dispatch" | "selectedView" | "commitId" | "vcStore" | "editEvent"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+}, "selectedView" | "dispatch" | "commitId" | "vcStore" | "editEvent"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;

@@ -5,6 +5,10 @@ export interface Persistence {
     save: (store: VersionControlState) => Promise<boolean>;
     load: () => Promise<VersionControlState>;
 }
+export interface Action {
+    title: string;
+    handleClick(dispatch: Dispatch, store: AppState, persistence: Persistence, currentUser: string, name: string): void;
+}
 export declare const App: React.ComponentType<Pick<{
     classes: Record<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
 } & {
@@ -14,8 +18,9 @@ export declare const App: React.ComponentType<Pick<{
         loadOnStartup: boolean;
         showToolbar: boolean;
     };
-    panels?(dispatch: Dispatch, store: AppState, persistence: Persistence): any[];
-}, "persistence" | "currentUser" | "options" | "panels"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+    buttons?: Action[];
+    name?: string;
+}, "persistence" | "currentUser" | "options" | "buttons" | "name"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
 export declare const PanelContent: React.ComponentType<Pick<{
     classes: Record<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
 } & {
