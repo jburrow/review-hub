@@ -22,8 +22,8 @@ class LocalStoragePersistence {
     }
 }
 exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
-    var _a, _b, _c, _d, _e, _f;
-    const persistence = props.persistence || new LocalStoragePersistence();
+    var _a, _b, _c, _d, _e, _f, _g;
+    const persistence = (_a = props.persistence) !== null && _a !== void 0 ? _a : new LocalStoragePersistence();
     const [store, dispatch] = React.useReducer(store_1.appReducer, store_1.initialState);
     const { innerHeight } = use_window_size_1.default();
     React.useEffect(() => {
@@ -33,20 +33,18 @@ exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
             }
         };
         effect();
-    }, [(_a = props.options) === null || _a === void 0 ? void 0 : _a.loadOnStartup]);
+    }, [(_b = props.options) === null || _b === void 0 ? void 0 : _b.loadOnStartup]);
     React.useEffect(() => {
         if (props.currentUser) {
             dispatch({ type: "setCurrentUser", user: props.currentUser });
         }
     }, [props.currentUser]);
-    let panels = [];
-    panels.push(React.createElement("div", { key: "0.0", "data-grid": { x: 0, y: 0, w: 12, h: 2 }, className: props.classes.header_bar },
-        React.createElement(exports.PanelHeading, null,
-            "Review-Hub : ",
-            props.name),
-        React.createElement(exports.PanelContent, null, (_b = props.buttons) === null || _b === void 0 ? void 0 : _b.map((a) => (React.createElement(core_1.Button, { onClick: () => a.handleClick(dispatch, store, persistence, props.currentUser, props.name) }, a.title))))));
     return (React.createElement(ReactGridLayout, { rowHeight: (innerHeight - 70) / 20, maxRows: 20, compactType: "vertical", cols: 12, margin: [5, 5], containerPadding: [5, 5], useCSSTransforms: true, draggableCancel: props.classes.panel_content, className: props.classes.layout },
-        panels,
+        React.createElement("div", { key: "0.0", "data-grid": { x: 0, y: 0, w: 12, h: 2 }, className: props.classes.header_bar },
+            React.createElement(exports.PanelHeading, null,
+                "Review-Hub : ",
+                props.name),
+            React.createElement(exports.PanelContent, null, (_c = props.buttons) === null || _c === void 0 ? void 0 : _c.map((a) => (React.createElement(core_1.Button, { onClick: () => a.handleClick(dispatch, store, persistence, props.currentUser, props.name) }, a.title))))),
         React.createElement("div", { key: "0.1", "data-grid": { x: 0, y: 1, w: 3, h: 13 }, className: props.classes.version_control },
             React.createElement(exports.PanelHeading, null,
                 "version-control",
@@ -58,9 +56,9 @@ exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
             React.createElement(exports.PanelContent, null,
                 React.createElement(staging_scm_1.SCMPanel, { store: store, dispatch: dispatch }))),
         React.createElement("div", { key: "0.2", "data-grid": { x: 3, y: 1, w: 6, h: 13 }, className: props.classes.editor },
-            React.createElement(exports.PanelHeading, null, !((_c = store.interactionStore.selectedView) === null || _c === void 0 ? void 0 : _c.fullPath)
+            React.createElement(exports.PanelHeading, null, !((_d = store.interactionStore.selectedView) === null || _d === void 0 ? void 0 : _d.fullPath)
                 ? "Editor"
-                : `Editor - ${(_d = store.interactionStore.selectedView) === null || _d === void 0 ? void 0 : _d.fullPath} @ ${(_e = store.interactionStore.selectedView) === null || _e === void 0 ? void 0 : _e.revision} ${((_f = store.interactionStore.selectedView) === null || _f === void 0 ? void 0 : _f.label) || ""}`),
+                : `Editor - ${(_e = store.interactionStore.selectedView) === null || _e === void 0 ? void 0 : _e.fullPath} @ ${(_f = store.interactionStore.selectedView) === null || _f === void 0 ? void 0 : _f.revision} ${((_g = store.interactionStore.selectedView) === null || _g === void 0 ? void 0 : _g.label) || ""}`),
             React.createElement(exports.PanelContent, null,
                 React.createElement(editor_1.Editor, { currentUser: store.interactionStore.currentUser, view: store.interactionStore.selectedView, dispatch: dispatch }))),
         React.createElement("div", { key: "0.3", "data-grid": { x: 9, y: 1, w: 3, h: 13 }, className: props.classes.script_history },

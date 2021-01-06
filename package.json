@@ -1,13 +1,12 @@
 {
   "name": "review-hub",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "webpack serve",
-    "compile": "tsc",
-    "compileapp": "webpack --mode=production",
+    "compile": "tsc && webpack --mode=production",
     "tsc": "tsc --watch",
     "doc": "typedoc --out ./docs ./src/main.tsx",
     "test": "jest --coverage",

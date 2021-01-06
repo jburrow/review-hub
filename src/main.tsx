@@ -14,7 +14,7 @@ render(
   <App
     persistence={demoStore}
     currentUser="current-user"
-    options={{ loadOnStartup: true, showToolbar: true }}
+    options={{ loadOnStartup: true }}
     buttons={[
       {
         title: "Download Zip",

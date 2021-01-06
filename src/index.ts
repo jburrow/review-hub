@@ -5,6 +5,7 @@ import {
   versionControlReducer,
   VersionControlState,
 } from "./events-version-control";
+import { rebaseScripts, generateZip } from "./import-export";
 
 import { AppState, Dispatch } from "./store";
 
@@ -17,4 +18,6 @@ export {
   VersionControlState,
   AppState,
   Dispatch,
+  rebaseScripts,
+  generateZip,
 };

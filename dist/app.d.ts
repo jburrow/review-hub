@@ -15,8 +15,7 @@ export declare const App: React.ComponentType<Pick<{
     persistence?: Persistence;
     currentUser?: string;
     options?: {
-        loadOnStartup: boolean;
-        showToolbar: boolean;
+        loadOnStartup?: boolean;
     };
     buttons?: Action[];
     name?: string;

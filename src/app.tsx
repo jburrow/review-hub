@@ -13,8 +13,6 @@ import { AppStyles } from "./styles";
 import React = require("react");
 
 import useWindowSize from "@rooks/use-window-size";
-import { generateZip } from "./import-export";
-import GetAppIcon from "@material-ui/icons/GetApp";
 
 const ReactGridLayout = RGL.WidthProvider(RGL);
 
@@ -50,12 +48,12 @@ export const App = withStyles(AppStyles)(
     props: WithStyles<typeof AppStyles> & {
       persistence?: Persistence;
       currentUser?: string;
-      options?: { loadOnStartup: boolean; showToolbar: boolean };
+      options?: { loadOnStartup?: boolean };
       buttons?: Action[];
       name?: string;
     }
   ) => {
-    const persistence = props.persistence || new LocalStoragePersistence();
+    const persistence = props.persistence ?? new LocalStoragePersistence();
     const [store, dispatch] = React.useReducer(appReducer, initialState);
     const { innerHeight } = useWindowSize();
 
@@ -75,35 +73,6 @@ export const App = withStyles(AppStyles)(
       }
     }, [props.currentUser]);
 
-    let panels = [];
-
-    panels.push(
-      <div
-        key="0.0"
-        data-grid={{ x: 0, y: 0, w: 12, h: 2 }}
-        className={props.classes.header_bar}
-      >
-        <PanelHeading>Review-Hub : {props.name}</PanelHeading>
-        <PanelContent>
-          {props.buttons?.map((a) => (
-            <Button
-              onClick={() =>
-                a.handleClick(
-                  dispatch,
-                  store,
-                  persistence,
-                  props.currentUser,
-                  props.name
-                )
-              }
-            >
-              {a.title}
-            </Button>
-          ))}
-        </PanelContent>
-      </div>
-    );
-
     return (
       <ReactGridLayout
         rowHeight={(innerHeight - 70) / 20}
@@ -116,7 +85,30 @@ export const App = withStyles(AppStyles)(
         draggableCancel={props.classes.panel_content}
         className={props.classes.layout}
       >
-        {panels}
+        <div
+          key="0.0"
+          data-grid={{ x: 0, y: 0, w: 12, h: 2 }}
+          className={props.classes.header_bar}
+        >
+          <PanelHeading>Review-Hub : {props.name}</PanelHeading>
+          <PanelContent>
+            {props.buttons?.map((a) => (
+              <Button
+                onClick={() =>
+                  a.handleClick(
+                    dispatch,
+                    store,
+                    persistence,
+                    props.currentUser,
+                    props.name
+                  )
+                }
+              >
+                {a.title}
+              </Button>
+            ))}
+          </PanelContent>
+        </div>
 
         <div
           key="0.1"
