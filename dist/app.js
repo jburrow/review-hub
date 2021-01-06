@@ -44,7 +44,7 @@ exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
             React.createElement(exports.PanelHeading, null,
                 "Review-Hub : ",
                 props.name),
-            React.createElement(exports.PanelContent, null, (_c = props.buttons) === null || _c === void 0 ? void 0 : _c.map((a) => (React.createElement(core_1.Button, { onClick: () => a.handleClick(dispatch, store, persistence, props.currentUser, props.name) }, a.title))))),
+            React.createElement(exports.PanelContent, null, (_c = props.buttons) === null || _c === void 0 ? void 0 : _c.map((a, i) => (React.createElement(core_1.Button, { key: i, onClick: () => a.handleClick(dispatch, store, persistence, props.currentUser, props.name) }, a.title))))),
         React.createElement("div", { key: "0.1", "data-grid": { x: 0, y: 1, w: 3, h: 13 }, className: props.classes.version_control },
             React.createElement(exports.PanelHeading, null,
                 "version-control",

@@ -92,8 +92,9 @@ export const App = withStyles(AppStyles)(
         >
           <PanelHeading>Review-Hub : {props.name}</PanelHeading>
           <PanelContent>
-            {props.buttons?.map((a) => (
+            {props.buttons?.map((a, i) => (
               <Button
+                key={i}
                 onClick={() =>
                   a.handleClick(
                     dispatch,
