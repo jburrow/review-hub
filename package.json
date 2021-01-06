@@ -1,6 +1,6 @@
 {
   "name": "review-hub",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +24,7 @@
     "jszip": "^3.5.0",
     "moment": "^2.29.1",
     "monaco-editor": "^0.21.2",
-    "monaco-review": "0.0.15",
+    "monaco-review": "0.0.16",
     "react-grid-layout": "^1.2.0",
     "react-with-styles": "^4.1.0",
     "stream": "0.0.2",
