@@ -15,6 +15,7 @@ exports.initialState = {
     isHeadCommit: false,
 };
 const appReducer = (state, event) => {
+    var _a, _b, _c, _d, _e;
     console.debug("appReducer:", event);
     switch (event.type) {
         case "selectCommit":
@@ -37,11 +38,6 @@ const appReducer = (state, event) => {
         case "reset":
             switch (event.storeType) {
                 case VersionControlStoreType.VersionControl:
-                    const vcSelectedFile = state.vcStore.files[state.interactionStore.selectedFile];
-                    const isSelectedHead = state.interactionStore.selectedFile &&
-                        vcSelectedFile &&
-                        vcSelectedFile.revision ===
-                            state.interactionStore.selectedView.revision;
                     const isHeadCommit = state.interactionStore.selectedCommitId &&
                         state.vcStore.headCommitId
                         ? true
@@ -54,16 +50,6 @@ const appReducer = (state, event) => {
                         type: "reset",
                         storeType: VersionControlStoreType.Working,
                     });
-                    if (isSelectedHead) {
-                        const c = s2.vcStore.files[state.interactionStore.selectedFile];
-                        s2 = exports.appReducer(s2, {
-                            type: "selectedView",
-                            fullPath: s2.interactionStore.selectedFile,
-                            revision: c.revision,
-                            text: c.text,
-                            readOnly: false,
-                        });
-                    }
                     if (isHeadCommit) {
                         s2 = exports.appReducer(s2, {
                             type: "selectCommit",
@@ -72,22 +58,23 @@ const appReducer = (state, event) => {
                     }
                     return s2;
                 case VersionControlStoreType.Working:
-                    let newSelectedPath = state.interactionStore.selectedFile;
+                    let newSelectedPath = (_a = state.interactionStore.selectedView) === null || _a === void 0 ? void 0 : _a.fullPath;
                     let interactionStore = state.interactionStore;
+                    console.log(newSelectedPath);
                     // if we are renaming of a revision ::  and it isn't in the working set... then do we need to seed it?
                     if (event.type === "commit") {
-                        const rename = event.events.filter((e) => e.type === "rename" &&
-                            e.oldFullPath === state.interactionStore.selectedFile);
+                        const rename = event.events.filter((e) => e.type === "rename" && e.oldFullPath === newSelectedPath);
                         if (rename.length > 0 && rename[0].type == "rename") {
                             newSelectedPath = rename[0].fullPath;
                         }
-                        if (event.events.filter((e) => e.type === "delete" &&
-                            e.fullPath === state.interactionStore.selectedFile).length) {
+                        if (event.events.filter((e) => e.type === "delete" && e.fullPath === newSelectedPath).length) {
                             newSelectedPath = null;
                         }
                     }
                     const wsStore = events_version_control_1.versionControlReducer(state.wsStore, event);
-                    if (state.interactionStore.selectedFile !== newSelectedPath) {
+                    if (((_c = (_b = state.interactionStore) === null || _b === void 0 ? void 0 : _b.selectedView) === null || _c === void 0 ? void 0 : _c.fullPath) ===
+                        newSelectedPath &&
+                        !((_e = (_d = state.interactionStore) === null || _d === void 0 ? void 0 : _d.selectedView) === null || _e === void 0 ? void 0 : _e.readOnly)) {
                         const value = wsStore.files[newSelectedPath];
                         interactionStore = interaction_store_1.interactionReducer(state.interactionStore, {
                             type: "selectedView",

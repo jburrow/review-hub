@@ -22,7 +22,7 @@ class LocalStoragePersistence {
     }
 }
 exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const persistence = (_a = props.persistence) !== null && _a !== void 0 ? _a : new LocalStoragePersistence();
     const [store, dispatch] = React.useReducer(store_1.appReducer, store_1.initialState);
     const { innerHeight } = use_window_size_1.default();
@@ -63,11 +63,10 @@ exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
                 React.createElement(editor_1.Editor, { currentUser: store.interactionStore.currentUser, view: store.interactionStore.selectedView, dispatch: dispatch }))),
         React.createElement("div", { key: "0.3", "data-grid": { x: 9, y: 1, w: 3, h: 13 }, className: props.classes.script_history },
             React.createElement(exports.PanelHeading, null,
-                "File History ",
-                store.interactionStore.selectedFile),
+                "File History ", (_h = store.interactionStore.selectedView) === null || _h === void 0 ? void 0 :
+                _h.fullPath),
             React.createElement(exports.PanelContent, null,
-                React.createElement(file_history_1.FileHistory, { file: store.interactionStore.selectedFile &&
-                        store.vcStore.files[store.interactionStore.selectedFile], selectedView: store.interactionStore.selectedView, dispatch: dispatch }))),
+                React.createElement(file_history_1.FileHistory, { file: store.vcStore.files[(_j = store.interactionStore.selectedView) === null || _j === void 0 ? void 0 : _j.fullPath], selectedView: store.interactionStore.selectedView, dispatch: dispatch }))),
         React.createElement("div", { key: "1.1", "data-grid": { x: 0, y: 2, w: 12, h: 4 }, className: props.classes.vc_history },
             React.createElement(exports.PanelHeading, null, "VC History"),
             React.createElement(exports.PanelContent, null,

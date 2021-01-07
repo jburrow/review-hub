@@ -14,6 +14,7 @@ render(
   <App
     persistence={demoStore}
     currentUser="current-user"
+    name="Demo Review Set"
     options={{ loadOnStartup: true }}
     buttons={[
       {

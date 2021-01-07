@@ -10,7 +10,7 @@ const demo_store_1 = require("./demo-store");
 const import_export_1 = require("./import-export");
 require("./index.css");
 react_1.monaco.init().then(() => console.debug("Monaco has initialized..."));
-react_dom_1.render(React.createElement(app_1.App, { persistence: demo_store_1.demoStore, currentUser: "current-user", options: { loadOnStartup: true }, buttons: [
+react_dom_1.render(React.createElement(app_1.App, { persistence: demo_store_1.demoStore, currentUser: "current-user", name: "Demo Review Set", options: { loadOnStartup: true }, buttons: [
         {
             title: "Download Zip",
             handleClick: (dispatch, store, persistence, currentUser, name) => {

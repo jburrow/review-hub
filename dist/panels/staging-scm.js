@@ -85,6 +85,7 @@ const StagingSCM = (props) => {
                                 type: "edit",
                                 fullPath: c.text,
                                 text: "",
+                                revision: 0,
                             },
                         ],
                     });
@@ -193,16 +194,17 @@ const SCMItem = core_1.withStyles(styles_1.SelectedStyles)((props) => {
         props.status));
 });
 const SCMPanel = (props) => {
+    var _a, _b;
     const activeFiles = props.store.interactionStore.selectedCommitId
         ? props.store.vcStore.commits[props.store.interactionStore.selectedCommitId]
         : props.store.vcStore.files;
     return (React.createElement(React.Fragment, null,
-        React.createElement(exports.SCM, { dispatch: props.dispatch, files: activeFiles, currentUser: props.store.interactionStore.currentUser, selectedFile: props.store.interactionStore.selectedFile, comments: props.store.vcStore.commentStore, filter: (i) => {
+        React.createElement(exports.SCM, { dispatch: props.dispatch, files: activeFiles, currentUser: props.store.interactionStore.currentUser, selectedFile: (_a = props.store.interactionStore.selectedView) === null || _a === void 0 ? void 0 : _a.fullPath, comments: props.store.vcStore.commentStore, filter: (i) => {
                 return i[1].status === events_version_control_1.FileStateStatus.active;
             } }),
         React.createElement(core_1.Chip, { label: `Events: #${props.store.vcStore.events.length}`, size: "small" }),
         React.createElement(core_1.Divider, null),
-        React.createElement(exports.StagingSCM, { dispatch: props.dispatch, isHeadCommit: props.store.isHeadCommit, currentUser: props.store.interactionStore.currentUser, generalComments: props.store.wsStore.commentStore, events: props.store.wsStore.events, wsfiles: props.store.wsStore.files, vcfiles: props.store.vcStore.files, selectedFile: props.store.interactionStore.selectedFile }),
+        React.createElement(exports.StagingSCM, { dispatch: props.dispatch, isHeadCommit: props.store.isHeadCommit, currentUser: props.store.interactionStore.currentUser, generalComments: props.store.wsStore.commentStore, events: props.store.wsStore.events, wsfiles: props.store.wsStore.files, vcfiles: props.store.vcStore.files, selectedFile: (_b = props.store.interactionStore.selectedView) === null || _b === void 0 ? void 0 : _b.fullPath }),
         React.createElement(core_1.Chip, { label: `Events: #${props.store.wsStore.events.length}`, size: "small" })));
 };
 exports.SCMPanel = SCMPanel;

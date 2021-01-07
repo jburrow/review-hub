@@ -8,7 +8,7 @@ import * as React from "react";
 import { Dispatch, VersionControlStoreType } from "../store";
 import { SelectedView } from "../interaction-store";
 import { RenameDialog } from "../dialogs/rename";
-import { Button } from "@material-ui/core";
+import { Button, Chip } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { ConfirmDialog } from "../dialogs/confirm";
 
@@ -63,32 +63,36 @@ export const Editor = (props: {
   return props.view && props.view.fullPath ? (
     <div style={{ height: "calc(100% - 20px)" }}>
       {props.view.readOnly ? (
-        <span style={{ backgroundColor: "red" }}>READ-ONLY</span>
+        <Chip label="READ-ONLY" color="primary" size="small" />
       ) : (
-        <span style={{ backgroundColor: "green" }}>EDITABLE</span>
+        <Chip label="EDITABLE" color="secondary" size="small" />
       )}
 
-      <Button
-        aria-label="delete"
-        size="small"
-        disabled={text !== props.view.text}
-        onClick={() => {
-          setConfirmDialogOpen(true);
-        }}
-        startIcon={<DeleteIcon fontSize="small" />}
-      >
-        Stage - Delete
-      </Button>
+      {!props.view.readOnly && (
+        <React.Fragment>
+          <Button
+            aria-label="delete"
+            size="small"
+            disabled={text !== props.view.text}
+            onClick={() => {
+              setConfirmDialogOpen(true);
+            }}
+            startIcon={<DeleteIcon fontSize="small" />}
+          >
+            Stage - Delete
+          </Button>
 
-      <Button
-        size="small"
-        disabled={text !== props.view.text}
-        onClick={() => {
-          setRenameDialogOpen(true);
-        }}
-      >
-        stage - rename
-      </Button>
+          <Button
+            size="small"
+            disabled={text !== props.view.text}
+            onClick={() => {
+              setRenameDialogOpen(true);
+            }}
+          >
+            stage - rename
+          </Button>
+        </React.Fragment>
+      )}
 
       <RenameDialog
         fullPath={props.view.fullPath}
@@ -105,6 +109,7 @@ export const Editor = (props: {
                   oldFullPath: props.view.fullPath,
                   text: text,
                   fullPath: newFullPath,
+                  revision: props.view.revision,
                 },
               ],
             });
@@ -124,12 +129,18 @@ export const Editor = (props: {
               storeType: VersionControlStoreType.Working,
               type: "commit",
               author: props.currentUser,
-              events: [{ type: "delete", fullPath: props.view.fullPath }],
+              events: [
+                {
+                  type: "delete",
+                  fullPath: props.view.fullPath,
+                  revision: props.view.revision,
+                },
+              ],
             });
         }}
       />
 
-      {text !== props.view.text ? (
+      {text !== props.view.text && (
         <React.Fragment>
           <Button
             size="small"
@@ -139,7 +150,12 @@ export const Editor = (props: {
                 type: "commit",
                 author: props.currentUser,
                 events: [
-                  { type: "edit", fullPath: props.view.fullPath, text: text },
+                  {
+                    type: "edit",
+                    fullPath: props.view.fullPath,
+                    text: text,
+                    revision: props.view.revision,
+                  },
                 ],
               });
             }}
@@ -156,50 +172,49 @@ export const Editor = (props: {
             undo change
           </Button>
         </React.Fragment>
-      ) : (
-        <span>not modified text </span>
       )}
-      {(comments || []).length ? (
-        <Button
-          size="small"
-          onClick={() => {
-            props.dispatch({
-              storeType: VersionControlStoreType.Working,
-              type: "commit",
-              author: props.currentUser,
-              events: [
-                {
-                  type: "comment",
-                  fullPath: props.view.fullPath,
-                  commentEvents: comments,
+
+      {(comments || []).length > 0 && (
+        <React.Fragment>
+          <Button
+            size="small"
+            onClick={() => {
+              props.dispatch({
+                storeType: VersionControlStoreType.Working,
+                type: "commit",
+                author: props.currentUser,
+                events: [
+                  {
+                    type: "comment",
+                    fullPath: props.view.fullPath,
+                    commentEvents: comments,
+                    revision: props.view.revision,
+                  },
+                ],
+              });
+              setComments([]);
+            }}
+          >
+            Stage Comments {`${comments.length}`}
+          </Button>
+
+          <Button
+            size="small"
+            onClick={() => {
+              setComments([]);
+              reviewManager.loadFromStore(
+                props.view.comments || {
+                  comments: {},
+                  deletedCommentIds: new Set(),
+                  dirtyCommentIds: new Set(),
                 },
-              ],
-            });
-            setComments([]);
-          }}
-        >
-          Stage Comments {`${comments.length}`}
-        </Button>
-      ) : (
-        <span>not modified comments</span>
-      )}
-      {(comments || []).length && (
-        <Button
-          size="small"
-          onClick={() => {
-            setComments([]);
-            reviewManager.loadFromStore(
-              props.view.comments || {
-                comments: {},
-                deletedCommentIds: new Set(),
-                dirtyCommentIds: new Set(),
-              },
-              []
-            );
-          }}
-        >
-          Discard Comments
-        </Button>
+                []
+              );
+            }}
+          >
+            Discard Comments
+          </Button>
+        </React.Fragment>
       )}
       {props.view.original ? (
         <DiffEditor

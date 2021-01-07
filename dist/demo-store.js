@@ -8,11 +8,13 @@ const loadVersionControlStore = () => {
             fullPath: "/script1.txt",
             text: "function version(){ return 's1.1'}",
             type: "edit",
+            revision: 0,
         },
         {
             fullPath: "/script3.py",
             text: "function version(){ return 's3.1'}",
             type: "edit",
+            revision: 0,
         },
     ];
     const store = events_version_control_1.reduceVersionControl([
@@ -31,11 +33,13 @@ const loadVersionControlStore = () => {
                     fullPath: "/script1.txt",
                     text: "function version(){ return 's1.2'}",
                     type: "edit",
+                    revision: 0,
                 },
                 {
                     fullPath: "/script2.py",
                     text: "function version(){ return 's2.1'}",
                     type: "edit",
+                    revision: 0,
                 },
             ],
         },
@@ -48,6 +52,7 @@ const loadVersionControlStore = () => {
                     fullPath: "/script1.txt",
                     text: "function version(){ return 's1.3'}",
                     type: "edit",
+                    revision: 0,
                 },
             ],
         },
@@ -68,6 +73,7 @@ const loadVersionControlStore = () => {
                             id: "1",
                         },
                     ],
+                    revision: 0,
                     type: "comment",
                 },
             ],

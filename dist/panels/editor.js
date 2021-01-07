@@ -41,13 +41,14 @@ const Editor = (props) => {
     const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
     const editorHeight = "calc(100% - 25px)";
     return props.view && props.view.fullPath ? (React.createElement("div", { style: { height: "calc(100% - 20px)" } },
-        props.view.readOnly ? (React.createElement("span", { style: { backgroundColor: "red" } }, "READ-ONLY")) : (React.createElement("span", { style: { backgroundColor: "green" } }, "EDITABLE")),
-        React.createElement(core_1.Button, { "aria-label": "delete", size: "small", disabled: text !== props.view.text, onClick: () => {
-                setConfirmDialogOpen(true);
-            }, startIcon: React.createElement(Delete_1.default, { fontSize: "small" }) }, "Stage - Delete"),
-        React.createElement(core_1.Button, { size: "small", disabled: text !== props.view.text, onClick: () => {
-                setRenameDialogOpen(true);
-            } }, "stage - rename"),
+        props.view.readOnly ? (React.createElement(core_1.Chip, { label: "READ-ONLY", color: "primary", size: "small" })) : (React.createElement(core_1.Chip, { label: "EDITABLE", color: "secondary", size: "small" })),
+        !props.view.readOnly && (React.createElement(React.Fragment, null,
+            React.createElement(core_1.Button, { "aria-label": "delete", size: "small", disabled: text !== props.view.text, onClick: () => {
+                    setConfirmDialogOpen(true);
+                }, startIcon: React.createElement(Delete_1.default, { fontSize: "small" }) }, "Stage - Delete"),
+            React.createElement(core_1.Button, { size: "small", disabled: text !== props.view.text, onClick: () => {
+                    setRenameDialogOpen(true);
+                } }, "stage - rename"))),
         React.createElement(rename_1.RenameDialog, { fullPath: props.view.fullPath, onClose: ({ newFullPath, rename }) => {
                 setRenameDialogOpen(false);
                 rename &&
@@ -61,6 +62,7 @@ const Editor = (props) => {
                                 oldFullPath: props.view.fullPath,
                                 text: text,
                                 fullPath: newFullPath,
+                                revision: props.view.revision,
                             },
                         ],
                     });
@@ -72,49 +74,62 @@ const Editor = (props) => {
                         storeType: store_1.VersionControlStoreType.Working,
                         type: "commit",
                         author: props.currentUser,
-                        events: [{ type: "delete", fullPath: props.view.fullPath }],
+                        events: [
+                            {
+                                type: "delete",
+                                fullPath: props.view.fullPath,
+                                revision: props.view.revision,
+                            },
+                        ],
                     });
             } }),
-        text !== props.view.text ? (React.createElement(React.Fragment, null,
+        text !== props.view.text && (React.createElement(React.Fragment, null,
             React.createElement(core_1.Button, { size: "small", onClick: () => {
                     props.dispatch({
                         storeType: store_1.VersionControlStoreType.Working,
                         type: "commit",
                         author: props.currentUser,
                         events: [
-                            { type: "edit", fullPath: props.view.fullPath, text: text },
+                            {
+                                type: "edit",
+                                fullPath: props.view.fullPath,
+                                text: text,
+                                revision: props.view.revision,
+                            },
                         ],
                     });
                 } }, "stage - change"),
             React.createElement(core_1.Button, { size: "small", onClick: () => {
                     setText(props.view.text);
                     e.getModel().setValue(props.view.text);
-                } }, "undo change"))) : (React.createElement("span", null, "not modified text ")),
-        (comments || []).length ? (React.createElement(core_1.Button, { size: "small", onClick: () => {
-                props.dispatch({
-                    storeType: store_1.VersionControlStoreType.Working,
-                    type: "commit",
-                    author: props.currentUser,
-                    events: [
-                        {
-                            type: "comment",
-                            fullPath: props.view.fullPath,
-                            commentEvents: comments,
-                        },
-                    ],
-                });
-                setComments([]);
-            } },
-            "Stage Comments ",
-            `${comments.length}`)) : (React.createElement("span", null, "not modified comments")),
-        (comments || []).length && (React.createElement(core_1.Button, { size: "small", onClick: () => {
-                setComments([]);
-                reviewManager.loadFromStore(props.view.comments || {
-                    comments: {},
-                    deletedCommentIds: new Set(),
-                    dirtyCommentIds: new Set(),
-                }, []);
-            } }, "Discard Comments")),
+                } }, "undo change"))),
+        (comments || []).length > 0 && (React.createElement(React.Fragment, null,
+            React.createElement(core_1.Button, { size: "small", onClick: () => {
+                    props.dispatch({
+                        storeType: store_1.VersionControlStoreType.Working,
+                        type: "commit",
+                        author: props.currentUser,
+                        events: [
+                            {
+                                type: "comment",
+                                fullPath: props.view.fullPath,
+                                commentEvents: comments,
+                                revision: props.view.revision,
+                            },
+                        ],
+                    });
+                    setComments([]);
+                } },
+                "Stage Comments ",
+                `${comments.length}`),
+            React.createElement(core_1.Button, { size: "small", onClick: () => {
+                    setComments([]);
+                    reviewManager.loadFromStore(props.view.comments || {
+                        comments: {},
+                        deletedCommentIds: new Set(),
+                        dirtyCommentIds: new Set(),
+                    }, []);
+                } }, "Discard Comments"))),
         props.view.original ? (React.createElement(react_1.DiffEditor, { editorDidMount: (_modified, _original, editor) => {
                 editor
                     .getModifiedEditor()

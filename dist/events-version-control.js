@@ -33,6 +33,7 @@ function initialVersionControlState() {
 }
 exports.initialVersionControlState = initialVersionControlState;
 function versionControlReducer(state, event) {
+    var _a, _b;
     switch (event.type) {
         case "reset":
             return initialVersionControlState();
@@ -50,7 +51,7 @@ function versionControlReducer(state, event) {
                     status: FileStateStatus.active,
                     history: [],
                     commentStore: { comments: {} },
-                    revision: -1,
+                    revision: (_a = e.revision) !== null && _a !== void 0 ? _a : -1,
                 });
                 let status = FileStateStatus.active;
                 let text = prev.text;
@@ -88,7 +89,13 @@ function versionControlReducer(state, event) {
             return {
                 files: files,
                 commits: { ...state.commits, ...newCommit },
-                events: [...state.events, event],
+                events: [
+                    ...state.events,
+                    {
+                        ...event,
+                        createdAt: (_b = event.createdAt) !== null && _b !== void 0 ? _b : new Date().getTime().toString(),
+                    },
+                ],
                 version: state.version + 1,
                 headCommitId: event.id,
                 commentStore: generalCommentStore,

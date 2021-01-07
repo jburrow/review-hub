@@ -73,14 +73,6 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
     case "reset":
       switch (event.storeType) {
         case VersionControlStoreType.VersionControl:
-          const vcSelectedFile =
-            state.vcStore.files[state.interactionStore.selectedFile];
-          const isSelectedHead =
-            state.interactionStore.selectedFile &&
-            vcSelectedFile &&
-            vcSelectedFile.revision ===
-              state.interactionStore.selectedView.revision;
-
           const isHeadCommit: boolean =
             state.interactionStore.selectedCommitId &&
             state.vcStore.headCommitId
@@ -99,17 +91,6 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
             }
           );
 
-          if (isSelectedHead) {
-            const c = s2.vcStore.files[state.interactionStore.selectedFile];
-            s2 = appReducer(s2, {
-              type: "selectedView",
-              fullPath: s2.interactionStore.selectedFile,
-              revision: c.revision,
-              text: c.text,
-              readOnly: false,
-            });
-          }
-
           if (isHeadCommit) {
             s2 = appReducer(s2, {
               type: "selectCommit",
@@ -119,15 +100,15 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
 
           return s2;
         case VersionControlStoreType.Working:
-          let newSelectedPath = state.interactionStore.selectedFile;
+          let newSelectedPath = state.interactionStore.selectedView?.fullPath;
           let interactionStore = state.interactionStore;
+
+          console.log(newSelectedPath);
 
           // if we are renaming of a revision ::  and it isn't in the working set... then do we need to seed it?
           if (event.type === "commit") {
             const rename = event.events.filter(
-              (e) =>
-                e.type === "rename" &&
-                e.oldFullPath === state.interactionStore.selectedFile
+              (e) => e.type === "rename" && e.oldFullPath === newSelectedPath
             );
 
             if (rename.length > 0 && rename[0].type == "rename") {
@@ -135,17 +116,20 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
             }
             if (
               event.events.filter(
-                (e) =>
-                  e.type === "delete" &&
-                  e.fullPath === state.interactionStore.selectedFile
+                (e) => e.type === "delete" && e.fullPath === newSelectedPath
               ).length
             ) {
               newSelectedPath = null;
             }
           }
+
           const wsStore = versionControlReducer(state.wsStore, event);
 
-          if (state.interactionStore.selectedFile !== newSelectedPath) {
+          if (
+            state.interactionStore?.selectedView?.fullPath ===
+              newSelectedPath &&
+            !state.interactionStore?.selectedView?.readOnly
+          ) {
             const value = wsStore.files[newSelectedPath];
 
             interactionStore = interactionReducer(state.interactionStore, {

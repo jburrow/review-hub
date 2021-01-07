@@ -157,6 +157,7 @@ export const StagingSCM = (props: {
                   type: "edit",
                   fullPath: c.text,
                   text: "",
+                  revision: 0,
                 },
               ],
             });
@@ -179,7 +180,6 @@ export const SCM = (props: {
 
   const handleClick = (fullPath: string) => {
     const value = props.files[fullPath];
-
     props.dispatch({
       type: "selectedView",
       fullPath: value.fullPath,
@@ -378,7 +378,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
         dispatch={props.dispatch}
         files={activeFiles}
         currentUser={props.store.interactionStore.currentUser}
-        selectedFile={props.store.interactionStore.selectedFile}
+        selectedFile={props.store.interactionStore.selectedView?.fullPath}
         comments={props.store.vcStore.commentStore}
         filter={(i) => {
           return i[1].status === FileStateStatus.active;
@@ -397,7 +397,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
         events={props.store.wsStore.events}
         wsfiles={props.store.wsStore.files}
         vcfiles={props.store.vcStore.files}
-        selectedFile={props.store.interactionStore.selectedFile}
+        selectedFile={props.store.interactionStore.selectedView?.fullPath}
       ></StagingSCM>
       <Chip
         label={`Events: #${props.store.wsStore.events.length}`}

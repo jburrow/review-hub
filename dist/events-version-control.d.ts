@@ -3,21 +3,25 @@ export declare type FileEditEvent = {
     type: "edit";
     fullPath: string;
     text: string;
+    revision: number;
 };
 export declare type FileDeleteEvent = {
     type: "delete";
     fullPath: string;
+    revision: number;
 };
 export declare type FileCommentEvent = {
     type: "comment";
     fullPath: string;
     commentEvents: ReviewCommentEvent[];
+    revision: number;
 };
 export declare type FileRenameEvent = {
     type: "rename";
     fullPath: string;
     oldFullPath: string;
     text: string;
+    revision: number;
 };
 export declare type GeneralComment = {
     type: "general-comment";
@@ -29,10 +33,12 @@ export declare type VersionControlCommitEvent = {
     id?: string;
     author: string;
     events: FileEvents[];
+    createdAt?: string;
 };
 export declare type VersionControlCommitReset = {
     type: "reset";
     id?: string;
+    createdAt?: string;
 };
 export declare type VersionControlEvent = VersionControlCommitEvent | VersionControlCommitReset;
 export declare enum FileStateStatus {

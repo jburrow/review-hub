@@ -163,14 +163,15 @@ export const App = withStyles(AppStyles)(
           className={props.classes.script_history}
         >
           <PanelHeading>
-            File History {store.interactionStore.selectedFile}
+            File History {store.interactionStore.selectedView?.fullPath}
           </PanelHeading>
 
           <PanelContent>
             <FileHistory
               file={
-                store.interactionStore.selectedFile &&
-                store.vcStore.files[store.interactionStore.selectedFile]
+                store.vcStore.files[
+                  store.interactionStore.selectedView?.fullPath
+                ]
               }
               selectedView={store.interactionStore.selectedView}
               dispatch={dispatch}

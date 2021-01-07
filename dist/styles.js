@@ -3,28 +3,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SelectedStyles = exports.AppStyles = void 0;
 const core_1 = require("@material-ui/core");
 const panelHeadingHeight = "20px";
+const common = { backgroundColor: "#33333311" };
 exports.AppStyles = core_1.createStyles({
     layout: {
         fontSize: "12px",
         backgroundColor: "#f9f4f633",
         overflow: "hidden",
     },
-    header_bar: { backgroundColor: "#224D2533" },
+    header_bar: {
+        ...common,
+    },
     version_control: {
-        backgroundColor: "#D28C1F33",
+        ...common,
     },
     editor: {
-        backgroundColor: "#561E8E33",
+        ...common,
     },
     script_history: {
-        backgroundColor: "#1E518933",
+        ...common,
     },
     vc_history: {
-        backgroundColor: "#684D2533",
+        ...common,
     },
     panel_content: {
         height: `calc(100% - ${panelHeadingHeight})`,
         overflow: "auto",
+        padding: 5,
     },
     panel_heading: {
         height: panelHeadingHeight,

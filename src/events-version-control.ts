@@ -5,18 +5,29 @@ import {
 } from "monaco-review";
 import { v4 } from "uuid";
 
-export type FileEditEvent = { type: "edit"; fullPath: string; text: string };
-export type FileDeleteEvent = { type: "delete"; fullPath: string };
+export type FileEditEvent = {
+  type: "edit";
+  fullPath: string;
+  text: string;
+  revision: number;
+};
+export type FileDeleteEvent = {
+  type: "delete";
+  fullPath: string;
+  revision: number;
+};
 export type FileCommentEvent = {
   type: "comment";
   fullPath: string;
   commentEvents: ReviewCommentEvent[];
+  revision: number;
 };
 export type FileRenameEvent = {
   type: "rename";
   fullPath: string;
   oldFullPath: string;
   text: string;
+  revision: number;
 };
 
 export type GeneralComment = {
@@ -36,11 +47,13 @@ export type VersionControlCommitEvent = {
   id?: string;
   author: string;
   events: FileEvents[];
+  createdAt?: string;
 };
 
 export type VersionControlCommitReset = {
   type: "reset";
   id?: string;
+  createdAt?: string;
 };
 
 export type VersionControlEvent =
@@ -142,7 +155,7 @@ export function versionControlReducer(
           status: FileStateStatus.active,
           history: [],
           commentStore: { comments: {} },
-          revision: -1,
+          revision: e.revision ?? -1,
         }) as FileState;
 
         let status = FileStateStatus.active;
@@ -205,7 +218,13 @@ export function versionControlReducer(
       return {
         files: files,
         commits: { ...state.commits, ...newCommit },
-        events: [...state.events, event],
+        events: [
+          ...state.events,
+          {
+            ...event,
+            createdAt: event.createdAt ?? new Date().getTime().toString(),
+          },
+        ],
         version: state.version + 1,
         headCommitId: event.id,
         commentStore: generalCommentStore,

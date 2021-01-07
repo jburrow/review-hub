@@ -2,7 +2,7 @@ import { ReviewCommentStore } from "monaco-review";
 
 export interface InteractionState {
   selectedCommitId?: string;
-  selectedFile?: string;
+  //selectedFile?: string;
   selectedView?: SelectedView;
   currentUser: string;
 }
@@ -36,7 +36,7 @@ export const interactionReducer = (
     case "selectedView":
       return {
         ...state,
-        selectedFile: event.fullPath,
+        //selectedFile: event.fullPath,
         selectedView: {
           fullPath: event.fullPath,
           text: event.text,
