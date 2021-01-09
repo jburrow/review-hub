@@ -24,11 +24,16 @@ export type AppEvents =
   | InteractionStateEvents
   | AppCommitEvent
   | AppResetEvent
-  | { type: "load"; vcStore: VersionControlState };
+  | {
+      type: "load";
+      vcStore?: VersionControlState;
+      mainStore?: VersionControlState;
+    };
 
 export enum VersionControlStoreType {
   Working,
   VersionControl,
+  Main,
 }
 export type Dispatch = (event: AppEvents) => void;
 
@@ -36,6 +41,7 @@ export interface AppState {
   interactionStore: InteractionState;
   vcStore: VersionControlState;
   wsStore: VersionControlState;
+  mainStore?: VersionControlState;
   isHeadCommit: boolean;
 }
 
@@ -66,7 +72,8 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
     case "load":
       return {
         ...state,
-        vcStore: event.vcStore,
+        vcStore: event.vcStore ?? state.vcStore,
+        mainStore: event.mainStore ?? state.mainStore,
         wsStore: initialVersionControlState(),
       };
     case "commit":
