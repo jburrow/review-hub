@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94% </span>
+                <span class="strong">92% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>47/50</span>
+                <span class='fraction'>46/50</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.36% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/22</span>
+                <span class='fraction'>25/30</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94% </span>
+                <span class="strong">92% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>47/50</span>
+                <span class='fraction'>46/50</span>
             </div>
         
             
@@ -288,12 +288,44 @@
 <a name='L229'></a><a href='#L229'>229</a>
 <a name='L230'></a><a href='#L230'>230</a>
 <a name='L231'></a><a href='#L231'>231</a>
-<a name='L232'></a><a href='#L232'>232</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<a name='L232'></a><a href='#L232'>232</a>
+<a name='L233'></a><a href='#L233'>233</a>
+<a name='L234'></a><a href='#L234'>234</a>
+<a name='L235'></a><a href='#L235'>235</a>
+<a name='L236'></a><a href='#L236'>236</a>
+<a name='L237'></a><a href='#L237'>237</a>
+<a name='L238'></a><a href='#L238'>238</a>
+<a name='L239'></a><a href='#L239'>239</a>
+<a name='L240'></a><a href='#L240'>240</a>
+<a name='L241'></a><a href='#L241'>241</a>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a>
+<a name='L246'></a><a href='#L246'>246</a>
+<a name='L247'></a><a href='#L247'>247</a>
+<a name='L248'></a><a href='#L248'>248</a>
+<a name='L249'></a><a href='#L249'>249</a>
+<a name='L250'></a><a href='#L250'>250</a>
+<a name='L251'></a><a href='#L251'>251</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -493,6 +525,12 @@
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -517,7 +555,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
   ReviewCommentStore,
@@ -526,18 +564,29 @@
 } from "monaco-review";
 import { v4 } from "uuid";
 &nbsp;
-export type FileEditEvent = { type: "edit"; fullPath: string; text: string };
-export type FileDeleteEvent = { type: "delete"; fullPath: string };
+export type FileEditEvent = {
+  type: "edit";
+  fullPath: string;
+  text: string;
+  revision: number;
+};
+export type FileDeleteEvent = {
+  type: "delete";
+  fullPath: string;
+  revision: number;
+};
 export type FileCommentEvent = {
   type: "comment";
   fullPath: string;
   commentEvents: ReviewCommentEvent[];
+  revision: number;
 };
 export type FileRenameEvent = {
   type: "rename";
   fullPath: string;
   oldFullPath: string;
   text: string;
+  revision: number;
 };
 &nbsp;
 export type GeneralComment = {
@@ -557,11 +606,13 @@ export type VersionControlCommitEvent = {
   id?: string;
   author: string;
   events: FileEvents[];
+  createdAt?: string;
 };
 &nbsp;
 export type VersionControlCommitReset = {
   type: "reset";
   id?: string;
+  createdAt?: string;
 };
 &nbsp;
 export type VersionControlEvent =
@@ -663,7 +714,7 @@ export function versionControlReducer(
           status: FileStateStatus.active,
           history: [],
           commentStore: { comments: {} },
-          revision: -1,
+          revision: e.revision ?? <span class="branch-1 cbranch-no" title="branch not covered" >-1,</span>
         }) as FileState;
 &nbsp;
         let status = FileStateStatus.active;
@@ -726,7 +777,13 @@ export function versionControlReducer(
       return {
         files: files,
         commits: { ...state.commits, ...newCommit },
-        events: [...state.events, event],
+        events: [
+          ...state.events,
+          {
+            ...event,
+            createdAt: event.createdAt<span class="branch-0 cbranch-no" title="branch not covered" > ?? n</span>ew Date().getTime().toString(),
+          },
+        ],
         version: state.version + 1,
         headCommitId: event.id,
         commentStore: generalCommentStore,
@@ -747,8 +804,8 @@ export function reduceVersionControl(
   return state;
 }
 &nbsp;
-export function isReadonly(history: FileStateHistory[], revision: number) {
-  return history[history.length - 1].fileState.revision !== revision;
+export function <span class="fstat-no" title="function not covered" >isReadonly(</span>history: FileStateHistory[], revision: number) {
+<span class="cstat-no" title="statement not covered" >  return history[history.length - 1].fileState.revision !== revision;</span>
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -757,7 +814,7 @@ export function isReadonly(history: FileStateHistory[], revision: number) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jan 06 2021 07:46:11 GMT+0000 (Greenwich Mean Time)
+                at Sat Jan 09 2021 21:11:21 GMT+0000 (Greenwich Mean Time)
             </div>
         </div>
         <script src="prettify.js"></script>
