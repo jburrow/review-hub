@@ -8,17 +8,20 @@ export declare type AppResetEvent = {
 } & VersionControlCommitReset;
 export declare type AppEvents = InteractionStateEvents | AppCommitEvent | AppResetEvent | {
     type: "load";
-    vcStore: VersionControlState;
+    vcStore?: VersionControlState;
+    mainStore?: VersionControlState;
 };
 export declare enum VersionControlStoreType {
     Working = 0,
-    VersionControl = 1
+    VersionControl = 1,
+    Main = 2
 }
 export declare type Dispatch = (event: AppEvents) => void;
 export interface AppState {
     interactionStore: InteractionState;
     vcStore: VersionControlState;
     wsStore: VersionControlState;
+    mainStore?: VersionControlState;
     isHeadCommit: boolean;
 }
 export declare const initialState: AppState;

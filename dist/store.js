@@ -7,6 +7,7 @@ var VersionControlStoreType;
 (function (VersionControlStoreType) {
     VersionControlStoreType[VersionControlStoreType["Working"] = 0] = "Working";
     VersionControlStoreType[VersionControlStoreType["VersionControl"] = 1] = "VersionControl";
+    VersionControlStoreType[VersionControlStoreType["Main"] = 2] = "Main";
 })(VersionControlStoreType = exports.VersionControlStoreType || (exports.VersionControlStoreType = {}));
 exports.initialState = {
     interactionStore: { currentUser: "xyz-user" },
@@ -15,7 +16,7 @@ exports.initialState = {
     isHeadCommit: false,
 };
 const appReducer = (state, event) => {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f, _g;
     console.debug("appReducer:", event);
     switch (event.type) {
         case "selectCommit":
@@ -31,7 +32,8 @@ const appReducer = (state, event) => {
         case "load":
             return {
                 ...state,
-                vcStore: event.vcStore,
+                vcStore: (_a = event.vcStore) !== null && _a !== void 0 ? _a : state.vcStore,
+                mainStore: (_b = event.mainStore) !== null && _b !== void 0 ? _b : state.mainStore,
                 wsStore: events_version_control_1.initialVersionControlState(),
             };
         case "commit":
@@ -58,7 +60,7 @@ const appReducer = (state, event) => {
                     }
                     return s2;
                 case VersionControlStoreType.Working:
-                    let newSelectedPath = (_a = state.interactionStore.selectedView) === null || _a === void 0 ? void 0 : _a.fullPath;
+                    let newSelectedPath = (_c = state.interactionStore.selectedView) === null || _c === void 0 ? void 0 : _c.fullPath;
                     let interactionStore = state.interactionStore;
                     console.log(newSelectedPath);
                     // if we are renaming of a revision ::  and it isn't in the working set... then do we need to seed it?
@@ -72,9 +74,9 @@ const appReducer = (state, event) => {
                         }
                     }
                     const wsStore = events_version_control_1.versionControlReducer(state.wsStore, event);
-                    if (((_c = (_b = state.interactionStore) === null || _b === void 0 ? void 0 : _b.selectedView) === null || _c === void 0 ? void 0 : _c.fullPath) ===
+                    if (((_e = (_d = state.interactionStore) === null || _d === void 0 ? void 0 : _d.selectedView) === null || _e === void 0 ? void 0 : _e.fullPath) ===
                         newSelectedPath &&
-                        !((_e = (_d = state.interactionStore) === null || _d === void 0 ? void 0 : _d.selectedView) === null || _e === void 0 ? void 0 : _e.readOnly)) {
+                        !((_g = (_f = state.interactionStore) === null || _f === void 0 ? void 0 : _f.selectedView) === null || _g === void 0 ? void 0 : _g.readOnly)) {
                         const value = wsStore.files[newSelectedPath];
                         interactionStore = interaction_store_1.interactionReducer(state.interactionStore, {
                             type: "selectedView",
