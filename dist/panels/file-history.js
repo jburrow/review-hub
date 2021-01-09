@@ -35,7 +35,7 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                             setSelected(selected.concat(idx));
                         }
                     } }, selected.indexOf(idx) > -1 ? "deselect" : "select"),
-                React.createElement(ViewButton, { dispatch: props.dispatch, history: h }),
+                React.createElement(ViewButton, { dispatch: props.dispatch, history: h, readOnly: events_version_control_1.isReadonly(props.file.history, h.fileState.revision) }),
                 convert(h.fileState)))),
             selected.length == 2 && (React.createElement(React.Fragment, null,
                 React.createElement(core_1.Button, { size: "small", onClick: () => {
@@ -73,7 +73,7 @@ const ViewButton = (props) => {
     return (React.createElement(core_1.Button, { size: "small", onClick: () => props.dispatch({
             type: "selectedView",
             fullPath: props.history.fileState.fullPath,
-            readOnly: true,
+            readOnly: props.readOnly,
             text: props.history.fileState.text,
             comments: props.history.fileState.commentStore,
             revision: props.history.fileState.revision,

@@ -7,44 +7,55 @@ import { App } from "./app";
 import { demoStore } from "./demo-store";
 import { generateZip } from "./import-export";
 import "./index.css";
+import { appReducer, initialState } from "./store";
 
 monaco.init().then(() => console.debug("Monaco has initialized..."));
+const currentUser = "current-user";
 
-render(
-  <App
-    persistence={demoStore}
-    currentUser="current-user"
-    name="Demo Review Set"
-    options={{ loadOnStartup: true }}
-    buttons={[
-      {
-        title: "Download Zip",
-        handleClick: (dispatch, store, persistence, currentUser, name) => {
-          generateZip({
-            ...store.vcStore.files,
-            ...store.wsStore.files,
-          });
+const DemoApp = () => {
+  const [store, dispatch] = React.useReducer(appReducer, {
+    ...initialState,
+    interactionStore: { currentUser },
+  });
+
+  React.useEffect(() => {
+    const effect = async () => {
+      dispatch({ type: "load", vcStore: await demoStore.load() });
+    };
+
+    effect();
+  }, []);
+
+  return (
+    <App
+      store={store}
+      dispatch={dispatch}
+      name="Demo Review Set"
+      buttons={[
+        {
+          title: "Download Zip",
+          handleClick: (dispatch, store) => {
+            generateZip({
+              ...store.vcStore.files,
+              ...store.wsStore.files,
+            });
+          },
         },
-      },
-      {
-        title: "Load",
-        handleClick: async (
-          dispatch,
-          store,
-          persistence,
-          currentUser,
-          name
-        ) => {
-          dispatch({ type: "load", vcStore: await persistence.load() });
+        {
+          title: "Load",
+          handleClick: async (dispatch) => {
+            dispatch({ type: "load", vcStore: await demoStore.load() });
+          },
         },
-      },
-      {
-        title: "Save",
-        handleClick: (dispatch, store, persistence, currentUser, name) => {
-          persistence.save(store.vcStore);
+        {
+          title: "Save",
+          handleClick: (dispatch, store) => {
+            demoStore.save(store.vcStore);
+          },
         },
-      },
-    ]}
-  />,
-  document.getElementById("root")
-);
+      ]}
+    />
+  );
+};
+
+render(<DemoApp />, document.getElementById("root"));

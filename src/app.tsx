@@ -1,14 +1,11 @@
 import { Button, withStyles, WithStyles } from "@material-ui/core";
 import * as RGL from "react-grid-layout";
-import {
-  initialVersionControlState,
-  VersionControlState,
-} from "./events-version-control";
+import { VersionControlState } from "./events-version-control";
 import { Editor } from "./panels/editor";
 import { FileHistory } from "./panels/file-history";
 import { SCMPanel } from "./panels/staging-scm";
 import { VCHistory } from "./panels/vc-history";
-import { appReducer, AppState, Dispatch, initialState } from "./store";
+import { AppState, Dispatch } from "./store";
 import { AppStyles } from "./styles";
 import React = require("react");
 
@@ -21,57 +18,21 @@ export interface Persistence {
   load: () => Promise<VersionControlState>;
 }
 
-class LocalStoragePersistence implements Persistence {
-  async save(store: VersionControlState): Promise<boolean> {
-    return new Promise<boolean>((resolve) => resolve(true));
-  }
-  async load(): Promise<VersionControlState> {
-    return new Promise<VersionControlState>((resolve) =>
-      resolve(initialVersionControlState())
-    );
-  }
-}
-
 export interface Action {
   title: string;
-  handleClick(
-    dispatch: Dispatch,
-    store: AppState,
-    persistence: Persistence,
-    currentUser: string,
-    name: string
-  ): void;
+  handleClick(dispatch: Dispatch, store: AppState, name: string): void;
 }
 
 export const App = withStyles(AppStyles)(
   (
     props: WithStyles<typeof AppStyles> & {
-      persistence?: Persistence;
-      currentUser?: string;
-      options?: { loadOnStartup?: boolean };
+      dispatch: Dispatch;
+      store: AppState;
       buttons?: Action[];
       name?: string;
     }
   ) => {
-    const persistence = props.persistence ?? new LocalStoragePersistence();
-    const [store, dispatch] = React.useReducer(appReducer, initialState);
     const { innerHeight } = useWindowSize();
-
-    React.useEffect(() => {
-      const effect = async () => {
-        if (props.options.loadOnStartup) {
-          dispatch({ type: "load", vcStore: await persistence.load() });
-        }
-      };
-
-      effect();
-    }, [props.options?.loadOnStartup]);
-
-    React.useEffect(() => {
-      if (props.currentUser) {
-        dispatch({ type: "setCurrentUser", user: props.currentUser });
-      }
-    }, [props.currentUser]);
 
     return (
       <ReactGridLayout
@@ -96,13 +57,7 @@ export const App = withStyles(AppStyles)(
               <Button
                 key={i}
                 onClick={() =>
-                  a.handleClick(
-                    dispatch,
-                    store,
-                    persistence,
-                    props.currentUser,
-                    props.name
-                  )
+                  a.handleClick(props.dispatch, props.store, props.name)
                 }
               >
                 {a.title}
@@ -118,13 +73,13 @@ export const App = withStyles(AppStyles)(
         >
           <PanelHeading>
             version-control{" "}
-            {store.isHeadCommit
-              ? store.interactionStore.selectedCommitId
+            {props.store.isHeadCommit
+              ? props.store.interactionStore.selectedCommitId
               : "HEAD"}
-            {store.isHeadCommit && (
+            {props.store.isHeadCommit && (
               <button
                 onClick={() =>
-                  dispatch({ type: "selectCommit", commitId: null })
+                  props.dispatch({ type: "selectCommit", commitId: null })
                 }
               >
                 Switch to HEAD
@@ -132,7 +87,7 @@ export const App = withStyles(AppStyles)(
             )}
           </PanelHeading>
           <PanelContent>
-            <SCMPanel store={store} dispatch={dispatch} />
+            <SCMPanel store={props.store} dispatch={props.dispatch} />
           </PanelContent>
         </div>
 
@@ -142,18 +97,20 @@ export const App = withStyles(AppStyles)(
           className={props.classes.editor}
         >
           <PanelHeading>
-            {!store.interactionStore.selectedView?.fullPath
+            {!props.store.interactionStore.selectedView?.fullPath
               ? "Editor"
-              : `Editor - ${store.interactionStore.selectedView?.fullPath} @ ${
-                  store.interactionStore.selectedView?.revision
-                } ${store.interactionStore.selectedView?.label || ""}`}
+              : `Editor - ${
+                  props.store.interactionStore.selectedView?.fullPath
+                } @ ${props.store.interactionStore.selectedView?.revision} ${
+                  props.store.interactionStore.selectedView?.label || ""
+                }`}
           </PanelHeading>
 
           <PanelContent>
             <Editor
-              currentUser={store.interactionStore.currentUser}
-              view={store.interactionStore.selectedView}
-              dispatch={dispatch}
+              currentUser={props.store.interactionStore.currentUser}
+              view={props.store.interactionStore.selectedView}
+              dispatch={props.dispatch}
             />
           </PanelContent>
         </div>
@@ -163,18 +120,18 @@ export const App = withStyles(AppStyles)(
           className={props.classes.script_history}
         >
           <PanelHeading>
-            File History {store.interactionStore.selectedView?.fullPath}
+            File History {props.store.interactionStore.selectedView?.fullPath}
           </PanelHeading>
 
           <PanelContent>
             <FileHistory
               file={
-                store.vcStore.files[
-                  store.interactionStore.selectedView?.fullPath
+                props.store.vcStore.files[
+                  props.store.interactionStore.selectedView?.fullPath
                 ]
               }
-              selectedView={store.interactionStore.selectedView}
-              dispatch={dispatch}
+              selectedView={props.store.interactionStore.selectedView}
+              dispatch={props.dispatch}
             />
           </PanelContent>
         </div>
@@ -186,12 +143,12 @@ export const App = withStyles(AppStyles)(
           <PanelHeading>VC History</PanelHeading>
           <PanelContent>
             <VCHistory
-              vcStore={store.vcStore}
-              dispatch={dispatch}
-              selectedCommitId={store.interactionStore.selectedCommitId}
-              selectedView={store.interactionStore.selectedView}
+              vcStore={props.store.vcStore}
+              dispatch={props.dispatch}
+              selectedCommitId={props.store.interactionStore.selectedCommitId}
+              selectedView={props.store.interactionStore.selectedView}
             />
-            <div>{store.vcStore.version}</div>
+            <div>{props.store.vcStore.version}</div>
           </PanelContent>
         </div>
       </ReactGridLayout>

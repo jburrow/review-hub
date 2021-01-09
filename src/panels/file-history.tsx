@@ -57,7 +57,11 @@ export const FileHistory = withStyles(SelectedStyles)(
               >
                 {selected.indexOf(idx) > -1 ? "deselect" : "select"}
               </Button>
-              <ViewButton dispatch={props.dispatch} history={h}></ViewButton>
+              <ViewButton
+                dispatch={props.dispatch}
+                history={h}
+                readOnly={isReadonly(props.file.history, h.fileState.revision)}
+              ></ViewButton>
 
               {convert(h.fileState)}
             </div>
@@ -117,6 +121,7 @@ export const FileHistory = withStyles(SelectedStyles)(
 const ViewButton: React.FunctionComponent<{
   dispatch: Dispatch;
   history: FileStateHistory;
+  readOnly: boolean;
 }> = (props) => {
   return (
     <Button
@@ -125,7 +130,7 @@ const ViewButton: React.FunctionComponent<{
         props.dispatch({
           type: "selectedView",
           fullPath: props.history.fileState.fullPath,
-          readOnly: true, //todo isEditable(props.history, props.history.fileState.revision),
+          readOnly: props.readOnly,
           text: props.history.fileState.text,
           comments: props.history.fileState.commentStore,
           revision: props.history.fileState.revision,
