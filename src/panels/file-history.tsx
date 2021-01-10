@@ -1,7 +1,7 @@
 import * as React from "react";
-import { AppState, Dispatch, getFile, VersionControlStoreType } from "../store";
+import { AppState, Dispatch, getFile, VersionControlStoreType, versionControlStoreTypeLabel } from "../store";
 import { FileStateHistory, isReadonly } from "../events-version-control";
-import { Button, withStyles, WithStyles } from "@material-ui/core";
+import { Button, Chip, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { SelectedView } from "../interaction-store";
 
@@ -34,13 +34,14 @@ export const FileHistory = withStyles(SelectedStyles)(
     } & WithStyles<typeof SelectedStyles>
   ) => {
     const [selected, setSelected] = React.useState<number[]>([]);
-
-    const file = props.store.vcStore.files[props.store.interactionStore.selectedView?.fullPath];
     const selectedView = props.store.interactionStore.selectedView;
+    const file = getFile(props.store, selectedView?.storeType, selectedView?.fullPath)?.file;
 
     if (file) {
       return (
         <div>
+          <Chip label={versionControlStoreTypeLabel(selectedView.storeType)} variant="outlined" />
+
           {props.store.mainStore &&
           ((props.store.interactionStore.selectedView?.type == "diff" &&
             props.store.interactionStore.selectedView.originalStoreType !== VersionControlStoreType.Main) ||
@@ -49,16 +50,23 @@ export const FileHistory = withStyles(SelectedStyles)(
             <Button
               size="small"
               onClick={() => {
-                const m = getFile(
+                const active = getFile(
                   props.store,
                   props.store.interactionStore.selectedView.storeType,
                   props.store.interactionStore.selectedView.fullPath
                 );
+                const m = active.file;
+
                 const original = getFile(
                   props.store,
                   VersionControlStoreType.Main,
                   props.store.interactionStore.selectedView.fullPath
-                );
+                ).file;
+                const readOnly =
+                  isReadonly(file.history, m.revision) &&
+                  props.store.interactionStore.selectedView.storeType !== VersionControlStoreType.Working;
+                console.log(readOnly, props.store.interactionStore.selectedView);
+                //ebugger;
                 props.dispatch({
                   type: "selectedView",
                   selectedView: {
@@ -66,12 +74,12 @@ export const FileHistory = withStyles(SelectedStyles)(
                     fullPath: file.fullPath,
                     label: `base:${original.revision} v other:${m.revision}`,
                     text: m.text,
-                    readOnly: isReadonly(file.history, m.revision),
+                    readOnly,
                     revision: m.revision,
                     original: original.text,
                     originalRevision: original.revision,
                     comments: m.commentStore,
-                    storeType: props.store.interactionStore.selectedView.storeType, //TODO: should store type be associated with to original - or primary?
+                    storeType: props.store.interactionStore.selectedView.storeType,
                     originalStoreType: VersionControlStoreType.Main,
                   },
                 });
@@ -99,6 +107,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                 dispatch={props.dispatch}
                 history={h}
                 readOnly={isReadonly(file.history, h.fileState.revision)}
+                storeType={selectedView.storeType}
               ></ViewButton>
 
               <FileHistoryItem history={h} selectedView={selectedView} />
@@ -124,8 +133,8 @@ export const FileHistory = withStyles(SelectedStyles)(
                       original: original.text,
                       originalRevision: original.revision,
                       comments: m.commentStore,
-                      storeType: VersionControlStoreType.Branch, //TODO: wrong - figure out
-                      originalStoreType: VersionControlStoreType.Branch, //TODO:
+                      storeType: props.store.interactionStore.selectedView.storeType,
+                      originalStoreType: props.store.interactionStore.selectedView.storeType,
                     },
                   });
                 }}
@@ -148,7 +157,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                       text: m.text,
                       revision: m.revision,
                       comments: m.commentStore,
-                      storeType: VersionControlStoreType.Branch, //TODO: check if this is what is right
+                      storeType: props.store.interactionStore.selectedView.storeType,
                     },
                   });
                 }}
@@ -167,6 +176,7 @@ export const FileHistory = withStyles(SelectedStyles)(
 const ViewButton: React.FunctionComponent<{
   dispatch: Dispatch;
   history: FileStateHistory;
+  storeType: VersionControlStoreType;
   readOnly: boolean;
 }> = (props) => {
   return (
@@ -182,7 +192,7 @@ const ViewButton: React.FunctionComponent<{
             text: props.history.fileState.text,
             comments: props.history.fileState.commentStore,
             revision: props.history.fileState.revision,
-            storeType: VersionControlStoreType.Branch, //TODO: Wrong - should be passed in
+            storeType: props.storeType,
           },
         })
       }

@@ -8,6 +8,7 @@ const interactionReducer = (state, event) => {
         case "selectCommit":
             return { ...state, selectedCommitId: event.commitId };
         case "selectedView":
+            debugger;
             return {
                 ...state,
                 selectedView: event.selectedView,

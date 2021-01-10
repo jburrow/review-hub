@@ -44,6 +44,7 @@ export const interactionReducer = (state: InteractionState, event: InteractionSt
       return { ...state, selectedCommitId: event.commitId };
 
     case "selectedView":
+      debugger;
       return {
         ...state,
         selectedView: event.selectedView,

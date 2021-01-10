@@ -27,4 +27,13 @@ export interface AppState {
 }
 export declare const initialState: AppState;
 export declare const appReducer: (state: AppState, event: AppEvents) => AppState;
-export declare function getFile(store: AppState, storeType: VersionControlStoreType, fullPath: string): import("./events-version-control").FileState;
+export declare function getFile(store: AppState, storeType: VersionControlStoreType, fullPath: string): {
+    storeType: VersionControlStoreType.Main;
+    file: import("./events-version-control").FileState;
+} | {
+    storeType: VersionControlStoreType.Working;
+    file: import("./events-version-control").FileState;
+} | {
+    storeType: VersionControlStoreType.Branch;
+    file: import("./events-version-control").FileState;
+};

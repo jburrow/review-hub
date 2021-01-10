@@ -69,7 +69,6 @@ const appReducer = (state, event) => {
                 case VersionControlStoreType.Working:
                     let newSelectedPath = (_c = state.interactionStore.selectedView) === null || _c === void 0 ? void 0 : _c.fullPath;
                     let interactionStore = state.interactionStore;
-                    console.log(newSelectedPath);
                     // if we are renaming of a revision ::  and it isn't in the working set... then do we need to seed it?
                     if (event.type === "commit") {
                         const rename = event.events.filter((e) => e.type === "rename" && e.oldFullPath === newSelectedPath);
@@ -93,6 +92,7 @@ const appReducer = (state, event) => {
                                 text: value.text,
                                 comments: value.commentStore,
                                 revision: value.revision,
+                                storeType: VersionControlStoreType.Working,
                             }
                                 : null,
                         });
@@ -111,14 +111,21 @@ const appReducer = (state, event) => {
 };
 exports.appReducer = appReducer;
 function getFile(store, storeType, fullPath) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     switch (storeType) {
         case VersionControlStoreType.Main:
-            return (_a = store.mainStore) === null || _a === void 0 ? void 0 : _a.files[fullPath];
+            return { storeType, file: (_a = store.mainStore) === null || _a === void 0 ? void 0 : _a.files[fullPath] };
         case VersionControlStoreType.Working:
-            return ((_b = store.wsStore) === null || _b === void 0 ? void 0 : _b.files[fullPath]) || ((_c = store.vcStore) === null || _c === void 0 ? void 0 : _c.files[fullPath]);
+            if ((_b = store.wsStore) === null || _b === void 0 ? void 0 : _b.files[fullPath]) {
+                return { storeType, file: (_c = store.wsStore) === null || _c === void 0 ? void 0 : _c.files[fullPath] };
+            }
+            else {
+                return { storeType, file: (_d = store.vcStore) === null || _d === void 0 ? void 0 : _d.files[fullPath] };
+            }
         case VersionControlStoreType.Branch:
-            return (_d = store.vcStore) === null || _d === void 0 ? void 0 : _d.files[fullPath];
+            return { storeType, file: (_e = store.vcStore) === null || _e === void 0 ? void 0 : _e.files[fullPath] };
+        default:
+            return null;
     }
 }
 exports.getFile = getFile;

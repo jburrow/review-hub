@@ -111,8 +111,6 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
           let newSelectedPath = state.interactionStore.selectedView?.fullPath;
           let interactionStore = state.interactionStore;
 
-          console.log(newSelectedPath);
-
           // if we are renaming of a revision ::  and it isn't in the working set... then do we need to seed it?
           if (event.type === "commit") {
             const rename = event.events.filter((e) => e.type === "rename" && e.oldFullPath === newSelectedPath);
@@ -143,6 +141,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
                     text: value.text,
                     comments: value.commentStore,
                     revision: value.revision,
+                    storeType: VersionControlStoreType.Working,
                   }
                 : null,
             });
@@ -165,12 +164,18 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
 export function getFile(store: AppState, storeType: VersionControlStoreType, fullPath: string) {
   switch (storeType) {
     case VersionControlStoreType.Main:
-      return store.mainStore?.files[fullPath];
+      return { storeType, file: store.mainStore?.files[fullPath] };
 
     case VersionControlStoreType.Working:
-      return store.wsStore?.files[fullPath] || store.vcStore?.files[fullPath];
+      if (store.wsStore?.files[fullPath]) {
+        return { storeType, file: store.wsStore?.files[fullPath] };
+      } else {
+        return { storeType, file: store.vcStore?.files[fullPath] };
+      }
 
     case VersionControlStoreType.Branch:
-      return store.vcStore?.files[fullPath];
+      return { storeType, file: store.vcStore?.files[fullPath] };
+    default:
+      return null;
   }
 }

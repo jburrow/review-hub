@@ -22,17 +22,23 @@ exports.FileHistoryItem = core_1.withStyles(styles_1.SelectedStyles)((props) => 
 exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
     var _a, _b, _c;
     const [selected, setSelected] = React.useState([]);
-    const file = props.store.vcStore.files[(_a = props.store.interactionStore.selectedView) === null || _a === void 0 ? void 0 : _a.fullPath];
     const selectedView = props.store.interactionStore.selectedView;
+    const file = (_a = store_1.getFile(props.store, selectedView === null || selectedView === void 0 ? void 0 : selectedView.storeType, selectedView === null || selectedView === void 0 ? void 0 : selectedView.fullPath)) === null || _a === void 0 ? void 0 : _a.file;
     if (file) {
         return (React.createElement("div", null,
+            React.createElement(core_1.Chip, { label: store_1.versionControlStoreTypeLabel(selectedView.storeType), variant: "outlined" }),
             props.store.mainStore &&
                 ((((_b = props.store.interactionStore.selectedView) === null || _b === void 0 ? void 0 : _b.type) == "diff" &&
                     props.store.interactionStore.selectedView.originalStoreType !== store_1.VersionControlStoreType.Main) ||
                     (((_c = props.store.interactionStore.selectedView) === null || _c === void 0 ? void 0 : _c.type) == "view" &&
                         props.store.interactionStore.selectedView.storeType !== store_1.VersionControlStoreType.Main)) ? (React.createElement(core_1.Button, { size: "small", onClick: () => {
-                    const m = store_1.getFile(props.store, props.store.interactionStore.selectedView.storeType, props.store.interactionStore.selectedView.fullPath);
-                    const original = store_1.getFile(props.store, store_1.VersionControlStoreType.Main, props.store.interactionStore.selectedView.fullPath);
+                    const active = store_1.getFile(props.store, props.store.interactionStore.selectedView.storeType, props.store.interactionStore.selectedView.fullPath);
+                    const m = active.file;
+                    const original = store_1.getFile(props.store, store_1.VersionControlStoreType.Main, props.store.interactionStore.selectedView.fullPath).file;
+                    const readOnly = events_version_control_1.isReadonly(file.history, m.revision) &&
+                        props.store.interactionStore.selectedView.storeType !== store_1.VersionControlStoreType.Working;
+                    console.log(readOnly, props.store.interactionStore.selectedView);
+                    //ebugger;
                     props.dispatch({
                         type: "selectedView",
                         selectedView: {
@@ -40,7 +46,7 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                             fullPath: file.fullPath,
                             label: `base:${original.revision} v other:${m.revision}`,
                             text: m.text,
-                            readOnly: events_version_control_1.isReadonly(file.history, m.revision),
+                            readOnly,
                             revision: m.revision,
                             original: original.text,
                             originalRevision: original.revision,
@@ -59,7 +65,7 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                             setSelected(selected.concat(idx));
                         }
                     } }, selected.indexOf(idx) > -1 ? "deselect" : "select"),
-                React.createElement(ViewButton, { dispatch: props.dispatch, history: h, readOnly: events_version_control_1.isReadonly(file.history, h.fileState.revision) }),
+                React.createElement(ViewButton, { dispatch: props.dispatch, history: h, readOnly: events_version_control_1.isReadonly(file.history, h.fileState.revision), storeType: selectedView.storeType }),
                 React.createElement(exports.FileHistoryItem, { history: h, selectedView: selectedView })))),
             selected.length == 2 && (React.createElement(React.Fragment, null,
                 React.createElement(core_1.Button, { size: "small", onClick: () => {
@@ -77,8 +83,8 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                                 original: original.text,
                                 originalRevision: original.revision,
                                 comments: m.commentStore,
-                                storeType: store_1.VersionControlStoreType.Branch,
-                                originalStoreType: store_1.VersionControlStoreType.Branch,
+                                storeType: props.store.interactionStore.selectedView.storeType,
+                                originalStoreType: props.store.interactionStore.selectedView.storeType,
                             },
                         });
                     } }, "diff"),
@@ -95,7 +101,7 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                                 text: m.text,
                                 revision: m.revision,
                                 comments: m.commentStore,
-                                storeType: store_1.VersionControlStoreType.Branch,
+                                storeType: props.store.interactionStore.selectedView.storeType,
                             },
                         });
                     } }, "clear")))));
@@ -112,7 +118,7 @@ const ViewButton = (props) => {
                 text: props.history.fileState.text,
                 comments: props.history.fileState.commentStore,
                 revision: props.history.fileState.revision,
-                storeType: store_1.VersionControlStoreType.Branch,
+                storeType: props.storeType,
             },
         }) }, "view"));
 };
