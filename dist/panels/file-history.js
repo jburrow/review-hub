@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FileHistory = exports.FileHistoryItem = void 0;
 const React = require("react");
 const store_1 = require("../store");
-const events_version_control_1 = require("../events-version-control");
 const core_1 = require("@material-ui/core");
 const styles_1 = require("../styles");
 exports.FileHistoryItem = core_1.withStyles(styles_1.SelectedStyles)((props) => {
@@ -35,7 +34,7 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                     const active = store_1.getFile(props.store, props.store.interactionStore.selectedView.storeType, props.store.interactionStore.selectedView.fullPath);
                     const m = active.file;
                     const original = store_1.getFile(props.store, store_1.VersionControlStoreType.Main, props.store.interactionStore.selectedView.fullPath).file;
-                    const readOnly = events_version_control_1.isReadonly(file.history, m.revision) &&
+                    const readOnly = store_1.isReadonly(props.store, selectedView.fullPath, m.revision) &&
                         props.store.interactionStore.selectedView.storeType !== store_1.VersionControlStoreType.Working;
                     console.log(readOnly, props.store.interactionStore.selectedView);
                     //ebugger;
@@ -65,7 +64,7 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                             setSelected(selected.concat(idx));
                         }
                     } }, selected.indexOf(idx) > -1 ? "deselect" : "select"),
-                React.createElement(ViewButton, { dispatch: props.dispatch, history: h, readOnly: events_version_control_1.isReadonly(file.history, h.fileState.revision), storeType: selectedView.storeType }),
+                React.createElement(ViewButton, { dispatch: props.dispatch, history: h, readOnly: store_1.isReadonly(props.store, selectedView.fullPath, h.fileState.revision), storeType: selectedView.storeType }),
                 React.createElement(exports.FileHistoryItem, { history: h, selectedView: selectedView })))),
             selected.length == 2 && (React.createElement(React.Fragment, null,
                 React.createElement(core_1.Button, { size: "small", onClick: () => {
@@ -78,7 +77,7 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                                 fullPath: file.fullPath,
                                 label: `base:${original.revision} v other:${m.revision}`,
                                 text: m.text,
-                                readOnly: events_version_control_1.isReadonly(file.history, m.revision),
+                                readOnly: store_1.isReadonly(props.store, selectedView.fullPath, m.revision),
                                 revision: m.revision,
                                 original: original.text,
                                 originalRevision: original.revision,
@@ -97,7 +96,7 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                             selectedView: {
                                 type: "view",
                                 fullPath: file.fullPath,
-                                readOnly: events_version_control_1.isReadonly(file.history, m.revision),
+                                readOnly: store_1.isReadonly(props.store, selectedView.fullPath, m.revision),
                                 text: m.text,
                                 revision: m.revision,
                                 comments: m.commentStore,

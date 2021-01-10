@@ -1,6 +1,13 @@
 import * as React from "react";
-import { AppState, Dispatch, getFile, VersionControlStoreType, versionControlStoreTypeLabel } from "../store";
-import { FileStateHistory, isReadonly } from "../events-version-control";
+import {
+  AppState,
+  Dispatch,
+  getFile,
+  isReadonly,
+  VersionControlStoreType,
+  versionControlStoreTypeLabel,
+} from "../store";
+import { FileStateHistory } from "../events-version-control";
 import { Button, Chip, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { SelectedView } from "../interaction-store";
@@ -63,7 +70,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                   props.store.interactionStore.selectedView.fullPath
                 ).file;
                 const readOnly =
-                  isReadonly(file.history, m.revision) &&
+                  isReadonly(props.store, selectedView.fullPath, m.revision) &&
                   props.store.interactionStore.selectedView.storeType !== VersionControlStoreType.Working;
                 console.log(readOnly, props.store.interactionStore.selectedView);
                 //ebugger;
@@ -106,7 +113,7 @@ export const FileHistory = withStyles(SelectedStyles)(
               <ViewButton
                 dispatch={props.dispatch}
                 history={h}
-                readOnly={isReadonly(file.history, h.fileState.revision)}
+                readOnly={isReadonly(props.store, selectedView.fullPath, h.fileState.revision)}
                 storeType={selectedView.storeType}
               ></ViewButton>
 
@@ -128,7 +135,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                       fullPath: file.fullPath,
                       label: `base:${original.revision} v other:${m.revision}`,
                       text: m.text,
-                      readOnly: isReadonly(file.history, m.revision),
+                      readOnly: isReadonly(props.store, selectedView.fullPath, m.revision),
                       revision: m.revision,
                       original: original.text,
                       originalRevision: original.revision,
@@ -153,7 +160,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                     selectedView: {
                       type: "view",
                       fullPath: file.fullPath,
-                      readOnly: isReadonly(file.history, m.revision),
+                      readOnly: isReadonly(props.store, selectedView.fullPath, m.revision),
                       text: m.text,
                       revision: m.revision,
                       comments: m.commentStore,

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { VersionControlStoreType, Dispatch, AppState } from "../store";
-import { FileState, isReadonly, FileStateStatus, FileEvents } from "../events-version-control";
+import { VersionControlStoreType, Dispatch, AppState, isReadonly } from "../store";
+import { FileState, FileStateStatus, FileEvents } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
 import { Button, Chip, Divider, Link, Tooltip, WithStyles, withStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
@@ -19,6 +19,7 @@ export const StagingSCM = (props: {
   dispatch: Dispatch;
   selectedFile: SelectedView;
   isHeadCommit: boolean;
+  store: AppState;
 }) => {
   const [generalCommentOpen, setGeneralCommentOpen] = React.useState<boolean>(false);
   const [newFileOpen, setNewFileOpen] = React.useState<boolean>(false);
@@ -35,6 +36,7 @@ export const StagingSCM = (props: {
         comments={props.generalComments}
         selectedFile={props.selectedFile}
         storeType={VersionControlStoreType.Working}
+        store={props.store}
       />
       <Button
         size="small"
@@ -162,18 +164,19 @@ export const SCM = (props: {
   selectedFile: SelectedView;
   currentUser: string;
   filter?(any): boolean;
+  store: AppState;
 }) => {
   const [textInputOpen, setTextInputOpen] = React.useState<boolean>(false);
   const [messageId, setMessageId] = React.useState<string>(null);
 
-  const handleClick = (fullPath: string) => {
+  const handleClick = (fullPath: string, readOnly: boolean) => {
     const value = props.files[fullPath];
     props.dispatch({
       type: "selectedView",
       selectedView: {
         type: "view",
         fullPath: value.fullPath,
-        readOnly: isReadonly(value.history, value.revision),
+        readOnly,
         text: value.text,
         comments: value.commentStore,
         revision: value.revision,
@@ -188,7 +191,8 @@ export const SCM = (props: {
     <SCMItem
       key={value.fullPath}
       fullPath={value.fullPath}
-      revision={value.revision.toString()}
+      revision={value.revision}
+      store={props.store}
       status={value.status}
       onClick={handleClick}
       selected={props.selectedFile?.fullPath === value.fullPath && props.selectedFile?.revision === value.revision}
@@ -308,9 +312,10 @@ const SCMItem = withStyles(SelectedStyles)(
   (
     props: {
       fullPath: string;
-      revision: string;
+      revision: number;
       status: FileStateStatus;
-      onClick(fullPath: string): void;
+      store: AppState;
+      onClick(fullPath: string, readOnly: boolean): void;
       selected: boolean;
     } & WithStyles<typeof SelectedStyles>
   ) => {
@@ -318,9 +323,7 @@ const SCMItem = withStyles(SelectedStyles)(
       <li
         style={props.status === 2 ? { textDecoration: "line-through" } : { cursor: "pointer" }}
         onClick={(e) => {
-          props.onClick(props.fullPath);
-          e.stopPropagation();
-          console.log("here");
+          props.onClick(props.fullPath, isReadonly(props.store, props.fullPath, props.revision));
         }}
         className={props.selected ? props.classes.selectedItem : props.classes.inactiveItem}
       >
@@ -347,6 +350,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
             comments={{ comments: {} }}
             filter={(i) => i[1].status === FileStateStatus.active}
             storeType={VersionControlStoreType.Main}
+            store={props.store}
           />
           <Chip label={`Main Events: #${props.store.mainStore?.events.length}`} size="small" />
           <Divider />
@@ -361,6 +365,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
         comments={props.store.vcStore.commentStore}
         filter={(i) => i[1].status === FileStateStatus.active}
         storeType={VersionControlStoreType.Branch}
+        store={props.store}
       />
       <Chip label={`Commited Events: #${props.store.vcStore.events.length}`} size="small" />
       <Divider />
@@ -373,6 +378,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
         wsfiles={props.store.wsStore.files}
         vcfiles={props.store.vcStore.files}
         selectedFile={props.store.interactionStore.selectedView}
+        store={props.store}
       ></StagingSCM>
       <Chip label={`Working Events: #${props.store.wsStore.events.length}`} size="small" />
     </React.Fragment>

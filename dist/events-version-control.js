@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isReadonly = exports.reduceVersionControl = exports.versionControlReducer = exports.initialVersionControlState = exports.FileStateStatus = void 0;
+exports.reduceVersionControl = exports.versionControlReducer = exports.initialVersionControlState = exports.FileStateStatus = void 0;
 const monaco_review_1 = require("monaco-review");
 const uuid_1 = require("uuid");
 var FileStateStatus;
@@ -111,8 +111,4 @@ function reduceVersionControl(actions, state = null) {
     return state;
 }
 exports.reduceVersionControl = reduceVersionControl;
-function isReadonly(history, revision) {
-    return history[history.length - 1].fileState.revision !== revision;
-}
-exports.isReadonly = isReadonly;
 //# sourceMappingURL=events-version-control.js.map

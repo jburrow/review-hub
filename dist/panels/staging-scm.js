@@ -14,7 +14,7 @@ const StagingSCM = (props) => {
     return (React.createElement("div", null,
         React.createElement(core_1.Tooltip, { title: "Changes that have not been merged to main" },
             React.createElement("h3", null, "Working set")),
-        React.createElement(exports.SCM, { dispatch: props.dispatch, currentUser: props.currentUser, files: props.wsfiles, comments: props.generalComments, selectedFile: props.selectedFile, storeType: store_1.VersionControlStoreType.Working }),
+        React.createElement(exports.SCM, { dispatch: props.dispatch, currentUser: props.currentUser, files: props.wsfiles, comments: props.generalComments, selectedFile: props.selectedFile, storeType: store_1.VersionControlStoreType.Working, store: props.store }),
         React.createElement(core_1.Button, { size: "small", onClick: () => {
                 setNewFileOpen(true);
             } }, "Create New File"),
@@ -95,14 +95,14 @@ exports.StagingSCM = StagingSCM;
 const SCM = (props) => {
     const [textInputOpen, setTextInputOpen] = React.useState(false);
     const [messageId, setMessageId] = React.useState(null);
-    const handleClick = (fullPath) => {
+    const handleClick = (fullPath, readOnly) => {
         const value = props.files[fullPath];
         props.dispatch({
             type: "selectedView",
             selectedView: {
                 type: "view",
                 fullPath: value.fullPath,
-                readOnly: events_version_control_1.isReadonly(value.history, value.revision),
+                readOnly,
                 text: value.text,
                 comments: value.commentStore,
                 revision: value.revision,
@@ -113,7 +113,7 @@ const SCM = (props) => {
     const filteredItems = props.filter ? Object.entries(props.files).filter(props.filter) : Object.entries(props.files);
     const items = filteredItems.map(([, value]) => {
         var _a, _b;
-        return (React.createElement(SCMItem, { key: value.fullPath, fullPath: value.fullPath, revision: value.revision.toString(), status: value.status, onClick: handleClick, selected: ((_a = props.selectedFile) === null || _a === void 0 ? void 0 : _a.fullPath) === value.fullPath && ((_b = props.selectedFile) === null || _b === void 0 ? void 0 : _b.revision) === value.revision }));
+        return (React.createElement(SCMItem, { key: value.fullPath, fullPath: value.fullPath, revision: value.revision, store: props.store, status: value.status, onClick: handleClick, selected: ((_a = props.selectedFile) === null || _a === void 0 ? void 0 : _a.fullPath) === value.fullPath && ((_b = props.selectedFile) === null || _b === void 0 ? void 0 : _b.revision) === value.revision }));
     });
     const renderedCommentIds = new Set();
     const onReply = (messageId) => {
@@ -184,9 +184,7 @@ const Comment = (props) => {
 };
 const SCMItem = core_1.withStyles(styles_1.SelectedStyles)((props) => {
     return (React.createElement("li", { style: props.status === 2 ? { textDecoration: "line-through" } : { cursor: "pointer" }, onClick: (e) => {
-            props.onClick(props.fullPath);
-            e.stopPropagation();
-            console.log("here");
+            props.onClick(props.fullPath, store_1.isReadonly(props.store, props.fullPath, props.revision));
         }, className: props.selected ? props.classes.selectedItem : props.classes.inactiveItem },
         props.fullPath,
         " @ v",
@@ -201,13 +199,13 @@ const SCMPanel = (props) => {
         : props.store.vcStore.files;
     return (React.createElement(React.Fragment, null,
         props.store.mainStore && false ? (React.createElement(React.Fragment, null,
-            React.createElement(exports.SCM, { dispatch: props.dispatch, files: (_b = (_a = props.store.mainStore) === null || _a === void 0 ? void 0 : _a.files) !== null && _b !== void 0 ? _b : {}, currentUser: props.store.interactionStore.currentUser, selectedFile: props.store.interactionStore.selectedView, comments: { comments: {} }, filter: (i) => i[1].status === events_version_control_1.FileStateStatus.active, storeType: store_1.VersionControlStoreType.Main }),
+            React.createElement(exports.SCM, { dispatch: props.dispatch, files: (_b = (_a = props.store.mainStore) === null || _a === void 0 ? void 0 : _a.files) !== null && _b !== void 0 ? _b : {}, currentUser: props.store.interactionStore.currentUser, selectedFile: props.store.interactionStore.selectedView, comments: { comments: {} }, filter: (i) => i[1].status === events_version_control_1.FileStateStatus.active, storeType: store_1.VersionControlStoreType.Main, store: props.store }),
             React.createElement(core_1.Chip, { label: `Main Events: #${(_c = props.store.mainStore) === null || _c === void 0 ? void 0 : _c.events.length}`, size: "small" }),
             React.createElement(core_1.Divider, null))) : null,
-        React.createElement(exports.SCM, { dispatch: props.dispatch, files: activeFiles, currentUser: props.store.interactionStore.currentUser, selectedFile: props.store.interactionStore.selectedView, comments: props.store.vcStore.commentStore, filter: (i) => i[1].status === events_version_control_1.FileStateStatus.active, storeType: store_1.VersionControlStoreType.Branch }),
+        React.createElement(exports.SCM, { dispatch: props.dispatch, files: activeFiles, currentUser: props.store.interactionStore.currentUser, selectedFile: props.store.interactionStore.selectedView, comments: props.store.vcStore.commentStore, filter: (i) => i[1].status === events_version_control_1.FileStateStatus.active, storeType: store_1.VersionControlStoreType.Branch, store: props.store }),
         React.createElement(core_1.Chip, { label: `Commited Events: #${props.store.vcStore.events.length}`, size: "small" }),
         React.createElement(core_1.Divider, null),
-        React.createElement(exports.StagingSCM, { dispatch: props.dispatch, isHeadCommit: props.store.isHeadCommit, currentUser: props.store.interactionStore.currentUser, generalComments: props.store.wsStore.commentStore, events: props.store.wsStore.events, wsfiles: props.store.wsStore.files, vcfiles: props.store.vcStore.files, selectedFile: props.store.interactionStore.selectedView }),
+        React.createElement(exports.StagingSCM, { dispatch: props.dispatch, isHeadCommit: props.store.isHeadCommit, currentUser: props.store.interactionStore.currentUser, generalComments: props.store.wsStore.commentStore, events: props.store.wsStore.events, wsfiles: props.store.wsStore.files, vcfiles: props.store.vcStore.files, selectedFile: props.store.interactionStore.selectedView, store: props.store }),
         React.createElement(core_1.Chip, { label: `Working Events: #${props.store.wsStore.events.length}`, size: "small" })));
 };
 exports.SCMPanel = SCMPanel;

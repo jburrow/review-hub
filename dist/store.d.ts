@@ -37,3 +37,4 @@ export declare function getFile(store: AppState, storeType: VersionControlStoreT
     storeType: VersionControlStoreType.Branch;
     file: import("./events-version-control").FileState;
 };
+export declare function isReadonly(store: AppState, fullPath: string, revision: number): boolean;

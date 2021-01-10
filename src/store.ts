@@ -3,7 +3,6 @@ import {
   VersionControlCommitEvent,
   VersionControlCommitReset,
   versionControlReducer,
-  isReadonly,
   initialVersionControlState,
 } from "./events-version-control";
 import { InteractionStateEvents, InteractionState, interactionReducer } from "./interaction-store";
@@ -124,6 +123,10 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
           }
 
           const wsStore = versionControlReducer(state.wsStore, event);
+          const s1 = {
+            ...state,
+            wsStore,
+          };
 
           if (
             state.interactionStore?.selectedView?.fullPath === newSelectedPath &&
@@ -137,7 +140,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
                 ? {
                     ...state.interactionStore.selectedView,
                     fullPath: value.fullPath,
-                    readOnly: value && isReadonly(value.history, value.revision),
+                    readOnly: value && isReadonly(s1, value.fullPath, value.revision),
                     text: value.text,
                     comments: value.commentStore,
                     revision: value.revision,
@@ -152,8 +155,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
           // should disable buttons for rename and delete when you edit.
 
           return {
-            ...state,
-            wsStore,
+            ...s1,
             interactionStore,
           };
       }
@@ -175,7 +177,20 @@ export function getFile(store: AppState, storeType: VersionControlStoreType, ful
 
     case VersionControlStoreType.Branch:
       return { storeType, file: store.vcStore?.files[fullPath] };
+
     default:
       return null;
   }
+}
+
+export function isReadonly(store: AppState, fullPath: string, revision: number) {
+  let readOnly = true;
+  //let headRevision = null;
+  if (fullPath && revision) {
+    const x = getFile(store, VersionControlStoreType.Working, fullPath);
+    //headRevision = x.file.revision;
+    readOnly = x.file.revision !== revision;
+  }
+  // console.log("ReadOnly:", fullPath, revision, headRevision, readOnly);
+  return readOnly;
 }

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFile = exports.appReducer = exports.initialState = exports.versionControlStoreTypeLabel = exports.VersionControlStoreType = void 0;
+exports.isReadonly = exports.getFile = exports.appReducer = exports.initialState = exports.versionControlStoreTypeLabel = exports.VersionControlStoreType = void 0;
 const events_version_control_1 = require("./events-version-control");
 const interaction_store_1 = require("./interaction-store");
 var VersionControlStoreType;
@@ -80,6 +80,10 @@ const appReducer = (state, event) => {
                         }
                     }
                     const wsStore = events_version_control_1.versionControlReducer(state.wsStore, event);
+                    const s1 = {
+                        ...state,
+                        wsStore,
+                    };
                     if (((_e = (_d = state.interactionStore) === null || _d === void 0 ? void 0 : _d.selectedView) === null || _e === void 0 ? void 0 : _e.fullPath) === newSelectedPath &&
                         !((_g = (_f = state.interactionStore) === null || _f === void 0 ? void 0 : _f.selectedView) === null || _g === void 0 ? void 0 : _g.readOnly)) {
                         const value = wsStore.files[newSelectedPath];
@@ -88,7 +92,7 @@ const appReducer = (state, event) => {
                             selectedView: (value === null || value === void 0 ? void 0 : value.fullPath) ? {
                                 ...state.interactionStore.selectedView,
                                 fullPath: value.fullPath,
-                                readOnly: value && events_version_control_1.isReadonly(value.history, value.revision),
+                                readOnly: value && isReadonly(s1, value.fullPath, value.revision),
                                 text: value.text,
                                 comments: value.commentStore,
                                 revision: value.revision,
@@ -101,8 +105,7 @@ const appReducer = (state, event) => {
                     // should handle when viewing a deleted script
                     // should disable buttons for rename and delete when you edit.
                     return {
-                        ...state,
-                        wsStore,
+                        ...s1,
                         interactionStore,
                     };
             }
@@ -129,4 +132,16 @@ function getFile(store, storeType, fullPath) {
     }
 }
 exports.getFile = getFile;
+function isReadonly(store, fullPath, revision) {
+    let readOnly = true;
+    //let headRevision = null;
+    if (fullPath && revision) {
+        const x = getFile(store, VersionControlStoreType.Working, fullPath);
+        //headRevision = x.file.revision;
+        readOnly = x.file.revision !== revision;
+    }
+    // console.log("ReadOnly:", fullPath, revision, headRevision, readOnly);
+    return readOnly;
+}
+exports.isReadonly = isReadonly;
 //# sourceMappingURL=store.js.map

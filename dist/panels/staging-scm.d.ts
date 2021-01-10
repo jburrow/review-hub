@@ -13,6 +13,7 @@ export declare const StagingSCM: (props: {
     dispatch: Dispatch;
     selectedFile: SelectedView;
     isHeadCommit: boolean;
+    store: AppState;
 }) => JSX.Element;
 export declare const SCM: (props: {
     storeType: VersionControlStoreType;
@@ -22,6 +23,7 @@ export declare const SCM: (props: {
     selectedFile: SelectedView;
     currentUser: string;
     filter?(any: any): boolean;
+    store: AppState;
 }) => JSX.Element;
 export declare const SCMPanel: (props: {
     dispatch: Dispatch;

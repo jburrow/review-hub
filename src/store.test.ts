@@ -1,10 +1,4 @@
-import {
-  FileDeleteEvent,
-  FileEditEvent,
-  FileEvents,
-  FileRenameEvent,
-  initialVersionControlState,
-} from "./events-version-control";
+import { FileDeleteEvent, FileEditEvent, FileRenameEvent, initialVersionControlState } from "./events-version-control";
 
 import { appReducer, VersionControlStoreType } from "./store";
 

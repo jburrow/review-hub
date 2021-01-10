@@ -1,6 +1,6 @@
 import * as React from "react";
-import { VersionControlState, VersionControlCommitEvent, isReadonly, FileEvents } from "../events-version-control";
-import { Dispatch, VersionControlStoreType } from "../store";
+import { VersionControlState, VersionControlCommitEvent, FileEvents } from "../events-version-control";
+import { Dispatch, isReadonly, VersionControlStoreType } from "../store";
 import { SelectedStyles } from "../styles";
 import { Button, Chip, Divider, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedView } from "../interaction-store";
@@ -139,7 +139,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
                   type: "view",
                   fullPath: f.fullPath,
                   revision: f.revision,
-                  readOnly: isReadonly(props.vcStore.files[f.fullPath].history, f.revision),
+                  readOnly: isReadonly(null, f.fullPath, f.revision), //TODO - xxxx
                   text: f.text,
                   storeType: VersionControlStoreType.Branch,
                 },

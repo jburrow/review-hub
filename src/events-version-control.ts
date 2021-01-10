@@ -217,7 +217,3 @@ export function reduceVersionControl(actions: VersionControlEvent[], state: Vers
 
   return state;
 }
-
-export function isReadonly(history: FileStateHistory[], revision: number) {
-  return history[history.length - 1].fileState.revision !== revision;
-}

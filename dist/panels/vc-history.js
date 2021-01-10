@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SelectEditButton = exports.SelectCommitButton = exports.renderCommentEvent = exports.renderFileEvent = exports.VCHistory = void 0;
 const React = require("react");
-const events_version_control_1 = require("../events-version-control");
 const store_1 = require("../store");
 const styles_1 = require("../styles");
 const core_1 = require("@material-ui/core");
@@ -78,7 +77,7 @@ exports.SelectEditButton = core_1.withStyles(styles_1.SelectedStyles)((props) =>
                             type: "view",
                             fullPath: f.fullPath,
                             revision: f.revision,
-                            readOnly: events_version_control_1.isReadonly(props.vcStore.files[f.fullPath].history, f.revision),
+                            readOnly: store_1.isReadonly(null, f.fullPath, f.revision),
                             text: f.text,
                             storeType: store_1.VersionControlStoreType.Branch,
                         },
