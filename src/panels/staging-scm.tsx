@@ -8,6 +8,7 @@ import { v4 } from "uuid";
 import { ReviewCommentStore } from "monaco-review";
 import { ReviewCommentState } from "monaco-review/dist/events-comments-reducers";
 import { TextInputDialog } from "../dialogs/text-input";
+import { SelectedView } from "../interaction-store";
 
 export const StagingSCM = (props: {
   currentUser: string;
@@ -16,7 +17,7 @@ export const StagingSCM = (props: {
   events: VersionControlEvent[];
   generalComments: ReviewCommentStore;
   dispatch: Dispatch;
-  selectedFile: string;
+  selectedFile: SelectedView;
   isHeadCommit: boolean;
 }) => {
   const [generalCommentOpen, setGeneralCommentOpen] = React.useState<boolean>(false);
@@ -158,7 +159,7 @@ export const SCM = (props: {
   files: Record<string, FileState>;
   comments: ReviewCommentStore;
   dispatch: Dispatch;
-  selectedFile: string;
+  selectedFile: SelectedView;
   currentUser: string;
   filter?(any): boolean;
 }) => {
@@ -190,7 +191,7 @@ export const SCM = (props: {
       revision={value.revision.toString()}
       status={value.status}
       onClick={handleClick}
-      selected={props.selectedFile === value.fullPath}
+      selected={props.selectedFile?.fullPath === value.fullPath && props.selectedFile?.revision === value.revision}
     />
   ));
 
@@ -342,7 +343,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
             dispatch={props.dispatch}
             files={props.store.mainStore?.files ?? {}}
             currentUser={props.store.interactionStore.currentUser}
-            selectedFile={props.store.interactionStore.selectedView?.fullPath}
+            selectedFile={props.store.interactionStore.selectedView}
             comments={{ comments: {} }}
             filter={(i) => i[1].status === FileStateStatus.active}
             storeType={VersionControlStoreType.Main}
@@ -356,7 +357,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
         dispatch={props.dispatch}
         files={activeFiles}
         currentUser={props.store.interactionStore.currentUser}
-        selectedFile={props.store.interactionStore.selectedView?.fullPath}
+        selectedFile={props.store.interactionStore.selectedView}
         comments={props.store.vcStore.commentStore}
         filter={(i) => i[1].status === FileStateStatus.active}
         storeType={VersionControlStoreType.Branch}
@@ -371,7 +372,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
         events={props.store.wsStore.events}
         wsfiles={props.store.wsStore.files}
         vcfiles={props.store.vcStore.files}
-        selectedFile={props.store.interactionStore.selectedView?.fullPath}
+        selectedFile={props.store.interactionStore.selectedView}
       ></StagingSCM>
       <Chip label={`Working Events: #${props.store.wsStore.events.length}`} size="small" />
     </React.Fragment>

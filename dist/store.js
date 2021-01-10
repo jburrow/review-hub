@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFile = exports.appReducer = exports.initialState = exports.VersionControlStoreType = void 0;
+exports.getFile = exports.appReducer = exports.initialState = exports.versionControlStoreTypeLabel = exports.VersionControlStoreType = void 0;
 const events_version_control_1 = require("./events-version-control");
 const interaction_store_1 = require("./interaction-store");
 var VersionControlStoreType;
@@ -9,6 +9,17 @@ var VersionControlStoreType;
     VersionControlStoreType[VersionControlStoreType["Branch"] = 1] = "Branch";
     VersionControlStoreType[VersionControlStoreType["Main"] = 2] = "Main";
 })(VersionControlStoreType = exports.VersionControlStoreType || (exports.VersionControlStoreType = {}));
+function versionControlStoreTypeLabel(v) {
+    switch (v) {
+        case VersionControlStoreType.Branch:
+            return "Branch";
+        case VersionControlStoreType.Main:
+            return "Main";
+        case VersionControlStoreType.Working:
+            return "Working";
+    }
+}
+exports.versionControlStoreTypeLabel = versionControlStoreTypeLabel;
 exports.initialState = {
     interactionStore: { currentUser: "xyz-user" },
     wsStore: events_version_control_1.initialVersionControlState(),

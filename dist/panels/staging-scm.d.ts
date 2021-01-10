@@ -3,6 +3,7 @@ import { VersionControlStoreType, Dispatch, AppState } from "../store";
 import { FileState } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
 import { ReviewCommentStore } from "monaco-review";
+import { SelectedView } from "../interaction-store";
 export declare const StagingSCM: (props: {
     currentUser: string;
     wsfiles: Record<string, FileState>;
@@ -10,7 +11,7 @@ export declare const StagingSCM: (props: {
     events: VersionControlEvent[];
     generalComments: ReviewCommentStore;
     dispatch: Dispatch;
-    selectedFile: string;
+    selectedFile: SelectedView;
     isHeadCommit: boolean;
 }) => JSX.Element;
 export declare const SCM: (props: {
@@ -18,7 +19,7 @@ export declare const SCM: (props: {
     files: Record<string, FileState>;
     comments: ReviewCommentStore;
     dispatch: Dispatch;
-    selectedFile: string;
+    selectedFile: SelectedView;
     currentUser: string;
     filter?(any: any): boolean;
 }) => JSX.Element;

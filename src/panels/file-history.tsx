@@ -1,9 +1,30 @@
 import * as React from "react";
 import { AppState, Dispatch, getFile, VersionControlStoreType } from "../store";
-import { FileState, FileStateX, FileStateHistory, isReadonly } from "../events-version-control";
+import { FileStateHistory, isReadonly } from "../events-version-control";
 import { Button, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { SelectedView } from "../interaction-store";
+
+export const FileHistoryItem = withStyles(SelectedStyles)(
+  (props: { history: FileStateHistory; selectedView: SelectedView } & WithStyles<typeof SelectedStyles>) => {
+    const comments = props.history.fileState.commentStore?.comments || {};
+
+    return (
+      <span>
+        <span
+          className={
+            props.selectedView?.revision === props.history.fileState.revision
+              ? props.classes.selectedItem
+              : props.classes.inactiveItem
+          }
+        >
+          v{props.history.fileState.revision}
+        </span>{" "}
+        <span>{Object.values(comments).length}</span>{" "}
+      </span>
+    );
+  }
+);
 
 export const FileHistory = withStyles(SelectedStyles)(
   (
@@ -17,26 +38,14 @@ export const FileHistory = withStyles(SelectedStyles)(
     const file = props.store.vcStore.files[props.store.interactionStore.selectedView?.fullPath];
     const selectedView = props.store.interactionStore.selectedView;
 
-    const convert = (e: FileStateX) => {
-      const comments = e.commentStore?.comments || {};
-
-      return (
-        <span>
-          <span
-            className={selectedView?.revision === e.revision ? props.classes.selectedItem : props.classes.inactiveItem}
-          >
-            v{e.revision}
-          </span>{" "}
-          <span>{Object.values(comments).length}</span>{" "}
-          <div style={{ fontSize: 10 }}>"{e.text?.substring(0, 35)} ..."</div>
-        </span>
-      );
-    };
-
     if (file) {
       return (
         <div>
-          {props.store.mainStore && props.store.interactionStore.selectedView ? (
+          {props.store.mainStore &&
+          ((props.store.interactionStore.selectedView?.type == "diff" &&
+            props.store.interactionStore.selectedView.originalStoreType !== VersionControlStoreType.Main) ||
+            (props.store.interactionStore.selectedView?.type == "view" &&
+              props.store.interactionStore.selectedView.storeType !== VersionControlStoreType.Main)) ? (
             <Button
               size="small"
               onClick={() => {
@@ -63,7 +72,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                     originalRevision: original.revision,
                     comments: m.commentStore,
                     storeType: props.store.interactionStore.selectedView.storeType, //TODO: should store type be associated with to original - or primary?
-                    originalStoreType: props.store.interactionStore.selectedView.storeType, //TODO: should store type be associated with to original - or primary?
+                    originalStoreType: VersionControlStoreType.Main,
                   },
                 });
               }}
@@ -92,7 +101,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                 readOnly={isReadonly(file.history, h.fileState.revision)}
               ></ViewButton>
 
-              {convert(h.fileState)}
+              <FileHistoryItem history={h} selectedView={selectedView} />
             </div>
           ))}
 

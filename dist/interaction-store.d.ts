@@ -5,7 +5,7 @@ export interface InteractionState {
     selectedView?: SelectedView;
     currentUser: string;
 }
-interface SelectedSimpleViewX {
+interface SelectViewBase {
     storeType: VersionControlStoreType;
     fullPath: string;
     label?: string;
@@ -14,10 +14,10 @@ interface SelectedSimpleViewX {
     revision: number;
     readOnly: boolean;
 }
-export interface SelectedSimpleView extends SelectedSimpleViewX {
+export interface SelectedSimpleView extends SelectViewBase {
     type: "view";
 }
-export interface SelectedDiffView extends SelectedSimpleViewX {
+export interface SelectedDiffView extends SelectViewBase {
     type: "diff";
     original: string;
     originalRevision: number;

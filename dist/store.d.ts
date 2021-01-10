@@ -16,6 +16,7 @@ export declare enum VersionControlStoreType {
     Branch = 1,
     Main = 2
 }
+export declare function versionControlStoreTypeLabel(v: VersionControlStoreType): "Branch" | "Main" | "Working";
 export declare type Dispatch = (event: AppEvents) => void;
 export interface AppState {
     interactionStore: InteractionState;

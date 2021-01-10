@@ -31,6 +31,18 @@ export enum VersionControlStoreType {
   Branch,
   Main,
 }
+
+export function versionControlStoreTypeLabel(v: VersionControlStoreType) {
+  switch (v) {
+    case VersionControlStoreType.Branch:
+      return "Branch";
+    case VersionControlStoreType.Main:
+      return "Main";
+    case VersionControlStoreType.Working:
+      return "Working";
+  }
+}
+
 export type Dispatch = (event: AppEvents) => void;
 
 export interface AppState {
