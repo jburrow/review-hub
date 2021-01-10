@@ -6,7 +6,7 @@ import {
   isReadonly,
   initialVersionControlState,
 } from "./events-version-control";
-import { InteractionStateEvents, InteractionState, interactionReducer, SelectedView } from "./interaction-store";
+import { InteractionStateEvents, InteractionState, interactionReducer } from "./interaction-store";
 
 export type AppCommitEvent = {
   storeType: VersionControlStoreType;
@@ -31,18 +31,6 @@ export enum VersionControlStoreType {
   Branch,
   Main,
 }
-
-export function versionControlStoreTypeLabel(v: VersionControlStoreType) {
-  switch (v) {
-    case VersionControlStoreType.Branch:
-      return "branch";
-    case VersionControlStoreType.Main:
-      return "main";
-    case VersionControlStoreType.Working:
-      return "working";
-  }
-}
-
 export type Dispatch = (event: AppEvents) => void;
 
 export interface AppState {
@@ -66,27 +54,20 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
     case "selectCommit":
     case "selectedView":
     case "setCurrentUser":
-      const is1 = interactionReducer(state.interactionStore, event);
+      const interactionStore = interactionReducer(state.interactionStore, event);
       return {
         ...state,
-        interactionStore: is1,
-        isHeadCommit: is1.selectedCommitId && state.vcStore.headCommitId != is1.selectedCommitId,
+        interactionStore,
+        isHeadCommit:
+          interactionStore.selectedCommitId && state.vcStore.headCommitId != interactionStore.selectedCommitId,
       };
-
     case "load":
-      //TODO - anywhere that is calling the interaction reducer and not passing selectedView back to appReducer is wrong.
-      const s1 = {
+      return {
         ...state,
         vcStore: event.vcStore ?? state.vcStore,
         mainStore: event.mainStore ?? state.mainStore,
         wsStore: initialVersionControlState(),
       };
-
-      const is2 = state.interactionStore?.selectedView
-        ? refreshSelectedView(s1, state.interactionStore?.selectedView.fullPath)
-        : s1.interactionStore;
-
-      return { ...s1, interactionStore: is2 };
     case "commit":
     case "reset":
       switch (event.storeType) {
@@ -116,6 +97,9 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
           return s2;
         case VersionControlStoreType.Working:
           let newSelectedPath = state.interactionStore.selectedView?.fullPath;
+          let interactionStore = state.interactionStore;
+
+          console.log(newSelectedPath);
 
           // if we are renaming of a revision ::  and it isn't in the working set... then do we need to seed it?
           if (event.type === "commit") {
@@ -131,24 +115,34 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
 
           const wsStore = versionControlReducer(state.wsStore, event);
 
-          const s1 = {
-            ...state,
-            wsStore,
-          };
+          if (
+            state.interactionStore?.selectedView?.fullPath === newSelectedPath &&
+            !state.interactionStore?.selectedView?.readOnly
+          ) {
+            const value = wsStore.files[newSelectedPath];
 
-          const interactionStore =
-            state.interactionStore?.selectedView &&
-            state.interactionStore?.selectedView.fullPath === newSelectedPath &&
-            !state.interactionStore?.selectedView.readOnly
-              ? refreshSelectedView(s1, newSelectedPath)
-              : state.interactionStore;
+            interactionStore = interactionReducer(state.interactionStore, {
+              type: "selectedView",
+              selectedView: value?.fullPath
+                ? {
+                    ...state.interactionStore.selectedView,
+                    fullPath: value.fullPath,
+                    readOnly: value && isReadonly(value.history, value.revision),
+                    text: value.text,
+                    comments: value.commentStore,
+                    revision: value.revision,
+                  }
+                : null,
+            });
+          }
 
           //should handle whne you commit
           // should handle when viewing a deleted script
           // should disable buttons for rename and delete when you edit.
 
           return {
-            ...s1,
+            ...state,
+            wsStore,
             interactionStore,
           };
       }
@@ -167,35 +161,4 @@ export function getFile(store: AppState, storeType: VersionControlStoreType, ful
     case VersionControlStoreType.Branch:
       return store.vcStore?.files[fullPath];
   }
-}
-
-export function refreshSelectedView(state: AppState, newSelectedPath: string) {
-  const value = getFile(state, state.interactionStore.selectedView.storeType, newSelectedPath);
-
-  let selectedView: SelectedView = null;
-
-  if (value) {
-    selectedView = {
-      ...state.interactionStore.selectedView,
-      fullPath: value.fullPath,
-      readOnly: value && isReadonly(value.history, value.revision),
-      text: value.text,
-      comments: value.commentStore,
-      revision: value.revision,
-    };
-  }
-
-  if (selectedView && selectedView.type == "diff") {
-    const original = getFile(state, selectedView.originalStoreType, newSelectedPath);
-    selectedView = {
-      ...selectedView,
-      original: original.text,
-      originalRevision: original.revision,
-    };
-  }
-
-  return interactionReducer(state.interactionStore, {
-    type: "selectedView",
-    selectedView,
-  });
 }

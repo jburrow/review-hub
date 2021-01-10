@@ -60,6 +60,9 @@ export const App = withStyles(AppStyles)(
         <div key="0.1" data-grid={{ x: 0, y: 1, w: 3, h: 13 }} className={props.classes.version_control}>
           <PanelHeading>
             version-control {props.store.isHeadCommit ? props.store.interactionStore.selectedCommitId : "HEAD"}
+            {props.store.isHeadCommit && (
+              <button onClick={() => props.dispatch({ type: "selectCommit", commitId: null })}>Switch to HEAD</button>
+            )}
           </PanelHeading>
           <PanelContent>
             <SCMPanel store={props.store} dispatch={props.dispatch} />
@@ -68,11 +71,11 @@ export const App = withStyles(AppStyles)(
 
         <div key="0.2" data-grid={{ x: 3, y: 1, w: 6, h: 13 }} className={props.classes.editor}>
           <PanelHeading>
-            Editor
-            {props.store.interactionStore.selectedView?.type == "diff" &&
-              `- ${props.store.interactionStore.selectedView.fullPath} ${props.store.interactionStore.selectedView.label}`}
-            {props.store.interactionStore.selectedView?.type == "view" &&
-              `- ${props.store.interactionStore.selectedView.fullPath} @ ${props.store.interactionStore.selectedView.revision}`}
+            {!props.store.interactionStore.selectedView?.fullPath
+              ? "Editor"
+              : `Editor - ${props.store.interactionStore.selectedView?.fullPath} @ ${
+                  props.store.interactionStore.selectedView?.revision
+                } ${props.store.interactionStore.selectedView?.label || ""}`}
           </PanelHeading>
 
           <PanelContent>
@@ -84,7 +87,7 @@ export const App = withStyles(AppStyles)(
           </PanelContent>
         </div>
         <div key="0.3" data-grid={{ x: 9, y: 1, w: 3, h: 13 }} className={props.classes.script_history}>
-          <PanelHeading>File History - {props.store.interactionStore.selectedView?.fullPath}</PanelHeading>
+          <PanelHeading>File History {props.store.interactionStore.selectedView?.fullPath}</PanelHeading>
 
           <PanelContent>
             <FileHistory store={props.store} dispatch={props.dispatch} />

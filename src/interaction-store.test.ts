@@ -11,6 +11,7 @@ test("interaction-store: selectedView", () => {
   const selectedView: SelectedSimpleView = {
     type: "view",
     readOnly: false,
+    label: "",
     fullPath: "",
     revision: 0,
     text: "",

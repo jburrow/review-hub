@@ -1,7 +1,7 @@
 import { DiffEditor, ControlledEditor } from "@monaco-editor/react";
 import { createReviewManager, ReviewManager, ReviewCommentEvent } from "monaco-review";
 import * as React from "react";
-import { Dispatch, VersionControlStoreType, versionControlStoreTypeLabel } from "../store";
+import { Dispatch, VersionControlStoreType } from "../store";
 import { SelectedView } from "../interaction-store";
 import { RenameDialog } from "../dialogs/rename";
 import { Button, Chip } from "@material-ui/core";
@@ -51,24 +51,9 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
   return props.view && props.view.fullPath ? (
     <div style={{ height: "calc(100% - 20px)" }}>
       {props.view.readOnly ? (
-        <Chip label="READ-ONLY" color="default" size="small" />
+        <Chip label="READ-ONLY" color="primary" size="small" />
       ) : (
-        <Chip label="EDITABLE" color="primary" size="small" />
-      )}
-
-      <Chip
-        label={versionControlStoreTypeLabel(props.view.storeType)}
-        color="primary"
-        variant="outlined"
-        size="small"
-      />
-      {props.view.type == "diff" && (
-        <Chip
-          label={versionControlStoreTypeLabel(props.view.originalStoreType)}
-          color="secondary"
-          variant="outlined"
-          size="small"
-        />
+        <Chip label="EDITABLE" color="secondary" size="small" />
       )}
 
       {!props.view.readOnly && (
