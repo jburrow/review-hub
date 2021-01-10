@@ -13,7 +13,7 @@ export declare type AppEvents = InteractionStateEvents | AppCommitEvent | AppRes
 };
 export declare enum VersionControlStoreType {
     Working = 0,
-    VersionControl = 1,
+    Branch = 1,
     Main = 2
 }
 export declare type Dispatch = (event: AppEvents) => void;

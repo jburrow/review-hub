@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Dispatch } from "../store";
+import { Dispatch, VersionControlStoreType } from "../store";
 import { FileState, FileStateX, FileStateHistory, isReadonly } from "../events-version-control";
 import { Button, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
@@ -68,14 +68,17 @@ export const FileHistory = withStyles(SelectedStyles)(
                   const original = props.file.history[selected[0]].fileState;
                   props.dispatch({
                     type: "selectedView",
-                    fullPath: props.file.fullPath,
-                    label: `base:${original.revision} v other:${m.revision}`,
-                    text: m.text,
-                    readOnly: isReadonly(props.file.history, m.revision),
-                    revision: m.revision,
-                    original: original.text,
-                    originalRevision: original.revision,
-                    comments: m.commentStore,
+                    selectedView: {
+                      fullPath: props.file.fullPath,
+                      label: `base:${original.revision} v other:${m.revision}`,
+                      text: m.text,
+                      readOnly: isReadonly(props.file.history, m.revision),
+                      revision: m.revision,
+                      original: original.text,
+                      originalRevision: original.revision,
+                      comments: m.commentStore,
+                      storeType: VersionControlStoreType.Branch, //TODO: wrong - figure out
+                    },
                   });
                 }}
               >
@@ -91,11 +94,14 @@ export const FileHistory = withStyles(SelectedStyles)(
 
                   props.dispatch({
                     type: "selectedView",
-                    fullPath: props.file.fullPath,
-                    readOnly: isReadonly(props.file.history, m.revision),
-                    text: m.text,
-                    revision: m.revision,
-                    comments: m.commentStore,
+                    selectedView: {
+                      fullPath: props.file.fullPath,
+                      readOnly: isReadonly(props.file.history, m.revision),
+                      text: m.text,
+                      revision: m.revision,
+                      comments: m.commentStore,
+                      storeType: VersionControlStoreType.Branch, //TODO: check if this is what is right
+                    },
                   });
                 }}
               >
@@ -121,11 +127,14 @@ const ViewButton: React.FunctionComponent<{
       onClick={() =>
         props.dispatch({
           type: "selectedView",
-          fullPath: props.history.fileState.fullPath,
-          readOnly: props.readOnly,
-          text: props.history.fileState.text,
-          comments: props.history.fileState.commentStore,
-          revision: props.history.fileState.revision,
+          selectedView: {
+            fullPath: props.history.fileState.fullPath,
+            readOnly: props.readOnly,
+            text: props.history.fileState.text,
+            comments: props.history.fileState.commentStore,
+            revision: props.history.fileState.revision,
+            storeType: VersionControlStoreType.Branch, //TODO: Wrong - should be passed in
+          },
         })
       }
     >

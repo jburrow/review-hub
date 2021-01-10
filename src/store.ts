@@ -28,7 +28,7 @@ export type AppEvents =
 
 export enum VersionControlStoreType {
   Working,
-  VersionControl,
+  Branch,
   Main,
 }
 export type Dispatch = (event: AppEvents) => void;
@@ -71,7 +71,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
     case "commit":
     case "reset":
       switch (event.storeType) {
-        case VersionControlStoreType.VersionControl:
+        case VersionControlStoreType.Branch:
           const isHeadCommit: boolean =
             state.interactionStore.selectedCommitId && state.vcStore.headCommitId ? true : false;
 
@@ -123,11 +123,14 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
 
             interactionStore = interactionReducer(state.interactionStore, {
               type: "selectedView",
-              fullPath: value?.fullPath,
-              readOnly: value && isReadonly(value.history, value.revision),
-              text: value?.text,
-              comments: value?.commentStore,
-              revision: value?.revision,
+              selectedView: {
+                storeType: VersionControlStoreType.Working,
+                fullPath: value?.fullPath,
+                readOnly: value && isReadonly(value.history, value.revision),
+                text: value?.text,
+                comments: value?.commentStore,
+                revision: value?.revision,
+              },
             });
           }
 

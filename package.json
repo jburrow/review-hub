@@ -7,7 +7,7 @@
   "prettier":{"printWidth":120},
   "scripts": {
     "start": "webpack serve",
-    "compile": "tsc && webpack --mode=production",
+    "compile": "tsc && webpack --mode=production && typedoc --out ./docs ./src/main.tsx",
     "tsc": "tsc --watch",
     "doc": "typedoc --out ./docs ./src/main.tsx",
     "test": "jest --coverage",

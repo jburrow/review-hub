@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FileHistory = void 0;
 const React = require("react");
+const store_1 = require("../store");
 const events_version_control_1 = require("../events-version-control");
 const core_1 = require("@material-ui/core");
 const styles_1 = require("../styles");
@@ -41,14 +42,17 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                         const original = props.file.history[selected[0]].fileState;
                         props.dispatch({
                             type: "selectedView",
-                            fullPath: props.file.fullPath,
-                            label: `base:${original.revision} v other:${m.revision}`,
-                            text: m.text,
-                            readOnly: events_version_control_1.isReadonly(props.file.history, m.revision),
-                            revision: m.revision,
-                            original: original.text,
-                            originalRevision: original.revision,
-                            comments: m.commentStore,
+                            selectedView: {
+                                fullPath: props.file.fullPath,
+                                label: `base:${original.revision} v other:${m.revision}`,
+                                text: m.text,
+                                readOnly: events_version_control_1.isReadonly(props.file.history, m.revision),
+                                revision: m.revision,
+                                original: original.text,
+                                originalRevision: original.revision,
+                                comments: m.commentStore,
+                                storeType: store_1.VersionControlStoreType.Branch,
+                            },
                         });
                     } }, "diff"),
                 React.createElement(core_1.Button, { size: "small", onClick: () => {
@@ -57,11 +61,14 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                         const m = (_a = props.file.history.filter((h) => h.fileState.revision === props.selectedView.revision)[0]) === null || _a === void 0 ? void 0 : _a.fileState;
                         props.dispatch({
                             type: "selectedView",
-                            fullPath: props.file.fullPath,
-                            readOnly: events_version_control_1.isReadonly(props.file.history, m.revision),
-                            text: m.text,
-                            revision: m.revision,
-                            comments: m.commentStore,
+                            selectedView: {
+                                fullPath: props.file.fullPath,
+                                readOnly: events_version_control_1.isReadonly(props.file.history, m.revision),
+                                text: m.text,
+                                revision: m.revision,
+                                comments: m.commentStore,
+                                storeType: store_1.VersionControlStoreType.Branch,
+                            },
                         });
                     } }, "clear")))));
     }
@@ -70,11 +77,14 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
 const ViewButton = (props) => {
     return (React.createElement(core_1.Button, { size: "small", onClick: () => props.dispatch({
             type: "selectedView",
-            fullPath: props.history.fileState.fullPath,
-            readOnly: props.readOnly,
-            text: props.history.fileState.text,
-            comments: props.history.fileState.commentStore,
-            revision: props.history.fileState.revision,
+            selectedView: {
+                fullPath: props.history.fileState.fullPath,
+                readOnly: props.readOnly,
+                text: props.history.fileState.text,
+                comments: props.history.fileState.commentStore,
+                revision: props.history.fileState.revision,
+                storeType: store_1.VersionControlStoreType.Branch,
+            },
         }) }, "view"));
 };
 //# sourceMappingURL=file-history.js.map

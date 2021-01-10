@@ -10,17 +10,7 @@ const interactionReducer = (state, event) => {
         case "selectedView":
             return {
                 ...state,
-                //selectedFile: event.fullPath,
-                selectedView: {
-                    fullPath: event.fullPath,
-                    text: event.text,
-                    original: event.original,
-                    label: event.label,
-                    readOnly: event.readOnly,
-                    comments: event.comments,
-                    revision: event.revision,
-                    originalRevision: event.originalRevision,
-                },
+                selectedView: event.selectedView,
             };
     }
     return state;

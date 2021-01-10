@@ -8,7 +8,7 @@ import {
   FileRenameEvent,
   FileEvents,
 } from "../events-version-control";
-import { Dispatch } from "../store";
+import { Dispatch, VersionControlStoreType } from "../store";
 import { SelectedStyles } from "../styles";
 import { Button, Chip, Divider, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedView } from "../interaction-store";
@@ -143,10 +143,13 @@ export const SelectEditButton = withStyles(SelectedStyles)(
               });
               props.dispatch({
                 type: "selectedView",
-                fullPath: f.fullPath,
-                revision: f.revision,
-                readOnly: isReadonly(props.vcStore.files[f.fullPath].history, f.revision),
-                text: f.text,
+                selectedView: {
+                  fullPath: f.fullPath,
+                  revision: f.revision,
+                  readOnly: isReadonly(props.vcStore.files[f.fullPath].history, f.revision),
+                  text: f.text,
+                  storeType: VersionControlStoreType.Branch,
+                },
               });
             }
           }}

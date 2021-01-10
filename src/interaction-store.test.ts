@@ -1,4 +1,5 @@
 import { interactionReducer } from "./interaction-store";
+import { VersionControlStoreType } from "./store";
 
 test("interaction-store: selectedCommitId", () => {
   const store = interactionReducer({ currentUser: "" }, { type: "selectCommit", commitId: "cid" });
@@ -13,8 +14,9 @@ test("interaction-store: selectedView", () => {
     fullPath: "",
     revision: 0,
     text: "",
+    storeType: VersionControlStoreType.Working,
   };
-  const store = interactionReducer({ currentUser: "" }, { type: "selectedView", ...selectedView });
+  const store = interactionReducer({ currentUser: "" }, { type: "selectedView", selectedView });
 
   expect(store.selectedView).toEqual(selectedView);
 });

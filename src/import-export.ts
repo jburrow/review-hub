@@ -38,7 +38,7 @@ export function rebaseScripts(
   return {
     type: "commit",
     author: author,
-    storeType: VersionControlStoreType.VersionControl,
+    storeType: VersionControlStoreType.Branch,
     events: editEvents.concat(deleteEvents),
   };
 }

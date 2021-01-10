@@ -3,7 +3,7 @@ import * as React from "react";
 import { render } from "react-dom";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import { initialVersionControlState } from ".";
+import { initialVersionControlState, versionControlReducer } from ".";
 import { App } from "./app";
 import { demoStore } from "./demo-store";
 import { generateZip } from "./import-export";
@@ -45,7 +45,12 @@ const DemoApp = () => {
         {
           title: "Pull Main",
           handleClick: (dispatch, store) => {
-            const mainStore = initialVersionControlState();
+            const mainStore = versionControlReducer(initialVersionControlState(), {
+              type: "commit",
+              author: "",
+              events: [{ type: "edit", fullPath: "/script-base.py", revision: 1, text: "hello" }],
+            });
+
             dispatch({ type: "load", mainStore });
           },
         },

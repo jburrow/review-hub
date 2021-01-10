@@ -37,7 +37,11 @@ const DemoApp = () => {
             {
                 title: "Pull Main",
                 handleClick: (dispatch, store) => {
-                    const mainStore = _1.initialVersionControlState();
+                    const mainStore = _1.versionControlReducer(_1.initialVersionControlState(), {
+                        type: "commit",
+                        author: "",
+                        events: [{ type: "edit", fullPath: "/script-base.py", revision: 1, text: "hello" }],
+                    });
                     dispatch({ type: "load", mainStore });
                 },
             },

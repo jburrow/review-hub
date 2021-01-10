@@ -6,7 +6,7 @@ const interaction_store_1 = require("./interaction-store");
 var VersionControlStoreType;
 (function (VersionControlStoreType) {
     VersionControlStoreType[VersionControlStoreType["Working"] = 0] = "Working";
-    VersionControlStoreType[VersionControlStoreType["VersionControl"] = 1] = "VersionControl";
+    VersionControlStoreType[VersionControlStoreType["Branch"] = 1] = "Branch";
     VersionControlStoreType[VersionControlStoreType["Main"] = 2] = "Main";
 })(VersionControlStoreType = exports.VersionControlStoreType || (exports.VersionControlStoreType = {}));
 exports.initialState = {
@@ -38,7 +38,7 @@ const appReducer = (state, event) => {
         case "commit":
         case "reset":
             switch (event.storeType) {
-                case VersionControlStoreType.VersionControl:
+                case VersionControlStoreType.Branch:
                     const isHeadCommit = state.interactionStore.selectedCommitId && state.vcStore.headCommitId ? true : false;
                     let s2 = exports.appReducer({
                         ...state,
@@ -75,11 +75,14 @@ const appReducer = (state, event) => {
                         const value = wsStore.files[newSelectedPath];
                         interactionStore = interaction_store_1.interactionReducer(state.interactionStore, {
                             type: "selectedView",
-                            fullPath: value === null || value === void 0 ? void 0 : value.fullPath,
-                            readOnly: value && events_version_control_1.isReadonly(value.history, value.revision),
-                            text: value === null || value === void 0 ? void 0 : value.text,
-                            comments: value === null || value === void 0 ? void 0 : value.commentStore,
-                            revision: value === null || value === void 0 ? void 0 : value.revision,
+                            selectedView: {
+                                storeType: VersionControlStoreType.Working,
+                                fullPath: value === null || value === void 0 ? void 0 : value.fullPath,
+                                readOnly: value && events_version_control_1.isReadonly(value.history, value.revision),
+                                text: value === null || value === void 0 ? void 0 : value.text,
+                                comments: value === null || value === void 0 ? void 0 : value.commentStore,
+                                revision: value === null || value === void 0 ? void 0 : value.revision,
+                            },
                         });
                     }
                     //should handle whne you commit

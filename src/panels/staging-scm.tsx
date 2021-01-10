@@ -33,6 +33,7 @@ export const StagingSCM = (props: {
         files={props.wsfiles}
         comments={props.generalComments}
         selectedFile={props.selectedFile}
+        storeType={VersionControlStoreType.Working}
       />
       <Button
         size="small"
@@ -68,7 +69,7 @@ export const StagingSCM = (props: {
               }
             }, []);
           props.dispatch({
-            storeType: VersionControlStoreType.VersionControl,
+            storeType: VersionControlStoreType.Branch,
             type: "commit",
             author: props.currentUser,
             id: v4(),
@@ -153,6 +154,7 @@ export const StagingSCM = (props: {
 };
 
 export const SCM = (props: {
+  storeType: VersionControlStoreType;
   files: Record<string, FileState>;
   comments: ReviewCommentStore;
   dispatch: Dispatch;
@@ -167,11 +169,14 @@ export const SCM = (props: {
     const value = props.files[fullPath];
     props.dispatch({
       type: "selectedView",
-      fullPath: value.fullPath,
-      readOnly: isReadonly(value.history, value.revision),
-      text: value.text,
-      comments: value.commentStore,
-      revision: value.revision,
+      selectedView: {
+        fullPath: value.fullPath,
+        readOnly: isReadonly(value.history, value.revision),
+        text: value.text,
+        comments: value.commentStore,
+        revision: value.revision,
+        storeType: props.storeType,
+      },
     });
   };
 
@@ -339,6 +344,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
             selectedFile={props.store.interactionStore.selectedView?.fullPath}
             comments={{ comments: {} }}
             filter={(i) => i[1].status === FileStateStatus.active}
+            storeType={VersionControlStoreType.Main}
           />
           <Chip label={`Main Events: #${props.store.mainStore?.events.length}`} size="small" />
           <Divider />
@@ -352,6 +358,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
         selectedFile={props.store.interactionStore.selectedView?.fullPath}
         comments={props.store.vcStore.commentStore}
         filter={(i) => i[1].status === FileStateStatus.active}
+        storeType={VersionControlStoreType.Branch}
       />
       <Chip label={`Commited Events: #${props.store.vcStore.events.length}`} size="small" />
       <Divider />

@@ -1,10 +1,12 @@
 import { ReviewCommentStore } from "monaco-review";
+import { VersionControlStoreType } from "./store";
 export interface InteractionState {
     selectedCommitId?: string;
     selectedView?: SelectedView;
     currentUser: string;
 }
 export interface SelectedView {
+    storeType: VersionControlStoreType;
     fullPath: string;
     label?: string;
     text: string;
@@ -17,9 +19,10 @@ export interface SelectedView {
 export declare type InteractionStateEvents = {
     type: "selectCommit";
     commitId: string;
-} | ({
+} | {
     type: "selectedView";
-} & SelectedView) | {
+    selectedView: SelectedView;
+} | {
     type: "setCurrentUser";
     user: string;
 };

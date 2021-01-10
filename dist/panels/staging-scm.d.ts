@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { Dispatch, AppState } from "../store";
+import { VersionControlStoreType, Dispatch, AppState } from "../store";
 import { FileState } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
 import { ReviewCommentStore } from "monaco-review";
@@ -14,6 +14,7 @@ export declare const StagingSCM: (props: {
     isHeadCommit: boolean;
 }) => JSX.Element;
 export declare const SCM: (props: {
+    storeType: VersionControlStoreType;
     files: Record<string, FileState>;
     comments: ReviewCommentStore;
     dispatch: Dispatch;

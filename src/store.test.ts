@@ -18,7 +18,7 @@ test("reduceVersionControl: edit=>edit=>edit", () => {
     },
     {
       type: "commit",
-      storeType: VersionControlStoreType.VersionControl,
+      storeType: VersionControlStoreType.Branch,
       author: "a1",
       events: [
         {
@@ -35,15 +35,18 @@ test("reduceVersionControl: edit=>edit=>edit", () => {
 
   const s1 = appReducer(store, {
     type: "selectedView",
-    fullPath: "/script1.py",
-    revision: store.vcStore.files["/script1.py"].revision,
-    readOnly: false,
-    text: "",
+    selectedView: {
+      storeType: VersionControlStoreType.Working,
+      fullPath: "/script1.py",
+      revision: store.vcStore.files["/script1.py"].revision,
+      readOnly: false,
+      text: "",
+    },
   });
 
   const s2 = appReducer(s1, {
     type: "commit",
-    storeType: VersionControlStoreType.VersionControl,
+    storeType: VersionControlStoreType.Branch,
     author: "a1",
     events: [
       {

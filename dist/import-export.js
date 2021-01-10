@@ -35,7 +35,7 @@ function rebaseScripts(author, currentFiles, files) {
     return {
         type: "commit",
         author: author,
-        storeType: store_1.VersionControlStoreType.VersionControl,
+        storeType: store_1.VersionControlStoreType.Branch,
         events: editEvents.concat(deleteEvents),
     };
 }
