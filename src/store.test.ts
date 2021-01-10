@@ -36,6 +36,7 @@ test("reduceVersionControl: edit=>edit=>edit", () => {
   const s1 = appReducer(store, {
     type: "selectedView",
     selectedView: {
+      type: "view",
       storeType: VersionControlStoreType.Working,
       fullPath: "/script1.py",
       revision: store.vcStore.files["/script1.py"].revision,

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/24</span>
+                <span class='fraction'>0/27</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/23</span>
+                <span class='fraction'>0/26</span>
             </div>
         
             
@@ -118,16 +118,27 @@
 <a name='L59'></a><a href='#L59'>59</a>
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -141,7 +152,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -149,6 +160,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -159,6 +173,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -184,8 +204,9 @@
 <span class="cstat-no" title="statement not covered" >import { render } from "react-dom";</span>
 <span class="cstat-no" title="statement not covered" >import "react-grid-layout/css/styles.css";</span>
 <span class="cstat-no" title="statement not covered" >import "react-resizable/css/styles.css";</span>
+&nbsp;
 <span class="cstat-no" title="statement not covered" >import { App } from "./app";</span>
-<span class="cstat-no" title="statement not covered" >import { demoStore } from "./demo-store";</span>
+<span class="cstat-no" title="statement not covered" >import { createFakeMainStore, demoStore } from "./demo-store";</span>
 <span class="cstat-no" title="statement not covered" >import { generateZip } from "./import-export";</span>
 <span class="cstat-no" title="statement not covered" >import "./index.css";</span>
 <span class="cstat-no" title="statement not covered" >import { appReducer, initialState } from "./store";</span>
@@ -201,7 +222,10 @@ const DemoApp = <span class="cstat-no" title="statement not covered" ><span clas
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  React.useEffect(<span class="fstat-no" title="function not covered" >() =</span>&gt; {</span>
     const effect = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async </span>() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      dispatch({ type: "load", vcStore: await demoStore.load() });</span>
+      const vcStore = <span class="cstat-no" title="statement not covered" >await demoStore.load();</span>
+      const mainStore = <span class="cstat-no" title="statement not covered" >createFakeMainStore(vcStore.files);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      dispatch({ type: "load", vcStore, mainStore });</span>
     };
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    effect();</span>
@@ -220,6 +244,12 @@ const DemoApp = <span class="cstat-no" title="statement not covered" ><span clas
               ...store.vcStore.files,
               ...store.wsStore.files,
             });
+          },
+        },
+        {
+          title: "Pull Main",
+          handleClick: <span class="fstat-no" title="function not covered" >(d</span>ispatch, store) =&gt; {
+<span class="cstat-no" title="statement not covered" >            dispatch({ type: "load", mainStore: createFakeMainStore(store.vcStore.files) });</span>
           },
         },
         {
@@ -247,7 +277,7 @@ const DemoApp = <span class="cstat-no" title="statement not covered" ><span clas
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Jan 09 2021 21:53:13 GMT+0000 (Greenwich Mean Time)
+                at Sun Jan 10 2021 11:02:29 GMT+0000 (Greenwich Mean Time)
             </div>
         </div>
         <script src="../prettify.js"></script>

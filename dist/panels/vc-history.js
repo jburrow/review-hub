@@ -75,6 +75,7 @@ exports.SelectEditButton = core_1.withStyles(styles_1.SelectedStyles)((props) =>
                     props.dispatch({
                         type: "selectedView",
                         selectedView: {
+                            type: "view",
                             fullPath: f.fullPath,
                             revision: f.revision,
                             readOnly: events_version_control_1.isReadonly(props.vcStore.files[f.fullPath].history, f.revision),

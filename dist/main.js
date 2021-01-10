@@ -5,7 +5,6 @@ const React = require("react");
 const react_dom_1 = require("react-dom");
 require("react-grid-layout/css/styles.css");
 require("react-resizable/css/styles.css");
-const _1 = require(".");
 const app_1 = require("./app");
 const demo_store_1 = require("./demo-store");
 const import_export_1 = require("./import-export");
@@ -20,7 +19,9 @@ const DemoApp = () => {
     });
     React.useEffect(() => {
         const effect = async () => {
-            dispatch({ type: "load", vcStore: await demo_store_1.demoStore.load() });
+            const vcStore = await demo_store_1.demoStore.load();
+            const mainStore = demo_store_1.createFakeMainStore(vcStore.files);
+            dispatch({ type: "load", vcStore, mainStore });
         };
         effect();
     }, []);
@@ -37,12 +38,7 @@ const DemoApp = () => {
             {
                 title: "Pull Main",
                 handleClick: (dispatch, store) => {
-                    const mainStore = _1.versionControlReducer(_1.initialVersionControlState(), {
-                        type: "commit",
-                        author: "",
-                        events: [{ type: "edit", fullPath: "/script-base.py", revision: 1, text: "hello" }],
-                    });
-                    dispatch({ type: "load", mainStore });
+                    dispatch({ type: "load", mainStore: demo_store_1.createFakeMainStore(store.vcStore.files) });
                 },
             },
             {

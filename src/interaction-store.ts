@@ -7,17 +7,29 @@ export interface InteractionState {
   currentUser: string;
 }
 
-export interface SelectedView {
+interface SelectViewBase {
   storeType: VersionControlStoreType;
   fullPath: string;
   label?: string;
   text: string;
-  original?: string;
   comments?: ReviewCommentStore;
   revision: number;
-  originalRevision?: number;
   readOnly: boolean;
 }
+
+export interface SelectedSimpleView extends SelectViewBase {
+  type: "view";
+}
+
+export interface SelectedDiffView extends SelectViewBase {
+  type: "diff";
+  original: string;
+  originalRevision: number;
+  originalStoreType: VersionControlStoreType;
+}
+
+export type SelectedView = SelectedDiffView | SelectedSimpleView;
+
 export type InteractionStateEvents =
   | { type: "selectCommit"; commitId: string }
   | { type: "selectedView"; selectedView: SelectedView }

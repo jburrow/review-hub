@@ -90,11 +90,7 @@ export const App = withStyles(AppStyles)(
           <PanelHeading>File History {props.store.interactionStore.selectedView?.fullPath}</PanelHeading>
 
           <PanelContent>
-            <FileHistory
-              file={props.store.vcStore.files[props.store.interactionStore.selectedView?.fullPath]}
-              selectedView={props.store.interactionStore.selectedView}
-              dispatch={props.dispatch}
-            />
+            <FileHistory store={props.store} dispatch={props.dispatch} />
           </PanelContent>
         </div>
         <div key="1.1" data-grid={{ x: 0, y: 2, w: 12, h: 4 }} className={props.classes.vc_history}>

@@ -3,9 +3,9 @@ import * as React from "react";
 import { render } from "react-dom";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import { initialVersionControlState, versionControlReducer } from ".";
+
 import { App } from "./app";
-import { demoStore } from "./demo-store";
+import { createFakeMainStore, demoStore } from "./demo-store";
 import { generateZip } from "./import-export";
 import "./index.css";
 import { appReducer, initialState } from "./store";
@@ -21,7 +21,10 @@ const DemoApp = () => {
 
   React.useEffect(() => {
     const effect = async () => {
-      dispatch({ type: "load", vcStore: await demoStore.load() });
+      const vcStore = await demoStore.load();
+      const mainStore = createFakeMainStore(vcStore.files);
+
+      dispatch({ type: "load", vcStore, mainStore });
     };
 
     effect();
@@ -45,13 +48,7 @@ const DemoApp = () => {
         {
           title: "Pull Main",
           handleClick: (dispatch, store) => {
-            const mainStore = versionControlReducer(initialVersionControlState(), {
-              type: "commit",
-              author: "",
-              events: [{ type: "edit", fullPath: "/script-base.py", revision: 1, text: "hello" }],
-            });
-
-            dispatch({ type: "load", mainStore });
+            dispatch({ type: "load", mainStore: createFakeMainStore(store.vcStore.files) });
           },
         },
         {

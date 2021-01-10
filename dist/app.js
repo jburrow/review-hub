@@ -12,7 +12,7 @@ const React = require("react");
 const use_window_size_1 = require("@rooks/use-window-size");
 const ReactGridLayout = RGL.WidthProvider(RGL);
 exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f;
     const { innerHeight } = use_window_size_1.default();
     return (React.createElement(ReactGridLayout, { rowHeight: (innerHeight - 70) / 20, maxRows: 20, compactType: "vertical", cols: 12, margin: [5, 5], containerPadding: [5, 5], useCSSTransforms: true, draggableCancel: props.classes.panel_content, className: props.classes.layout },
         React.createElement("div", { key: "0.0", "data-grid": { x: 0, y: 0, w: 12, h: 2 }, className: props.classes.header_bar },
@@ -38,7 +38,7 @@ exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
                 "File History ", (_f = props.store.interactionStore.selectedView) === null || _f === void 0 ? void 0 :
                 _f.fullPath),
             React.createElement(exports.PanelContent, null,
-                React.createElement(file_history_1.FileHistory, { file: props.store.vcStore.files[(_g = props.store.interactionStore.selectedView) === null || _g === void 0 ? void 0 : _g.fullPath], selectedView: props.store.interactionStore.selectedView, dispatch: props.dispatch }))),
+                React.createElement(file_history_1.FileHistory, { store: props.store, dispatch: props.dispatch }))),
         React.createElement("div", { key: "1.1", "data-grid": { x: 0, y: 2, w: 12, h: 4 }, className: props.classes.vc_history },
             React.createElement(exports.PanelHeading, null, "VC History"),
             React.createElement(exports.PanelContent, null,

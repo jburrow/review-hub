@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/46</span>
+                <span class='fraction'>0/45</span>
             </div>
         
             
@@ -290,28 +290,8 @@
 <a name='L231'></a><a href='#L231'>231</a>
 <a name='L232'></a><a href='#L232'>232</a>
 <a name='L233'></a><a href='#L233'>233</a>
-<a name='L234'></a><a href='#L234'>234</a>
-<a name='L235'></a><a href='#L235'>235</a>
-<a name='L236'></a><a href='#L236'>236</a>
-<a name='L237'></a><a href='#L237'>237</a>
-<a name='L238'></a><a href='#L238'>238</a>
-<a name='L239'></a><a href='#L239'>239</a>
-<a name='L240'></a><a href='#L240'>240</a>
-<a name='L241'></a><a href='#L241'>241</a>
-<a name='L242'></a><a href='#L242'>242</a>
-<a name='L243'></a><a href='#L243'>243</a>
-<a name='L244'></a><a href='#L244'>244</a>
-<a name='L245'></a><a href='#L245'>245</a>
-<a name='L246'></a><a href='#L246'>246</a>
-<a name='L247'></a><a href='#L247'>247</a>
-<a name='L248'></a><a href='#L248'>248</a>
-<a name='L249'></a><a href='#L249'>249</a>
-<a name='L250'></a><a href='#L250'>250</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L234'></a><a href='#L234'>234</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -321,10 +301,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -360,11 +336,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -528,10 +500,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -556,11 +524,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { DiffEditor, ControlledEditor } from "@monaco-editor/react";</span>
-<span class="cstat-no" title="statement not covered" >import {</span>
-  createReviewManager,
-  ReviewManager,
-  ReviewCommentEvent,
-} from "monaco-review";
+<span class="cstat-no" title="statement not covered" >import { createReviewManager, ReviewManager, ReviewCommentEvent } from "monaco-review";</span>
 <span class="cstat-no" title="statement not covered" >import * as React from "react";</span>
 <span class="cstat-no" title="statement not covered" >import { Dispatch, VersionControlStoreType } from "../store";</span>
 import { SelectedView } from "../interaction-store";
@@ -569,11 +533,7 @@ import { SelectedView } from "../interaction-store";
 <span class="cstat-no" title="statement not covered" >import DeleteIcon from "@material-ui/icons/Delete";</span>
 <span class="cstat-no" title="statement not covered" >import { ConfirmDialog } from "../dialogs/confirm";</span>
 &nbsp;
-export const <span class="cstat-no" title="statement not covered" >Editor = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span>p</span>rops: {</span>
-  currentUser: string;
-  view: SelectedView;
-  dispatch: Dispatch;
-}) =&gt; {
+export const <span class="cstat-no" title="statement not covered" >Editor = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span>p</span>rops: { currentUser: string; view: SelectedView; dispatch: Dispatch }) =&gt; {</span>
   const [text, setText] = <span class="cstat-no" title="statement not covered" >React.useState&lt;string&gt;(null);</span>
   const [e, setE] = <span class="cstat-no" title="statement not covered" >React.useState&lt;any&gt;(null);</span>
   const [comments, setComments] = <span class="cstat-no" title="statement not covered" >React.useState&lt;ReviewCommentEvent[]&gt;(null);</span>
@@ -607,13 +567,9 @@ export const <span class="cstat-no" title="statement not covered" >Editor = <spa
 <span class="cstat-no" title="statement not covered" >    setReviewManager(rm);</span>
   }
 &nbsp;
-  const [renameDialogOpen, setRenameDialogOpen] = <span class="cstat-no" title="statement not covered" >React.useState&lt;boolean&gt;(</span>
-    false
-  );
+  const [renameDialogOpen, setRenameDialogOpen] = <span class="cstat-no" title="statement not covered" >React.useState&lt;boolean&gt;(false);</span>
 &nbsp;
-  const [confirmDialogOpen, setConfirmDialogOpen] = <span class="cstat-no" title="statement not covered" >React.useState&lt;boolean&gt;(</span>
-    false
-  );
+  const [confirmDialogOpen, setConfirmDialogOpen] = <span class="cstat-no" title="statement not covered" >React.useState&lt;boolean&gt;(false);</span>
 &nbsp;
   const editorHeight = <span class="cstat-no" title="statement not covered" >"calc(100% - 25px)";</span>
 &nbsp;
@@ -773,14 +729,10 @@ export const <span class="cstat-no" title="statement not covered" >Editor = <spa
           &lt;/Button&gt;
         &lt;/React.Fragment&gt;
       )}
-      {props.view.original ? (
+      {props.view.type == "diff" ? (
         &lt;DiffEditor
           editorDidMount={<span class="fstat-no" title="function not covered" >(_</span>modified, _original, editor) =&gt; {
-<span class="cstat-no" title="statement not covered" >            editor</span>
-              .getModifiedEditor()
-              .onDidChangeModelContent(<span class="fstat-no" title="function not covered" >() =</span>&gt;
-<span class="cstat-no" title="statement not covered" >                setText(editor.getModifiedEditor().getValue())</span>
-              );
+<span class="cstat-no" title="statement not covered" >            editor.getModifiedEditor().onDidChangeModelContent(<span class="fstat-no" title="function not covered" >() =</span>&gt; <span class="cstat-no" title="statement not covered" >setText(editor.getModifiedEditor().getValue()))</span>;</span>
 <span class="cstat-no" title="statement not covered" >            setEditor(editor.getModifiedEditor());</span>
           }}
           options={{ originalEditable: false, readOnly: props.view.readOnly }}
@@ -811,7 +763,7 @@ export const <span class="cstat-no" title="statement not covered" >Editor = <spa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Jan 09 2021 21:53:13 GMT+0000 (Greenwich Mean Time)
+                at Sun Jan 10 2021 11:02:29 GMT+0000 (Greenwich Mean Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

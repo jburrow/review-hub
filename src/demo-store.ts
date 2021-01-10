@@ -1,5 +1,13 @@
 import { Persistence } from "./app";
-import { VersionControlState, FileEvents, reduceVersionControl } from "./events-version-control";
+import {
+  VersionControlState,
+  FileEvents,
+  reduceVersionControl,
+  versionControlReducer,
+  initialVersionControlState,
+  Files,
+  FileStateStatus,
+} from "./events-version-control";
 
 const loadVersionControlStore = (): VersionControlState => {
   const events: FileEvents[] = [
@@ -104,3 +112,18 @@ export const demoStore: Persistence = {
     });
   },
 };
+
+export function createFakeMainStore(files: Files) {
+  return versionControlReducer(initialVersionControlState(), {
+    type: "commit",
+    author: "?",
+    events: Object.entries(files)
+      .filter(([fn, fs]) => fs.status === FileStateStatus.active)
+      .map(([fn, _]) => ({
+        type: "edit",
+        fullPath: fn,
+        revision: 1,
+        text: `i am main branch ${new Date().toISOString()}`,
+      })),
+  });
+}

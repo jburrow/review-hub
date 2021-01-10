@@ -1,4 +1,4 @@
-import { interactionReducer } from "./interaction-store";
+import { interactionReducer, SelectedSimpleView } from "./interaction-store";
 import { VersionControlStoreType } from "./store";
 
 test("interaction-store: selectedCommitId", () => {
@@ -8,7 +8,8 @@ test("interaction-store: selectedCommitId", () => {
 });
 
 test("interaction-store: selectedView", () => {
-  const selectedView = {
+  const selectedView: SelectedSimpleView = {
+    type: "view",
     readOnly: false,
     label: "",
     fullPath: "",

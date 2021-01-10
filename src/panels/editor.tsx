@@ -204,7 +204,7 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
           </Button>
         </React.Fragment>
       )}
-      {props.view.original ? (
+      {props.view.type == "diff" ? (
         <DiffEditor
           editorDidMount={(_modified, _original, editor) => {
             editor.getModifiedEditor().onDidChangeModelContent(() => setText(editor.getModifiedEditor().getValue()));

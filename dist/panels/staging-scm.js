@@ -100,6 +100,7 @@ const SCM = (props) => {
         props.dispatch({
             type: "selectedView",
             selectedView: {
+                type: "view",
                 fullPath: value.fullPath,
                 readOnly: events_version_control_1.isReadonly(value.history, value.revision),
                 text: value.text,
@@ -196,10 +197,10 @@ const SCMPanel = (props) => {
         ? props.store.vcStore.commits[props.store.interactionStore.selectedCommitId]
         : props.store.vcStore.files;
     return (React.createElement(React.Fragment, null,
-        props.store.mainStore && (React.createElement(React.Fragment, null,
+        props.store.mainStore && false ? (React.createElement(React.Fragment, null,
             React.createElement(exports.SCM, { dispatch: props.dispatch, files: (_b = (_a = props.store.mainStore) === null || _a === void 0 ? void 0 : _a.files) !== null && _b !== void 0 ? _b : {}, currentUser: props.store.interactionStore.currentUser, selectedFile: (_c = props.store.interactionStore.selectedView) === null || _c === void 0 ? void 0 : _c.fullPath, comments: { comments: {} }, filter: (i) => i[1].status === events_version_control_1.FileStateStatus.active, storeType: store_1.VersionControlStoreType.Main }),
             React.createElement(core_1.Chip, { label: `Main Events: #${(_d = props.store.mainStore) === null || _d === void 0 ? void 0 : _d.events.length}`, size: "small" }),
-            React.createElement(core_1.Divider, null))),
+            React.createElement(core_1.Divider, null))) : null,
         React.createElement(exports.SCM, { dispatch: props.dispatch, files: activeFiles, currentUser: props.store.interactionStore.currentUser, selectedFile: (_e = props.store.interactionStore.selectedView) === null || _e === void 0 ? void 0 : _e.fullPath, comments: props.store.vcStore.commentStore, filter: (i) => i[1].status === events_version_control_1.FileStateStatus.active, storeType: store_1.VersionControlStoreType.Branch }),
         React.createElement(core_1.Chip, { label: `Commited Events: #${props.store.vcStore.events.length}`, size: "small" }),
         React.createElement(core_1.Divider, null),

@@ -123,14 +123,16 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
 
             interactionStore = interactionReducer(state.interactionStore, {
               type: "selectedView",
-              selectedView: {
-                storeType: VersionControlStoreType.Working,
-                fullPath: value?.fullPath,
-                readOnly: value && isReadonly(value.history, value.revision),
-                text: value?.text,
-                comments: value?.commentStore,
-                revision: value?.revision,
-              },
+              selectedView: value?.fullPath
+                ? {
+                    ...state.interactionStore.selectedView,
+                    fullPath: value.fullPath,
+                    readOnly: value && isReadonly(value.history, value.revision),
+                    text: value.text,
+                    comments: value.commentStore,
+                    revision: value.revision,
+                  }
+                : null,
             });
           }
 
@@ -147,3 +149,16 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
   }
   return state;
 };
+
+export function getFile(store: AppState, storeType: VersionControlStoreType, fullPath: string) {
+  switch (storeType) {
+    case VersionControlStoreType.Main:
+      return store.mainStore?.files[fullPath];
+
+    case VersionControlStoreType.Working:
+      return store.wsStore?.files[fullPath] || store.vcStore?.files[fullPath];
+
+    case VersionControlStoreType.Branch:
+      return store.vcStore?.files[fullPath];
+  }
+}

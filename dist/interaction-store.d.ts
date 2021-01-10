@@ -5,17 +5,25 @@ export interface InteractionState {
     selectedView?: SelectedView;
     currentUser: string;
 }
-export interface SelectedView {
+interface SelectedSimpleViewX {
     storeType: VersionControlStoreType;
     fullPath: string;
     label?: string;
     text: string;
-    original?: string;
     comments?: ReviewCommentStore;
     revision: number;
-    originalRevision?: number;
     readOnly: boolean;
 }
+export interface SelectedSimpleView extends SelectedSimpleViewX {
+    type: "view";
+}
+export interface SelectedDiffView extends SelectedSimpleViewX {
+    type: "diff";
+    original: string;
+    originalRevision: number;
+    originalStoreType: VersionControlStoreType;
+}
+export declare type SelectedView = SelectedDiffView | SelectedSimpleView;
 export declare type InteractionStateEvents = {
     type: "selectCommit";
     commitId: string;
@@ -27,3 +35,4 @@ export declare type InteractionStateEvents = {
     user: string;
 };
 export declare const interactionReducer: (state: InteractionState, event: InteractionStateEvents) => InteractionState;
+export {};

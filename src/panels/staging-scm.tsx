@@ -170,6 +170,7 @@ export const SCM = (props: {
     props.dispatch({
       type: "selectedView",
       selectedView: {
+        type: "view",
         fullPath: value.fullPath,
         readOnly: isReadonly(value.history, value.revision),
         text: value.text,
@@ -335,7 +336,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
 
   return (
     <React.Fragment>
-      {props.store.mainStore && (
+      {props.store.mainStore && false ? (
         <React.Fragment>
           <SCM
             dispatch={props.dispatch}
@@ -349,7 +350,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
           <Chip label={`Main Events: #${props.store.mainStore?.events.length}`} size="small" />
           <Divider />
         </React.Fragment>
-      )}
+      ) : null}
 
       <SCM
         dispatch={props.dispatch}

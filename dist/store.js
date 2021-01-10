@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.appReducer = exports.initialState = exports.VersionControlStoreType = void 0;
+exports.getFile = exports.appReducer = exports.initialState = exports.VersionControlStoreType = void 0;
 const events_version_control_1 = require("./events-version-control");
 const interaction_store_1 = require("./interaction-store");
 var VersionControlStoreType;
@@ -75,14 +75,15 @@ const appReducer = (state, event) => {
                         const value = wsStore.files[newSelectedPath];
                         interactionStore = interaction_store_1.interactionReducer(state.interactionStore, {
                             type: "selectedView",
-                            selectedView: {
-                                storeType: VersionControlStoreType.Working,
-                                fullPath: value === null || value === void 0 ? void 0 : value.fullPath,
+                            selectedView: (value === null || value === void 0 ? void 0 : value.fullPath) ? {
+                                ...state.interactionStore.selectedView,
+                                fullPath: value.fullPath,
                                 readOnly: value && events_version_control_1.isReadonly(value.history, value.revision),
-                                text: value === null || value === void 0 ? void 0 : value.text,
-                                comments: value === null || value === void 0 ? void 0 : value.commentStore,
-                                revision: value === null || value === void 0 ? void 0 : value.revision,
-                            },
+                                text: value.text,
+                                comments: value.commentStore,
+                                revision: value.revision,
+                            }
+                                : null,
                         });
                     }
                     //should handle whne you commit
@@ -98,4 +99,16 @@ const appReducer = (state, event) => {
     return state;
 };
 exports.appReducer = appReducer;
+function getFile(store, storeType, fullPath) {
+    var _a, _b, _c, _d;
+    switch (storeType) {
+        case VersionControlStoreType.Main:
+            return (_a = store.mainStore) === null || _a === void 0 ? void 0 : _a.files[fullPath];
+        case VersionControlStoreType.Working:
+            return ((_b = store.wsStore) === null || _b === void 0 ? void 0 : _b.files[fullPath]) || ((_c = store.vcStore) === null || _c === void 0 ? void 0 : _c.files[fullPath]);
+        case VersionControlStoreType.Branch:
+            return (_d = store.vcStore) === null || _d === void 0 ? void 0 : _d.files[fullPath];
+    }
+}
+exports.getFile = getFile;
 //# sourceMappingURL=store.js.map

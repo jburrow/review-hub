@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.demoStore = void 0;
+exports.createFakeMainStore = exports.demoStore = void 0;
 const events_version_control_1 = require("./events-version-control");
 const loadVersionControlStore = () => {
     const events = [
@@ -101,4 +101,19 @@ exports.demoStore = {
         });
     },
 };
+function createFakeMainStore(files) {
+    return events_version_control_1.versionControlReducer(events_version_control_1.initialVersionControlState(), {
+        type: "commit",
+        author: "?",
+        events: Object.entries(files)
+            .filter(([fn, fs]) => fs.status === events_version_control_1.FileStateStatus.active)
+            .map(([fn, _]) => ({
+            type: "edit",
+            fullPath: fn,
+            revision: 1,
+            text: `i am main branch ${new Date().toISOString()}`,
+        })),
+    });
+}
+exports.createFakeMainStore = createFakeMainStore;
 //# sourceMappingURL=demo-store.js.map
