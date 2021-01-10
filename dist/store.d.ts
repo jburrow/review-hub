@@ -16,6 +16,7 @@ export declare enum VersionControlStoreType {
     Branch = 1,
     Main = 2
 }
+export declare function versionControlStoreTypeLabel(v: VersionControlStoreType): "branch" | "main" | "working";
 export declare type Dispatch = (event: AppEvents) => void;
 export interface AppState {
     interactionStore: InteractionState;
@@ -27,3 +28,4 @@ export interface AppState {
 export declare const initialState: AppState;
 export declare const appReducer: (state: AppState, event: AppEvents) => AppState;
 export declare function getFile(store: AppState, storeType: VersionControlStoreType, fullPath: string): import("./events-version-control").FileState;
+export declare function refreshSelectedView(state: AppState, newSelectedPath: string): InteractionState;

@@ -5,6 +5,28 @@ import { Button, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { SelectedView } from "../interaction-store";
 
+export const FileHistoryItem = withStyles(SelectedStyles)(
+  (props: { selectedView: SelectedView; history: FileStateHistory } & WithStyles<typeof SelectedStyles>) => {
+    const comments = props.history.fileState.commentStore?.comments || {};
+
+    return (
+      <span>
+        <span
+          className={
+            props.selectedView?.revision === props.history.fileState.revision
+              ? props.classes.selectedItem
+              : props.classes.inactiveItem
+          }
+        >
+          v{props.history.fileState.revision}
+        </span>{" "}
+        {props.history.event.createdAt}
+        <span>{Object.values(comments).length}</span>
+      </span>
+    );
+  }
+);
+
 export const FileHistory = withStyles(SelectedStyles)(
   (
     props: {
@@ -16,22 +38,6 @@ export const FileHistory = withStyles(SelectedStyles)(
 
     const file = props.store.vcStore.files[props.store.interactionStore.selectedView?.fullPath];
     const selectedView = props.store.interactionStore.selectedView;
-
-    const convert = (e: FileStateX) => {
-      const comments = e.commentStore?.comments || {};
-
-      return (
-        <span>
-          <span
-            className={selectedView?.revision === e.revision ? props.classes.selectedItem : props.classes.inactiveItem}
-          >
-            v{e.revision}
-          </span>{" "}
-          <span>{Object.values(comments).length}</span>{" "}
-          <div style={{ fontSize: 10 }}>"{e.text?.substring(0, 35)} ..."</div>
-        </span>
-      );
-    };
 
     if (file) {
       return (
@@ -63,7 +69,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                     originalRevision: original.revision,
                     comments: m.commentStore,
                     storeType: props.store.interactionStore.selectedView.storeType, //TODO: should store type be associated with to original - or primary?
-                    originalStoreType: props.store.interactionStore.selectedView.storeType, //TODO: should store type be associated with to original - or primary?
+                    originalStoreType: VersionControlStoreType.Main, //TODO: should store type be associated with to original - or primary?
                   },
                 });
               }}
@@ -92,7 +98,7 @@ export const FileHistory = withStyles(SelectedStyles)(
                 readOnly={isReadonly(file.history, h.fileState.revision)}
               ></ViewButton>
 
-              {convert(h.fileState)}
+              <FileHistoryItem history={h} selectedView={selectedView} />
             </div>
           ))}
 
@@ -115,8 +121,8 @@ export const FileHistory = withStyles(SelectedStyles)(
                       original: original.text,
                       originalRevision: original.revision,
                       comments: m.commentStore,
-                      storeType: VersionControlStoreType.Branch, //TODO: wrong - figure out
-                      originalStoreType: VersionControlStoreType.Branch, //TODO:
+                      storeType: VersionControlStoreType.Branch, //TODO: wrong - by default we don't show the revisions of teh working in here so it is kind of right
+                      originalStoreType: VersionControlStoreType.Branch, //TODO: ^ see above
                     },
                   });
                 }}

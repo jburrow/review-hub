@@ -41,7 +41,9 @@ const Editor = (props) => {
     const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
     const editorHeight = "calc(100% - 25px)";
     return props.view && props.view.fullPath ? (React.createElement("div", { style: { height: "calc(100% - 20px)" } },
-        props.view.readOnly ? (React.createElement(core_1.Chip, { label: "READ-ONLY", color: "primary", size: "small" })) : (React.createElement(core_1.Chip, { label: "EDITABLE", color: "secondary", size: "small" })),
+        props.view.readOnly ? (React.createElement(core_1.Chip, { label: "READ-ONLY", color: "default", size: "small" })) : (React.createElement(core_1.Chip, { label: "EDITABLE", color: "primary", size: "small" })),
+        React.createElement(core_1.Chip, { label: store_1.versionControlStoreTypeLabel(props.view.storeType), color: "primary", variant: "outlined", size: "small" }),
+        props.view.type == "diff" && (React.createElement(core_1.Chip, { label: store_1.versionControlStoreTypeLabel(props.view.originalStoreType), color: "secondary", variant: "outlined", size: "small" })),
         !props.view.readOnly && (React.createElement(React.Fragment, null,
             React.createElement(core_1.Button, { "aria-label": "delete", size: "small", disabled: text !== props.view.text, onClick: () => {
                     setConfirmDialogOpen(true);

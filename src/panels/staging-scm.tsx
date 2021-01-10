@@ -336,6 +336,9 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
 
   return (
     <React.Fragment>
+      {props.store.isHeadCommit && (
+        <button onClick={() => props.dispatch({ type: "selectCommit", commitId: null })}>Switch to HEAD</button>
+      )}
       {props.store.mainStore && false ? (
         <React.Fragment>
           <SCM

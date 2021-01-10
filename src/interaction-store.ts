@@ -10,7 +10,6 @@ export interface InteractionState {
 interface SelectViewBase {
   storeType: VersionControlStoreType;
   fullPath: string;
-  label?: string;
   text: string;
   comments?: ReviewCommentStore;
   revision: number;
@@ -23,6 +22,7 @@ export interface SelectedSimpleView extends SelectViewBase {
 
 export interface SelectedDiffView extends SelectViewBase {
   type: "diff";
+  label: string;
   original: string;
   originalRevision: number;
   originalStoreType: VersionControlStoreType;

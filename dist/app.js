@@ -12,7 +12,7 @@ const React = require("react");
 const use_window_size_1 = require("@rooks/use-window-size");
 const ReactGridLayout = RGL.WidthProvider(RGL);
 exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d;
     const { innerHeight } = use_window_size_1.default();
     return (React.createElement(ReactGridLayout, { rowHeight: (innerHeight - 70) / 20, maxRows: 20, compactType: "vertical", cols: 12, margin: [5, 5], containerPadding: [5, 5], useCSSTransforms: true, draggableCancel: props.classes.panel_content, className: props.classes.layout },
         React.createElement("div", { key: "0.0", "data-grid": { x: 0, y: 0, w: 12, h: 2 }, className: props.classes.header_bar },
@@ -23,20 +23,22 @@ exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
         React.createElement("div", { key: "0.1", "data-grid": { x: 0, y: 1, w: 3, h: 13 }, className: props.classes.version_control },
             React.createElement(exports.PanelHeading, null,
                 "version-control ",
-                props.store.isHeadCommit ? props.store.interactionStore.selectedCommitId : "HEAD",
-                props.store.isHeadCommit && (React.createElement("button", { onClick: () => props.dispatch({ type: "selectCommit", commitId: null }) }, "Switch to HEAD"))),
+                props.store.isHeadCommit ? props.store.interactionStore.selectedCommitId : "HEAD"),
             React.createElement(exports.PanelContent, null,
                 React.createElement(staging_scm_1.SCMPanel, { store: props.store, dispatch: props.dispatch }))),
         React.createElement("div", { key: "0.2", "data-grid": { x: 3, y: 1, w: 6, h: 13 }, className: props.classes.editor },
-            React.createElement(exports.PanelHeading, null, !((_b = props.store.interactionStore.selectedView) === null || _b === void 0 ? void 0 : _b.fullPath)
-                ? "Editor"
-                : `Editor - ${(_c = props.store.interactionStore.selectedView) === null || _c === void 0 ? void 0 : _c.fullPath} @ ${(_d = props.store.interactionStore.selectedView) === null || _d === void 0 ? void 0 : _d.revision} ${((_e = props.store.interactionStore.selectedView) === null || _e === void 0 ? void 0 : _e.label) || ""}`),
+            React.createElement(exports.PanelHeading, null,
+                "Editor",
+                ((_b = props.store.interactionStore.selectedView) === null || _b === void 0 ? void 0 : _b.type) == "diff" &&
+                    `- ${props.store.interactionStore.selectedView.fullPath} ${props.store.interactionStore.selectedView.label}`,
+                ((_c = props.store.interactionStore.selectedView) === null || _c === void 0 ? void 0 : _c.type) == "view" &&
+                    `- ${props.store.interactionStore.selectedView.fullPath} @ ${props.store.interactionStore.selectedView.revision}`),
             React.createElement(exports.PanelContent, null,
                 React.createElement(editor_1.Editor, { currentUser: props.store.interactionStore.currentUser, view: props.store.interactionStore.selectedView, dispatch: props.dispatch }))),
         React.createElement("div", { key: "0.3", "data-grid": { x: 9, y: 1, w: 3, h: 13 }, className: props.classes.script_history },
             React.createElement(exports.PanelHeading, null,
-                "File History ", (_f = props.store.interactionStore.selectedView) === null || _f === void 0 ? void 0 :
-                _f.fullPath),
+                "File History - ", (_d = props.store.interactionStore.selectedView) === null || _d === void 0 ? void 0 :
+                _d.fullPath),
             React.createElement(exports.PanelContent, null,
                 React.createElement(file_history_1.FileHistory, { store: props.store, dispatch: props.dispatch }))),
         React.createElement("div", { key: "1.1", "data-grid": { x: 0, y: 2, w: 12, h: 4 }, className: props.classes.vc_history },

@@ -197,6 +197,7 @@ const SCMPanel = (props) => {
         ? props.store.vcStore.commits[props.store.interactionStore.selectedCommitId]
         : props.store.vcStore.files;
     return (React.createElement(React.Fragment, null,
+        props.store.isHeadCommit && (React.createElement("button", { onClick: () => props.dispatch({ type: "selectCommit", commitId: null }) }, "Switch to HEAD")),
         props.store.mainStore && false ? (React.createElement(React.Fragment, null,
             React.createElement(exports.SCM, { dispatch: props.dispatch, files: (_b = (_a = props.store.mainStore) === null || _a === void 0 ? void 0 : _a.files) !== null && _b !== void 0 ? _b : {}, currentUser: props.store.interactionStore.currentUser, selectedFile: (_c = props.store.interactionStore.selectedView) === null || _c === void 0 ? void 0 : _c.fullPath, comments: { comments: {} }, filter: (i) => i[1].status === events_version_control_1.FileStateStatus.active, storeType: store_1.VersionControlStoreType.Main }),
             React.createElement(core_1.Chip, { label: `Main Events: #${(_d = props.store.mainStore) === null || _d === void 0 ? void 0 : _d.events.length}`, size: "small" }),
