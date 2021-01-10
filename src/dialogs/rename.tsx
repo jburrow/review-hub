@@ -1,11 +1,4 @@
-import {
-  Button,
-  DialogActions,
-  DialogContent,
-  TextField,
-  withStyles,
-  WithStyles,
-} from "@material-ui/core";
+import { Button, DialogActions, DialogContent, TextField, withStyles, WithStyles } from "@material-ui/core";
 import * as React from "react";
 import { AppStyles } from "../styles";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -19,9 +12,7 @@ export const RenameDialog = withStyles(AppStyles)(
       fullPath: string;
     } & WithStyles<typeof AppStyles>
   ) => {
-    const [newFullPath, setNewFullPath] = React.useState<string>(
-      props.fullPath
-    );
+    const [newFullPath, setNewFullPath] = React.useState<string>(props.fullPath);
     return (
       <Dialog
         onClose={(e) => {
@@ -40,10 +31,7 @@ export const RenameDialog = withStyles(AppStyles)(
           ></TextField>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={() => props.onClose({ newFullPath, rename: false })}
-            variant="contained"
-          >
+          <Button onClick={() => props.onClose({ newFullPath, rename: false })} variant="contained">
             Cancel
           </Button>
           <Button

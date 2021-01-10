@@ -22,10 +22,7 @@ export type InteractionStateEvents =
   | ({ type: "selectedView" } & SelectedView)
   | { type: "setCurrentUser"; user: string };
 
-export const interactionReducer = (
-  state: InteractionState,
-  event: InteractionStateEvents
-): InteractionState => {
+export const interactionReducer = (state: InteractionState, event: InteractionStateEvents): InteractionState => {
   switch (event.type) {
     case "setCurrentUser":
       return { ...state, currentUser: event.user };

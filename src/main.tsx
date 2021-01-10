@@ -3,6 +3,7 @@ import * as React from "react";
 import { render } from "react-dom";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
+import { initialVersionControlState } from ".";
 import { App } from "./app";
 import { demoStore } from "./demo-store";
 import { generateZip } from "./import-export";
@@ -39,6 +40,13 @@ const DemoApp = () => {
               ...store.vcStore.files,
               ...store.wsStore.files,
             });
+          },
+        },
+        {
+          title: "Pull Main",
+          handleClick: (dispatch, store) => {
+            const mainStore = initialVersionControlState();
+            dispatch({ type: "load", mainStore });
           },
         },
         {

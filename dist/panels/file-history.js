@@ -11,9 +11,7 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
         var _a, _b, _c;
         const comments = ((_a = e.commentStore) === null || _a === void 0 ? void 0 : _a.comments) || {};
         return (React.createElement("span", null,
-            React.createElement("span", { className: ((_b = props.selectedView) === null || _b === void 0 ? void 0 : _b.revision) === e.revision
-                    ? props.classes.selectedItem
-                    : props.classes.inactiveItem },
+            React.createElement("span", { className: ((_b = props.selectedView) === null || _b === void 0 ? void 0 : _b.revision) === e.revision ? props.classes.selectedItem : props.classes.inactiveItem },
                 "v",
                 e.revision),
             " ",

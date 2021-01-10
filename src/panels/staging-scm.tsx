@@ -1,21 +1,8 @@
 import * as React from "react";
 import { VersionControlStoreType, Dispatch, AppState } from "../store";
-import {
-  FileState,
-  isReadonly,
-  FileStateStatus,
-  FileEvents,
-} from "../events-version-control";
+import { FileState, isReadonly, FileStateStatus, FileEvents } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
-import {
-  Button,
-  Chip,
-  Divider,
-  Link,
-  Tooltip,
-  WithStyles,
-  withStyles,
-} from "@material-ui/core";
+import { Button, Chip, Divider, Link, Tooltip, WithStyles, withStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { v4 } from "uuid";
 import { ReviewCommentStore } from "monaco-review";
@@ -32,9 +19,7 @@ export const StagingSCM = (props: {
   selectedFile: string;
   isHeadCommit: boolean;
 }) => {
-  const [generalCommentOpen, setGeneralCommentOpen] = React.useState<boolean>(
-    false
-  );
+  const [generalCommentOpen, setGeneralCommentOpen] = React.useState<boolean>(false);
   const [newFileOpen, setNewFileOpen] = React.useState<boolean>(false);
 
   return (
@@ -190,9 +175,7 @@ export const SCM = (props: {
     });
   };
 
-  const filteredItems = props.filter
-    ? Object.entries(props.files).filter(props.filter)
-    : Object.entries(props.files);
+  const filteredItems = props.filter ? Object.entries(props.files).filter(props.filter) : Object.entries(props.files);
 
   const items = filteredItems.map(([, value]) => (
     <SCMItem
@@ -230,24 +213,12 @@ export const SCM = (props: {
       recurseComments(cs, (cc) => cc.comment.parentId == c.comment.id);
     });
   };
-  recurseComments(
-    Object.values(props.comments.comments),
-    (v) => v.comment.parentId === null
-  );
+  recurseComments(Object.values(props.comments.comments), (v) => v.comment.parentId === null);
 
-  const notRenderedIds = Object.values(props.comments.comments).filter(
-    (c) => !renderedCommentIds.has(c.comment.id)
-  );
+  const notRenderedIds = Object.values(props.comments.comments).filter((c) => !renderedCommentIds.has(c.comment.id));
 
   const replyComments = notRenderedIds.map((cs) => (
-    <Comment
-      onReply={null}
-      key={cs.comment.id}
-      comment={cs}
-      comments={{}}
-      depth={0}
-      dispatch={null}
-    />
+    <Comment onReply={null} key={cs.comment.id} comment={cs} comments={{}} depth={0} dispatch={null} />
   ));
 
   const onClose = React.useCallback(
@@ -284,15 +255,9 @@ export const SCM = (props: {
   return (
     <div>
       <ul>{items}</ul>
-      {comments.length + replyComments.length ? (
-        <h3>General Comments</h3>
-      ) : null}
+      {comments.length + replyComments.length ? <h3>General Comments</h3> : null}
       <ul>{comments.concat(replyComments)}</ul>
-      <TextInputDialog
-        open={textInputOpen}
-        title="Reply to comment"
-        onClose={onClose}
-      ></TextInputDialog>
+      <TextInputDialog open={textInputOpen} title="Reply to comment" onClose={onClose}></TextInputDialog>
     </div>
   );
 };
@@ -306,8 +271,7 @@ const Comment = (props: {
 }) => {
   return (
     <li>
-      {props.depth} - {props.comment.comment.text}{" "}
-      {props.comment.comment.author} {props.comment.comment.dt}
+      {props.depth} - {props.comment.comment.text} {props.comment.comment.author} {props.comment.comment.dt}
       <Link
         onClick={() => {
           props.onReply(props.comment.comment.id);
@@ -345,21 +309,13 @@ const SCMItem = withStyles(SelectedStyles)(
   ) => {
     return (
       <li
-        style={
-          props.status === 2
-            ? { textDecoration: "line-through" }
-            : { cursor: "pointer" }
-        }
+        style={props.status === 2 ? { textDecoration: "line-through" } : { cursor: "pointer" }}
         onClick={(e) => {
           props.onClick(props.fullPath);
           e.stopPropagation();
           console.log("here");
         }}
-        className={
-          props.selected
-            ? props.classes.selectedItem
-            : props.classes.inactiveItem
-        }
+        className={props.selected ? props.classes.selectedItem : props.classes.inactiveItem}
       >
         {props.fullPath} @ v{props.revision} - {props.status}
       </li>
@@ -374,20 +330,30 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
 
   return (
     <React.Fragment>
+      {props.store.mainStore && (
+        <React.Fragment>
+          <SCM
+            dispatch={props.dispatch}
+            files={props.store.mainStore?.files ?? {}}
+            currentUser={props.store.interactionStore.currentUser}
+            selectedFile={props.store.interactionStore.selectedView?.fullPath}
+            comments={{ comments: {} }}
+            filter={(i) => i[1].status === FileStateStatus.active}
+          />
+          <Chip label={`Main Events: #${props.store.mainStore?.events.length}`} size="small" />
+          <Divider />
+        </React.Fragment>
+      )}
+
       <SCM
         dispatch={props.dispatch}
         files={activeFiles}
         currentUser={props.store.interactionStore.currentUser}
         selectedFile={props.store.interactionStore.selectedView?.fullPath}
         comments={props.store.vcStore.commentStore}
-        filter={(i) => {
-          return i[1].status === FileStateStatus.active;
-        }}
+        filter={(i) => i[1].status === FileStateStatus.active}
       />
-      <Chip
-        label={`Events: #${props.store.vcStore.events.length}`}
-        size="small"
-      />
+      <Chip label={`Commited Events: #${props.store.vcStore.events.length}`} size="small" />
       <Divider />
       <StagingSCM
         dispatch={props.dispatch}
@@ -399,10 +365,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
         vcfiles={props.store.vcStore.files}
         selectedFile={props.store.interactionStore.selectedView?.fullPath}
       ></StagingSCM>
-      <Chip
-        label={`Events: #${props.store.wsStore.events.length}`}
-        size="small"
-      />
+      <Chip label={`Working Events: #${props.store.wsStore.events.length}`} size="small" />
     </React.Fragment>
   );
 };

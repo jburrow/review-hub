@@ -6,11 +6,7 @@ import {
   isReadonly,
   initialVersionControlState,
 } from "./events-version-control";
-import {
-  InteractionStateEvents,
-  InteractionState,
-  interactionReducer,
-} from "./interaction-store";
+import { InteractionStateEvents, InteractionState, interactionReducer } from "./interaction-store";
 
 export type AppCommitEvent = {
   storeType: VersionControlStoreType;
@@ -58,16 +54,12 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
     case "selectCommit":
     case "selectedView":
     case "setCurrentUser":
-      const interactionStore = interactionReducer(
-        state.interactionStore,
-        event
-      );
+      const interactionStore = interactionReducer(state.interactionStore, event);
       return {
         ...state,
         interactionStore,
         isHeadCommit:
-          interactionStore.selectedCommitId &&
-          state.vcStore.headCommitId != interactionStore.selectedCommitId,
+          interactionStore.selectedCommitId && state.vcStore.headCommitId != interactionStore.selectedCommitId,
       };
     case "load":
       return {
@@ -81,10 +73,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
       switch (event.storeType) {
         case VersionControlStoreType.VersionControl:
           const isHeadCommit: boolean =
-            state.interactionStore.selectedCommitId &&
-            state.vcStore.headCommitId
-              ? true
-              : false;
+            state.interactionStore.selectedCommitId && state.vcStore.headCommitId ? true : false;
 
           let s2 = appReducer(
             {
@@ -114,18 +103,12 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
 
           // if we are renaming of a revision ::  and it isn't in the working set... then do we need to seed it?
           if (event.type === "commit") {
-            const rename = event.events.filter(
-              (e) => e.type === "rename" && e.oldFullPath === newSelectedPath
-            );
+            const rename = event.events.filter((e) => e.type === "rename" && e.oldFullPath === newSelectedPath);
 
             if (rename.length > 0 && rename[0].type == "rename") {
               newSelectedPath = rename[0].fullPath;
             }
-            if (
-              event.events.filter(
-                (e) => e.type === "delete" && e.fullPath === newSelectedPath
-              ).length
-            ) {
+            if (event.events.filter((e) => e.type === "delete" && e.fullPath === newSelectedPath).length) {
               newSelectedPath = null;
             }
           }
@@ -133,8 +116,7 @@ export const appReducer = (state: AppState, event: AppEvents): AppState => {
           const wsStore = versionControlReducer(state.wsStore, event);
 
           if (
-            state.interactionStore?.selectedView?.fullPath ===
-              newSelectedPath &&
+            state.interactionStore?.selectedView?.fullPath === newSelectedPath &&
             !state.interactionStore?.selectedView?.readOnly
           ) {
             const value = wsStore.files[newSelectedPath];

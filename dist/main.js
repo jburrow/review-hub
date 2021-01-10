@@ -5,6 +5,7 @@ const React = require("react");
 const react_dom_1 = require("react-dom");
 require("react-grid-layout/css/styles.css");
 require("react-resizable/css/styles.css");
+const _1 = require(".");
 const app_1 = require("./app");
 const demo_store_1 = require("./demo-store");
 const import_export_1 = require("./import-export");
@@ -31,6 +32,13 @@ const DemoApp = () => {
                         ...store.vcStore.files,
                         ...store.wsStore.files,
                     });
+                },
+            },
+            {
+                title: "Pull Main",
+                handleClick: (dispatch, store) => {
+                    const mainStore = _1.initialVersionControlState();
+                    dispatch({ type: "load", mainStore });
                 },
             },
             {

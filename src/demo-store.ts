@@ -1,9 +1,5 @@
 import { Persistence } from "./app";
-import {
-  VersionControlState,
-  FileEvents,
-  reduceVersionControl,
-} from "./events-version-control";
+import { VersionControlState, FileEvents, reduceVersionControl } from "./events-version-control";
 
 const loadVersionControlStore = (): VersionControlState => {
   const events: FileEvents[] = [

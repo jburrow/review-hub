@@ -1,11 +1,4 @@
-import {
-  Button,
-  DialogActions,
-  DialogContent,
-  TextField,
-  withStyles,
-  WithStyles,
-} from "@material-ui/core";
+import { Button, DialogActions, DialogContent, TextField, withStyles, WithStyles } from "@material-ui/core";
 import * as React from "react";
 import { AppStyles } from "../styles";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -25,11 +18,7 @@ export const TextInputDialog = withStyles(AppStyles)(
       setText("");
     };
     return (
-      <Dialog
-        onClose={(e) => onClose(false)}
-        aria-labelledby="simple-dialog-title"
-        open={props.open}
-      >
+      <Dialog onClose={(e) => onClose(false)} aria-labelledby="simple-dialog-title" open={props.open}>
         <DialogTitle id="simple-dialog-title">{props.title}</DialogTitle>
         <DialogContent>
           <TextField
@@ -43,11 +32,7 @@ export const TextInputDialog = withStyles(AppStyles)(
           <Button onClick={() => onClose(false)} variant="contained">
             Cancel
           </Button>
-          <Button
-            onClick={() => onClose(true)}
-            variant="contained"
-            color="primary"
-          >
+          <Button onClick={() => onClose(true)} variant="contained" color="primary">
             Ok
           </Button>
         </DialogActions>

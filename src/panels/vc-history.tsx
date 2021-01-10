@@ -10,13 +10,7 @@ import {
 } from "../events-version-control";
 import { Dispatch } from "../store";
 import { SelectedStyles } from "../styles";
-import {
-  Button,
-  Chip,
-  Divider,
-  withStyles,
-  WithStyles,
-} from "@material-ui/core";
+import { Button, Chip, Divider, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedView } from "../interaction-store";
 import { ReviewCommentEvent } from "monaco-review";
 
@@ -26,26 +20,18 @@ export const VCHistory = (props: {
   selectedCommitId: string;
   selectedView: SelectedView;
 }) => {
-  const scid = props.selectedCommitId
-    ? props.selectedCommitId
-    : props.vcStore.headCommitId;
+  const scid = props.selectedCommitId ? props.selectedCommitId : props.vcStore.headCommitId;
 
   const elements = props.vcStore.events
     .filter((e) => e.type === "commit")
     .map((ce: VersionControlCommitEvent, idx) => {
       return (
         <div key={idx}>
-          <SelectCommitButton
-            commitId={ce.id}
-            dispatch={props.dispatch}
-            selected={scid === ce.id}
-          ></SelectCommitButton>
+          <SelectCommitButton commitId={ce.id} dispatch={props.dispatch} selected={scid === ce.id}></SelectCommitButton>
           {ce.events.map((e, idx) => (
             <div key={idx}>
               {renderFileEvent(e)}
-              {(e.type === "edit" ||
-                e.type == "comment" ||
-                e.type == "rename") && (
+              {(e.type === "edit" || e.type == "comment" || e.type == "rename") && (
                 <SelectEditButton
                   commitId={ce.id}
                   selectedView={props.selectedView}
@@ -77,11 +63,7 @@ export const renderFileEvent = (e: FileEvents) => {
         </ul>
       );
     default:
-      return (
-        <Chip
-          label={`${e.type} - ${(e as any).fullPath} @ ${(e as any).revision}`}
-        />
-      );
+      return <Chip label={`${e.type} - ${(e as any).fullPath} @ ${(e as any).revision}`} />;
   }
 };
 
@@ -116,15 +98,7 @@ export const SelectCommitButton = withStyles(SelectedStyles)(
       >
         Select Commit
       </Button>
-      <span
-        className={
-          props.selected
-            ? props.classes.selectedItem
-            : props.classes.inactiveItem
-        }
-      >
-        {props.commitId}
-      </span>
+      <span className={props.selected ? props.classes.selectedItem : props.classes.inactiveItem}>{props.commitId}</span>
     </React.Fragment>
   )
 );
@@ -147,9 +121,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
         props.editEvent.type === "delete") &&
       props.vcStore.commits[props.commitId] &&
       props.selectedView?.fullPath == props.editEvent.fullPath &&
-      props.selectedView?.revision ==
-        props.vcStore.commits[props.commitId][props.editEvent.fullPath]
-          .revision;
+      props.selectedView?.revision == props.vcStore.commits[props.commitId][props.editEvent.fullPath].revision;
 
     return (
       <React.Fragment>
@@ -164,8 +136,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
               props.editEvent.type === "rename" ||
               props.editEvent.type === "delete"
             ) {
-              const f =
-                props.vcStore.commits[props.commitId][props.editEvent.fullPath];
+              const f = props.vcStore.commits[props.commitId][props.editEvent.fullPath];
               props.dispatch({
                 type: "selectCommit",
                 commitId: props.commitId,
@@ -174,10 +145,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
                 type: "selectedView",
                 fullPath: f.fullPath,
                 revision: f.revision,
-                readOnly: isReadonly(
-                  props.vcStore.files[f.fullPath].history,
-                  f.revision
-                ),
+                readOnly: isReadonly(props.vcStore.files[f.fullPath].history, f.revision),
                 text: f.text,
               });
             }
@@ -186,13 +154,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
           View Revision
         </Button>
         {selected && (
-          <span
-            className={
-              selected ? props.classes.selectedItem : props.classes.inactiveItem
-            }
-          >
-            Selected
-          </span>
+          <span className={selected ? props.classes.selectedItem : props.classes.inactiveItem}>Selected</span>
         )}
       </React.Fragment>
     );

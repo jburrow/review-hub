@@ -131,9 +131,7 @@ const Editor = (props) => {
                     }, []);
                 } }, "Discard Comments"))),
         props.view.original ? (React.createElement(react_1.DiffEditor, { editorDidMount: (_modified, _original, editor) => {
-                editor
-                    .getModifiedEditor()
-                    .onDidChangeModelContent(() => setText(editor.getModifiedEditor().getValue()));
+                editor.getModifiedEditor().onDidChangeModelContent(() => setText(editor.getModifiedEditor().getValue()));
                 setEditor(editor.getModifiedEditor());
             }, options: { originalEditable: false, readOnly: props.view.readOnly }, language: "javascript", height: editorHeight, modified: props.view.text, original: props.view.original })) : (React.createElement(react_1.ControlledEditor, { value: props.view.text, height: editorHeight, language: "javascript", options: { readOnly: props.view.readOnly }, editorDidMount: (_, editor) => {
                 setEditor(editor);

@@ -26,8 +26,7 @@ const appReducer = (state, event) => {
             return {
                 ...state,
                 interactionStore,
-                isHeadCommit: interactionStore.selectedCommitId &&
-                    state.vcStore.headCommitId != interactionStore.selectedCommitId,
+                isHeadCommit: interactionStore.selectedCommitId && state.vcStore.headCommitId != interactionStore.selectedCommitId,
             };
         case "load":
             return {
@@ -40,10 +39,7 @@ const appReducer = (state, event) => {
         case "reset":
             switch (event.storeType) {
                 case VersionControlStoreType.VersionControl:
-                    const isHeadCommit = state.interactionStore.selectedCommitId &&
-                        state.vcStore.headCommitId
-                        ? true
-                        : false;
+                    const isHeadCommit = state.interactionStore.selectedCommitId && state.vcStore.headCommitId ? true : false;
                     let s2 = exports.appReducer({
                         ...state,
                         vcStore: events_version_control_1.versionControlReducer(state.vcStore, event),
@@ -74,8 +70,7 @@ const appReducer = (state, event) => {
                         }
                     }
                     const wsStore = events_version_control_1.versionControlReducer(state.wsStore, event);
-                    if (((_e = (_d = state.interactionStore) === null || _d === void 0 ? void 0 : _d.selectedView) === null || _e === void 0 ? void 0 : _e.fullPath) ===
-                        newSelectedPath &&
+                    if (((_e = (_d = state.interactionStore) === null || _d === void 0 ? void 0 : _d.selectedView) === null || _e === void 0 ? void 0 : _e.fullPath) === newSelectedPath &&
                         !((_g = (_f = state.interactionStore) === null || _f === void 0 ? void 0 : _f.selectedView) === null || _g === void 0 ? void 0 : _g.readOnly)) {
                         const value = wsStore.files[newSelectedPath];
                         interactionStore = interaction_store_1.interactionReducer(state.interactionStore, {

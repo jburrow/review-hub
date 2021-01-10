@@ -1,11 +1,6 @@
 import * as React from "react";
 import { Dispatch } from "../store";
-import {
-  FileState,
-  FileStateX,
-  FileStateHistory,
-  isReadonly,
-} from "../events-version-control";
+import { FileState, FileStateX, FileStateHistory, isReadonly } from "../events-version-control";
 import { Button, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
 import { SelectedView } from "../interaction-store";
@@ -27,9 +22,7 @@ export const FileHistory = withStyles(SelectedStyles)(
         <span>
           <span
             className={
-              props.selectedView?.revision === e.revision
-                ? props.classes.selectedItem
-                : props.classes.inactiveItem
+              props.selectedView?.revision === e.revision ? props.classes.selectedItem : props.classes.inactiveItem
             }
           >
             v{e.revision}
@@ -93,9 +86,8 @@ export const FileHistory = withStyles(SelectedStyles)(
                 onClick={() => {
                   setSelected([]);
 
-                  const m = props.file.history.filter(
-                    (h) => h.fileState.revision === props.selectedView.revision
-                  )[0]?.fileState;
+                  const m = props.file.history.filter((h) => h.fileState.revision === props.selectedView.revision)[0]
+                    ?.fileState;
 
                   props.dispatch({
                     type: "selectedView",

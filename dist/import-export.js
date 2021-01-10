@@ -27,8 +27,7 @@ function rebaseScripts(author, currentFiles, files) {
     });
     const editEvents = Object.entries(files)
         .filter(([fullPath, v]) => {
-        return (currentFiles[fullPath] == undefined ||
-            currentFiles[fullPath].text !== v.text);
+        return currentFiles[fullPath] == undefined || currentFiles[fullPath].text !== v.text;
     })
         .map(([fullPath, v]) => {
         return { type: "edit", fullPath, text: v.text };

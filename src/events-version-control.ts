@@ -1,8 +1,4 @@
-import {
-  ReviewCommentStore,
-  ReviewCommentEvent,
-  reduceComments,
-} from "monaco-review";
+import { ReviewCommentStore, ReviewCommentEvent, reduceComments } from "monaco-review";
 import { v4 } from "uuid";
 
 export type FileEditEvent = {
@@ -35,12 +31,7 @@ export type GeneralComment = {
   commentEvents: ReviewCommentEvent[];
 };
 
-export type FileEvents =
-  | FileEditEvent
-  | FileDeleteEvent
-  | FileRenameEvent
-  | FileCommentEvent
-  | GeneralComment;
+export type FileEvents = FileEditEvent | FileDeleteEvent | FileRenameEvent | FileCommentEvent | GeneralComment;
 
 export type VersionControlCommitEvent = {
   type: "commit";
@@ -56,9 +47,7 @@ export type VersionControlCommitReset = {
   createdAt?: string;
 };
 
-export type VersionControlEvent =
-  | VersionControlCommitEvent
-  | VersionControlCommitReset;
+export type VersionControlEvent = VersionControlCommitEvent | VersionControlCommitReset;
 
 export enum FileStateStatus {
   active = 1,
@@ -129,10 +118,7 @@ export function initialVersionControlState(): VersionControlState {
 
 export type VCDispatch = (event: VersionControlEvent) => void;
 
-export function versionControlReducer(
-  state: VersionControlState,
-  event: VersionControlEvent
-) {
+export function versionControlReducer(state: VersionControlState, event: VersionControlEvent) {
   switch (event.type) {
     case "reset":
       return initialVersionControlState();
@@ -142,10 +128,7 @@ export function versionControlReducer(
       let generalCommentStore = state.commentStore;
       for (const e of event.events) {
         if (e.type === "general-comment") {
-          generalCommentStore = reduceComments(
-            e.commentEvents,
-            generalCommentStore
-          );
+          generalCommentStore = reduceComments(e.commentEvents, generalCommentStore);
           continue;
         }
 
@@ -196,14 +179,7 @@ export function versionControlReducer(
             throw `unknown type`;
         }
 
-        updates[e.fullPath] = createFileState(
-          event,
-          e.fullPath,
-          text,
-          prev,
-          status,
-          commentStore
-        );
+        updates[e.fullPath] = createFileState(event, e.fullPath, text, prev, status, commentStore);
       }
 
       const files = {
@@ -232,10 +208,7 @@ export function versionControlReducer(
   }
 }
 
-export function reduceVersionControl(
-  actions: VersionControlEvent[],
-  state: VersionControlState = null
-) {
+export function reduceVersionControl(actions: VersionControlEvent[], state: VersionControlState = null) {
   state = state || initialVersionControlState();
 
   for (const a of actions) {

@@ -1,10 +1,4 @@
-import {
-  Button,
-  DialogActions,
-  DialogContent,
-  withStyles,
-  WithStyles,
-} from "@material-ui/core";
+import { Button, DialogActions, DialogContent, withStyles, WithStyles } from "@material-ui/core";
 import * as React from "react";
 import { AppStyles } from "../styles";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -33,11 +27,7 @@ export const ConfirmDialog = withStyles(AppStyles)(
           <Button onClick={() => props.onClose(false)} variant="contained">
             Cancel
           </Button>
-          <Button
-            onClick={() => props.onClose(true)}
-            variant="contained"
-            color="primary"
-          >
+          <Button onClick={() => props.onClose(true)} variant="contained" color="primary">
             Confirm
           </Button>
         </DialogActions>

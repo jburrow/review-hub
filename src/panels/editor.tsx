@@ -1,9 +1,5 @@
 import { DiffEditor, ControlledEditor } from "@monaco-editor/react";
-import {
-  createReviewManager,
-  ReviewManager,
-  ReviewCommentEvent,
-} from "monaco-review";
+import { createReviewManager, ReviewManager, ReviewCommentEvent } from "monaco-review";
 import * as React from "react";
 import { Dispatch, VersionControlStoreType } from "../store";
 import { SelectedView } from "../interaction-store";
@@ -12,11 +8,7 @@ import { Button, Chip } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { ConfirmDialog } from "../dialogs/confirm";
 
-export const Editor = (props: {
-  currentUser: string;
-  view: SelectedView;
-  dispatch: Dispatch;
-}) => {
+export const Editor = (props: { currentUser: string; view: SelectedView; dispatch: Dispatch }) => {
   const [text, setText] = React.useState<string>(null);
   const [e, setE] = React.useState<any>(null);
   const [comments, setComments] = React.useState<ReviewCommentEvent[]>(null);
@@ -50,13 +42,9 @@ export const Editor = (props: {
     setReviewManager(rm);
   }
 
-  const [renameDialogOpen, setRenameDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [renameDialogOpen, setRenameDialogOpen] = React.useState<boolean>(false);
 
-  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState<boolean>(false);
 
   const editorHeight = "calc(100% - 25px)";
 
@@ -219,11 +207,7 @@ export const Editor = (props: {
       {props.view.original ? (
         <DiffEditor
           editorDidMount={(_modified, _original, editor) => {
-            editor
-              .getModifiedEditor()
-              .onDidChangeModelContent(() =>
-                setText(editor.getModifiedEditor().getValue())
-              );
+            editor.getModifiedEditor().onDidChangeModelContent(() => setText(editor.getModifiedEditor().getValue()));
             setEditor(editor.getModifiedEditor());
           }}
           options={{ originalEditable: false, readOnly: props.view.readOnly }}

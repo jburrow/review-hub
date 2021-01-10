@@ -1,12 +1,6 @@
 import * as JSZip from "jszip";
 import { saveAs } from "file-saver";
-import {
-  FileStateStatus,
-  FileState,
-  FileDeleteEvent,
-  FileEditEvent,
-  FileEvents,
-} from "./events-version-control";
+import { FileStateStatus, FileState, FileDeleteEvent, FileEditEvent, FileEvents } from "./events-version-control";
 import { AppCommitEvent, VersionControlStoreType } from "./store";
 
 export async function generateZip(files: Record<string, FileState>) {
@@ -35,10 +29,7 @@ export function rebaseScripts(
     });
   const editEvents: FileEvents[] = Object.entries(files)
     .filter(([fullPath, v]) => {
-      return (
-        currentFiles[fullPath] == undefined ||
-        currentFiles[fullPath].text !== v.text
-      );
+      return currentFiles[fullPath] == undefined || currentFiles[fullPath].text !== v.text;
     })
     .map(([fullPath, v]) => {
       return { type: "edit", fullPath, text: v.text } as FileEditEvent;

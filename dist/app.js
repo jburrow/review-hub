@@ -22,11 +22,8 @@ exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
             React.createElement(exports.PanelContent, null, (_a = props.buttons) === null || _a === void 0 ? void 0 : _a.map((a, i) => (React.createElement(core_1.Button, { key: i, onClick: () => a.handleClick(props.dispatch, props.store, props.name) }, a.title))))),
         React.createElement("div", { key: "0.1", "data-grid": { x: 0, y: 1, w: 3, h: 13 }, className: props.classes.version_control },
             React.createElement(exports.PanelHeading, null,
-                "version-control",
-                " ",
-                props.store.isHeadCommit
-                    ? props.store.interactionStore.selectedCommitId
-                    : "HEAD",
+                "version-control ",
+                props.store.isHeadCommit ? props.store.interactionStore.selectedCommitId : "HEAD",
                 props.store.isHeadCommit && (React.createElement("button", { onClick: () => props.dispatch({ type: "selectCommit", commitId: null }) }, "Switch to HEAD"))),
             React.createElement(exports.PanelContent, null,
                 React.createElement(staging_scm_1.SCMPanel, { store: props.store, dispatch: props.dispatch }))),
