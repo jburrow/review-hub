@@ -21,7 +21,6 @@ exports.FileHistoryItem = core_1.withStyles(styles_1.SelectedStyles)((props) => 
 });
 function timeConverter(timestamp) {
     if (timestamp) {
-        debugger;
         const a = new Date(timestamp);
         const year = a.getFullYear();
         const month = a.getMonth();

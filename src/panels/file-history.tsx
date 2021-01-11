@@ -35,7 +35,6 @@ export const FileHistoryItem = withStyles(SelectedStyles)(
 
 function timeConverter(timestamp: number) {
   if (timestamp) {
-    debugger;
     const a = new Date(timestamp);
     const year = a.getFullYear();
     const month = a.getMonth();
