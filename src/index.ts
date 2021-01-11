@@ -1,5 +1,12 @@
 import { App, Action, Persistence } from "./app";
-import { initialVersionControlState, versionControlReducer, VersionControlState } from "./events-version-control";
+import {
+  Files,
+  reduceVersionControl,
+  FileEvents,
+  initialVersionControlState,
+  versionControlReducer,
+  VersionControlState,
+} from "./events-version-control";
 import { rebaseScripts, generateZip } from "./import-export";
 import { FileState, FileStateStatus } from "./events-version-control";
 import { AppState, Dispatch, appReducer, initialState } from "./store";
@@ -19,4 +26,7 @@ export {
   FileStateStatus,
   appReducer,
   initialState,
+  Files,
+  reduceVersionControl,
+  FileEvents,
 };
