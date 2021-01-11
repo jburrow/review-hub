@@ -13,4 +13,4 @@ export declare const FileHistory: React.ComponentType<Pick<{
     store: AppState;
 } & {
     classes: Record<"selectedItem" | "inactiveItem", string>;
-}, "store" | "dispatch"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+}, "dispatch" | "store"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
