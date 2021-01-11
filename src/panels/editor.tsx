@@ -22,7 +22,7 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
   }, [props.view]);
 
   React.useEffect(() => {
-    console.debug("load comments", props.view?.comments?.comments);
+    console.debug("[editor] load comments", props.view?.comments?.comments);
     if (reviewManager !== null && props.view) {
       reviewManager.loadFromStore(
         props.view.comments || {

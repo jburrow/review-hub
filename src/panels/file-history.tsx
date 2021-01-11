@@ -27,11 +27,28 @@ export const FileHistoryItem = withStyles(SelectedStyles)(
         >
           v{props.history.fileState.revision}
         </span>{" "}
-        <span>{Object.values(comments).length}</span>{" "}
+        <span>{Object.values(comments).length}</span> <span>{timeConverter(props.history.event.createdAt)}</span>
       </span>
     );
   }
 );
+
+function timeConverter(timestamp: number) {
+  if (timestamp) {
+    debugger;
+    const a = new Date(timestamp);
+    const year = a.getFullYear();
+    const month = a.getMonth();
+    const date = a.getDate();
+    const hour = a.getHours();
+    const min = a.getMinutes();
+    const sec = a.getSeconds();
+
+    return `${year}-${month}-${date} ${hour}:${min}:${sec}`;
+  } else {
+    return "";
+  }
+}
 
 export const FileHistory = withStyles(SelectedStyles)(
   (
@@ -72,8 +89,8 @@ export const FileHistory = withStyles(SelectedStyles)(
                 const readOnly =
                   isReadonly(props.store, selectedView.fullPath, m.revision) &&
                   props.store.interactionStore.selectedView.storeType !== VersionControlStoreType.Working;
-                console.log(readOnly, props.store.interactionStore.selectedView);
-                //ebugger;
+                //TODO - review this logic - not sure this is now correct
+
                 props.dispatch({
                   type: "selectedView",
                   selectedView: {

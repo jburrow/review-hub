@@ -33,14 +33,19 @@ function initialVersionControlState() {
 }
 exports.initialVersionControlState = initialVersionControlState;
 function versionControlReducer(state, event) {
-    var _a, _b;
+    var _a;
     switch (event.type) {
         case "reset":
             return initialVersionControlState();
         case "commit":
+            // Ensure all events have a timestamp
+            const tmpEvent = {
+                ...event,
+                createdAt: event.createdAt && event.createdAt > 0 ? event.createdAt : new Date().getTime(),
+            };
             const updates = {};
             let generalCommentStore = state.commentStore;
-            for (const e of event.events) {
+            for (const e of tmpEvent.events) {
                 if (e.type === "general-comment") {
                     generalCommentStore = monaco_review_1.reduceComments(e.commentEvents, generalCommentStore);
                     continue;
@@ -59,7 +64,7 @@ function versionControlReducer(state, event) {
                 switch (e.type) {
                     case "comment":
                         commentStore = monaco_review_1.reduceComments(e.commentEvents, commentStore);
-                        console.info("commentStore after reduce", commentStore);
+                        console.debug("[commentStore] after reduce", commentStore);
                         break;
                     case "edit":
                         status = FileStateStatus.active;
@@ -72,32 +77,26 @@ function versionControlReducer(state, event) {
                     case "rename":
                         status = FileStateStatus.active;
                         text = e.text || prev.text;
-                        updates[e.oldFullPath] = createFileState(event, e.oldFullPath, "", prev, FileStateStatus.deleted, commentStore);
+                        updates[e.oldFullPath] = createFileState(tmpEvent, e.oldFullPath, "", prev, FileStateStatus.deleted, commentStore);
                         break;
                     default:
                         throw `unknown type`;
                 }
-                updates[e.fullPath] = createFileState(event, e.fullPath, text, prev, status, commentStore);
+                updates[e.fullPath] = createFileState(tmpEvent, e.fullPath, text, prev, status, commentStore);
             }
             const files = {
                 ...state.files,
                 ...updates,
             };
-            const commitId = event.id || uuid_1.v4();
+            const commitId = tmpEvent.id || uuid_1.v4();
             const newCommit = {};
             newCommit[commitId] = files;
             return {
                 files: files,
                 commits: { ...state.commits, ...newCommit },
-                events: [
-                    ...state.events,
-                    {
-                        ...event,
-                        createdAt: (_b = event.createdAt) !== null && _b !== void 0 ? _b : new Date().getTime().toString(),
-                    },
-                ],
+                events: [...state.events, tmpEvent],
                 version: state.version + 1,
-                headCommitId: event.id,
+                headCommitId: tmpEvent.id,
                 commentStore: generalCommentStore,
             };
     }

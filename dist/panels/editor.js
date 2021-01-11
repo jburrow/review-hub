@@ -22,7 +22,7 @@ const Editor = (props) => {
     }, [props.view]);
     React.useEffect(() => {
         var _a, _b;
-        console.debug("load comments", (_b = (_a = props.view) === null || _a === void 0 ? void 0 : _a.comments) === null || _b === void 0 ? void 0 : _b.comments);
+        console.debug("[editor] load comments", (_b = (_a = props.view) === null || _a === void 0 ? void 0 : _a.comments) === null || _b === void 0 ? void 0 : _b.comments);
         if (reviewManager !== null && props.view) {
             reviewManager.loadFromStore(props.view.comments || {
                 comments: {},

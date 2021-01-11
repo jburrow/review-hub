@@ -33,12 +33,12 @@ export declare type VersionControlCommitEvent = {
     id?: string;
     author: string;
     events: FileEvents[];
-    createdAt?: string;
+    createdAt?: number;
 };
 export declare type VersionControlCommitReset = {
     type: "reset";
     id?: string;
-    createdAt?: string;
+    createdAt?: number;
 };
 export declare type VersionControlEvent = VersionControlCommitEvent | VersionControlCommitReset;
 export declare enum FileStateStatus {

@@ -77,7 +77,7 @@ const loadVersionControlStore = (): VersionControlState => {
               lineNumber: 1,
               text: "",
               type: "create",
-              createdAt: "",
+              createdAt: 0,
               createdBy: "xxx",
               id: "1",
             },

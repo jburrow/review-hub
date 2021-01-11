@@ -1,10 +1,12 @@
 {
   "name": "review-hub",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "ReactJs application, components and reducers for a web-based code review tool",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "prettier":{"printWidth":120},
+  "prettier": {
+    "printWidth": 120
+  },
   "scripts": {
     "start": "webpack serve",
     "compile": "tsc && webpack --mode=production && typedoc --out ./docs ./src/main.tsx",
@@ -16,8 +18,8 @@
   "author": "James Burrow",
   "license": "MIT",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/jburrow/review-hub.git"
+    "type": "git",
+    "url": "https://github.com/jburrow/review-hub.git"
   },
   "peerDependencies": {
     "react": "16.x || 17.x",
@@ -28,7 +30,7 @@
     "jszip": "^3.5.0",
     "moment": "^2.29.1",
     "monaco-editor": "^0.21.2",
-    "monaco-review": "0.0.16",
+    "monaco-review": "0.0.17",
     "react-grid-layout": "^1.2.0",
     "react-with-styles": "^4.1.0",
     "stream": "0.0.2",
@@ -62,5 +64,4 @@
     "webpack": "^5.11.1",
     "webpack-cli": "^4.3.1"
   }
-  
 }

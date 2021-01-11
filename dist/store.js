@@ -28,7 +28,6 @@ exports.initialState = {
 };
 const appReducer = (state, event) => {
     var _a, _b, _c, _d, _e, _f, _g;
-    console.debug("appReducer:", event);
     switch (event.type) {
         case "selectCommit":
         case "selectedView":

@@ -10,7 +10,7 @@ import { generateZip } from "./import-export";
 import "./index.css";
 import { appReducer, initialState } from "./store";
 
-monaco.init().then(() => console.debug("Monaco has initialized..."));
+monaco.init().then(() => console.debug("[main.tsx] Monaco has initialized..."));
 const currentUser = "current-user";
 
 const DemoApp = () => {

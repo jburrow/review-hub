@@ -38,13 +38,13 @@ export type VersionControlCommitEvent = {
   id?: string;
   author: string;
   events: FileEvents[];
-  createdAt?: string;
+  createdAt?: number;
 };
 
 export type VersionControlCommitReset = {
   type: "reset";
   id?: string;
-  createdAt?: string;
+  createdAt?: number;
 };
 
 export type VersionControlEvent = VersionControlCommitEvent | VersionControlCommitReset;
@@ -124,9 +124,15 @@ export function versionControlReducer(state: VersionControlState, event: Version
       return initialVersionControlState();
 
     case "commit":
+      // Ensure all events have a timestamp
+      const tmpEvent = {
+        ...event,
+        createdAt: event.createdAt && event.createdAt > 0 ? event.createdAt : new Date().getTime(),
+      };
+
       const updates: { [fullPath: string]: FileState } = {};
       let generalCommentStore = state.commentStore;
-      for (const e of event.events) {
+      for (const e of tmpEvent.events) {
         if (e.type === "general-comment") {
           generalCommentStore = reduceComments(e.commentEvents, generalCommentStore);
           continue;
@@ -148,7 +154,7 @@ export function versionControlReducer(state: VersionControlState, event: Version
         switch (e.type) {
           case "comment":
             commentStore = reduceComments(e.commentEvents, commentStore);
-            console.info("commentStore after reduce", commentStore);
+            console.debug("[commentStore] after reduce", commentStore);
 
             break;
           case "edit":
@@ -166,7 +172,7 @@ export function versionControlReducer(state: VersionControlState, event: Version
             text = e.text || prev.text;
 
             updates[e.oldFullPath] = createFileState(
-              event,
+              tmpEvent,
               e.oldFullPath,
               "",
               prev,
@@ -179,7 +185,7 @@ export function versionControlReducer(state: VersionControlState, event: Version
             throw `unknown type`;
         }
 
-        updates[e.fullPath] = createFileState(event, e.fullPath, text, prev, status, commentStore);
+        updates[e.fullPath] = createFileState(tmpEvent, e.fullPath, text, prev, status, commentStore);
       }
 
       const files = {
@@ -187,22 +193,16 @@ export function versionControlReducer(state: VersionControlState, event: Version
         ...updates,
       };
 
-      const commitId = event.id || v4();
+      const commitId = tmpEvent.id || v4();
       const newCommit: Record<string, Files> = {};
       newCommit[commitId] = files;
 
       return {
         files: files,
         commits: { ...state.commits, ...newCommit },
-        events: [
-          ...state.events,
-          {
-            ...event,
-            createdAt: event.createdAt ?? new Date().getTime().toString(),
-          },
-        ],
+        events: [...state.events, tmpEvent],
         version: state.version + 1,
-        headCommitId: event.id,
+        headCommitId: tmpEvent.id,
         commentStore: generalCommentStore,
       };
   }

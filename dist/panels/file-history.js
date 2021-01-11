@@ -16,8 +16,25 @@ exports.FileHistoryItem = core_1.withStyles(styles_1.SelectedStyles)((props) => 
             props.history.fileState.revision),
         " ",
         React.createElement("span", null, Object.values(comments).length),
-        " "));
+        " ",
+        React.createElement("span", null, timeConverter(props.history.event.createdAt))));
 });
+function timeConverter(timestamp) {
+    if (timestamp) {
+        debugger;
+        const a = new Date(timestamp);
+        const year = a.getFullYear();
+        const month = a.getMonth();
+        const date = a.getDate();
+        const hour = a.getHours();
+        const min = a.getMinutes();
+        const sec = a.getSeconds();
+        return `${year}-${month}-${date} ${hour}:${min}:${sec}`;
+    }
+    else {
+        return "";
+    }
+}
 exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
     var _a, _b, _c;
     const [selected, setSelected] = React.useState([]);
@@ -36,8 +53,7 @@ exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
                     const original = store_1.getFile(props.store, store_1.VersionControlStoreType.Main, props.store.interactionStore.selectedView.fullPath).file;
                     const readOnly = store_1.isReadonly(props.store, selectedView.fullPath, m.revision) &&
                         props.store.interactionStore.selectedView.storeType !== store_1.VersionControlStoreType.Working;
-                    console.log(readOnly, props.store.interactionStore.selectedView);
-                    //ebugger;
+                    //TODO - review this logic - not sure this is now correct
                     props.dispatch({
                         type: "selectedView",
                         selectedView: {

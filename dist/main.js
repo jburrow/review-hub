@@ -10,7 +10,7 @@ const demo_store_1 = require("./demo-store");
 const import_export_1 = require("./import-export");
 require("./index.css");
 const store_1 = require("./store");
-react_1.monaco.init().then(() => console.debug("Monaco has initialized..."));
+react_1.monaco.init().then(() => console.debug("[main.tsx] Monaco has initialized..."));
 const currentUser = "current-user";
 const DemoApp = () => {
     const [store, dispatch] = React.useReducer(store_1.appReducer, {
