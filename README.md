@@ -6,7 +6,7 @@ a browser based, version control agnostic, code review tool
 
 # Why?
 
-Great quesiton, been pondering this myself. In world where github exists this amy seem a bit odd, pointless. It is, in some regards.
+Great question, been pondering this myself. In world where github exists this amy seem a bit odd, pointless. It is, in some regards.
 
 However, consider this use-case.
 
@@ -16,7 +16,7 @@ With a thin API to initialize a "pull request", and similiar api to "rebase it".
 
 # Demo
 
-Check out the demo page - https://jburrow.github.io/review-hub/example/
+Check out the demo page - https://jburrow.github.io/review-hub-examples/dist/
 
 # Features
 
