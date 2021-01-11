@@ -1,6 +1,6 @@
 {
   "name": "review-hub",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "ReactJs application, components and reducers for a web-based code review tool",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -46,10 +46,8 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-grid-layout": "^1.1.1",
     "@types/uuid": "^8.3.0",
-
     "@types/jest": "^26.0.19",
     "coveralls": "^3.1.0",
-
     "jest": "^26.6.3",
     "style-loader": "^2.0.0",
     "ts-jest": "^26.4.4",
