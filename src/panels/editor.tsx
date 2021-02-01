@@ -1,4 +1,5 @@
-import { DiffEditor, ControlledEditor } from "@monaco-editor/react";
+// import * as Editor from "@monaco-editor/react";
+import { DiffEditor, default as ControlledEditor } from "@monaco-editor/react";
 import { createReviewManager, ReviewManager, ReviewCommentEvent } from "monaco-review";
 import * as React from "react";
 import { Dispatch, VersionControlStoreType, versionControlStoreTypeLabel } from "../store";
@@ -221,7 +222,7 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
       )}
       {props.view.type == "diff" ? (
         <DiffEditor
-          editorDidMount={(_modified, _original, editor) => {
+          onMount={(editor) => {
             editor.getModifiedEditor().onDidChangeModelContent(() => setText(editor.getModifiedEditor().getValue()));
             setEditor(editor.getModifiedEditor());
           }}
@@ -237,10 +238,10 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
           height={editorHeight}
           language={"javascript"} //TODO - work out how to do lanuage
           options={{ readOnly: props.view.readOnly }}
-          editorDidMount={(_, editor) => {
+          onMount={(editor) => {
             setEditor(editor);
           }}
-          onChange={(e, t) => setText(t)}
+          onChange={(value, e) => setText(value)}
         />
       )}
     </div>

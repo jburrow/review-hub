@@ -7,7 +7,7 @@ export declare const FileHistoryItem: React.ComponentType<Pick<{
     selectedView: SelectedView;
 } & {
     classes: Record<"selectedItem" | "inactiveItem", string>;
-}, "selectedView" | "history"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+}, "history" | "selectedView"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
 export declare const FileHistory: React.ComponentType<Pick<{
     dispatch: Dispatch;
     store: AppState;

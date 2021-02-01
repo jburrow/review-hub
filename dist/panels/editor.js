@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Editor = void 0;
+// import * as Editor from "@monaco-editor/react";
 const react_1 = require("@monaco-editor/react");
 const monaco_review_1 = require("monaco-review");
 const React = require("react");
@@ -132,12 +133,12 @@ const Editor = (props) => {
                         dirtyCommentIds: new Set(),
                     }, []);
                 } }, "Discard Comments"))),
-        props.view.type == "diff" ? (React.createElement(react_1.DiffEditor, { editorDidMount: (_modified, _original, editor) => {
+        props.view.type == "diff" ? (React.createElement(react_1.DiffEditor, { onMount: (editor) => {
                 editor.getModifiedEditor().onDidChangeModelContent(() => setText(editor.getModifiedEditor().getValue()));
                 setEditor(editor.getModifiedEditor());
-            }, options: { originalEditable: false, readOnly: props.view.readOnly }, language: "javascript", height: editorHeight, modified: props.view.text, original: props.view.original })) : (React.createElement(react_1.ControlledEditor, { value: props.view.text, height: editorHeight, language: "javascript", options: { readOnly: props.view.readOnly }, editorDidMount: (_, editor) => {
+            }, options: { originalEditable: false, readOnly: props.view.readOnly }, language: "javascript", height: editorHeight, modified: props.view.text, original: props.view.original })) : (React.createElement(react_1.default, { value: props.view.text, height: editorHeight, language: "javascript", options: { readOnly: props.view.readOnly }, onMount: (editor) => {
                 setEditor(editor);
-            }, onChange: (e, t) => setText(t) })))) : null;
+            }, onChange: (value, e) => setText(value) })))) : null;
 };
 exports.Editor = Editor;
 //# sourceMappingURL=editor.js.map
