@@ -9,7 +9,7 @@ import { AppState, Dispatch } from "./store";
 import { AppStyles } from "./styles";
 import React = require("react");
 
-import useWindowSize from "@rooks/use-window-size";
+import { useWindowSize } from "rooks";
 
 const ReactGridLayout = RGL.WidthProvider(RGL);
 

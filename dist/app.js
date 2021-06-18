@@ -9,11 +9,11 @@ const staging_scm_1 = require("./panels/staging-scm");
 const vc_history_1 = require("./panels/vc-history");
 const styles_1 = require("./styles");
 const React = require("react");
-const use_window_size_1 = require("@rooks/use-window-size");
+const rooks_1 = require("rooks");
 const ReactGridLayout = RGL.WidthProvider(RGL);
 exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
     var _a, _b, _c, _d, _e, _f;
-    const { innerHeight } = use_window_size_1.default();
+    const { innerHeight } = rooks_1.useWindowSize();
     return (React.createElement(ReactGridLayout, { rowHeight: (innerHeight - 70) / 20, maxRows: 20, compactType: "vertical", cols: 12, margin: [5, 5], containerPadding: [5, 5], useCSSTransforms: true, draggableCancel: props.classes.panel_content, className: props.classes.layout },
         React.createElement("div", { key: "0.0", "data-grid": { x: 0, y: 0, w: 12, h: 2 }, className: props.classes.header_bar },
             React.createElement(exports.PanelHeading, null,
