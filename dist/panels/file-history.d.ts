@@ -6,11 +6,11 @@ export declare const FileHistoryItem: React.ComponentType<Pick<{
     history: FileStateHistory;
     selectedView: SelectedView;
 } & {
-    classes: Record<"selectedItem" | "inactiveItem", string>;
+    classes: import("@material-ui/styles").ClassNameMap<"selectedItem" | "inactiveItem">;
 }, "selectedView" | "history"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
 export declare const FileHistory: React.ComponentType<Pick<{
     dispatch: Dispatch;
     store: AppState;
 } & {
-    classes: Record<"selectedItem" | "inactiveItem", string>;
+    classes: import("@material-ui/styles").ClassNameMap<"selectedItem" | "inactiveItem">;
 }, "dispatch" | "store"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;

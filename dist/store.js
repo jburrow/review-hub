@@ -88,15 +88,16 @@ const appReducer = (state, event) => {
                         const value = wsStore.files[newSelectedPath];
                         interactionStore = interaction_store_1.interactionReducer(state.interactionStore, {
                             type: "selectedView",
-                            selectedView: (value === null || value === void 0 ? void 0 : value.fullPath) ? {
-                                ...state.interactionStore.selectedView,
-                                fullPath: value.fullPath,
-                                readOnly: value && isReadonly(s1, value.fullPath, value.revision),
-                                text: value.text,
-                                comments: value.commentStore,
-                                revision: value.revision,
-                                storeType: VersionControlStoreType.Working,
-                            }
+                            selectedView: (value === null || value === void 0 ? void 0 : value.fullPath)
+                                ? {
+                                    ...state.interactionStore.selectedView,
+                                    fullPath: value.fullPath,
+                                    readOnly: value && isReadonly(s1, value.fullPath, value.revision),
+                                    text: value.text,
+                                    comments: value.commentStore,
+                                    revision: value.revision,
+                                    storeType: VersionControlStoreType.Working,
+                                }
                                 : null,
                         });
                     }

@@ -12,18 +12,23 @@ exports.AppStyles = core_1.createStyles({
     },
     header_bar: {
         ...common,
+        // backgroundColor: "#224D2533"
     },
     version_control: {
         ...common,
+        // backgroundColor: "#D28C1F33"
     },
     editor: {
         ...common,
+        // backgroundColor: "#561E8E33",
     },
     script_history: {
         ...common,
+        // backgroundColor: "#1E518933",
     },
     vc_history: {
         ...common,
+        // backgroundColor: "#684D2533",
     },
     panel_content: {
         height: `calc(100% - ${panelHeadingHeight})`,

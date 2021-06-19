@@ -10,7 +10,7 @@ export interface Action {
     handleClick(dispatch: Dispatch, store: AppState, name: string): void;
 }
 export declare const App: React.ComponentType<Pick<{
-    classes: Record<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
+    classes: import("@material-ui/styles").ClassNameMap<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading">;
 } & {
     dispatch: Dispatch;
     store: AppState;
@@ -18,12 +18,12 @@ export declare const App: React.ComponentType<Pick<{
     name?: string;
 }, "name" | "dispatch" | "store" | "buttons"> & import("@material-ui/core").StyledComponentProps<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
 export declare const PanelContent: React.ComponentType<Pick<{
-    classes: Record<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
+    classes: import("@material-ui/styles").ClassNameMap<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading">;
 } & {
     children: any;
 }, "children"> & import("@material-ui/core").StyledComponentProps<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
 export declare const PanelHeading: React.ComponentType<Pick<{
-    classes: Record<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading", string>;
+    classes: import("@material-ui/styles").ClassNameMap<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading">;
 } & {
     children: any;
 }, "children"> & import("@material-ui/core").StyledComponentProps<"layout" | "editor" | "header_bar" | "version_control" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
