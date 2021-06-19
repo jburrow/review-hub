@@ -1,20 +1,20 @@
 import * as React from "react";
 import { VersionControlState, VersionControlCommitEvent, FileEvents } from "../events-version-control";
-import { Dispatch, isReadonly, VersionControlStoreType } from "../store";
+import { AppState, Dispatch, isReadonly, VersionControlStoreType } from "../store";
 import { SelectedStyles } from "../styles";
 import { Button, Chip, Divider, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedView } from "../interaction-store";
 import { ReviewCommentEvent } from "monaco-review";
 
 export const VCHistory = (props: {
-  vcStore: VersionControlState;
+  store: AppState;
   dispatch: Dispatch;
   selectedCommitId: string;
   selectedView: SelectedView;
 }) => {
-  const scid = props.selectedCommitId ? props.selectedCommitId : props.vcStore.headCommitId;
+  const scid = props.selectedCommitId ? props.selectedCommitId : props.store.vcStore.headCommitId;
 
-  const elements = props.vcStore.events
+  const elements = props.store.vcStore.events
     .filter((e) => e.type === "commit")
     .map((ce: VersionControlCommitEvent, idx) => {
       return (
@@ -27,7 +27,7 @@ export const VCHistory = (props: {
                 <SelectEditButton
                   commitId={ce.id}
                   selectedView={props.selectedView}
-                  vcStore={props.vcStore}
+                  store={props.store}
                   dispatch={props.dispatch}
                   editEvent={e}
                 ></SelectEditButton>
@@ -99,7 +99,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
   (
     props: {
       commitId: string;
-      vcStore: VersionControlState;
+      store: AppState;
       dispatch: Dispatch;
       editEvent: FileEvents;
       selectedView: SelectedView;
@@ -111,9 +111,9 @@ export const SelectEditButton = withStyles(SelectedStyles)(
         props.editEvent.type === "edit" ||
         props.editEvent.type === "rename" ||
         props.editEvent.type === "delete") &&
-      props.vcStore.commits[props.commitId] &&
+      props.store.vcStore.commits[props.commitId] &&
       props.selectedView?.fullPath == props.editEvent.fullPath &&
-      props.selectedView?.revision == props.vcStore.commits[props.commitId][props.editEvent.fullPath].revision;
+      props.selectedView?.revision == props.store.vcStore.commits[props.commitId][props.editEvent.fullPath].revision;
 
     return (
       <React.Fragment>
@@ -128,7 +128,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
               props.editEvent.type === "rename" ||
               props.editEvent.type === "delete"
             ) {
-              const f = props.vcStore.commits[props.commitId][props.editEvent.fullPath];
+              const f = props.store.vcStore.commits[props.commitId][props.editEvent.fullPath];
               props.dispatch({
                 type: "selectCommit",
                 commitId: props.commitId,
@@ -139,7 +139,7 @@ export const SelectEditButton = withStyles(SelectedStyles)(
                   type: "view",
                   fullPath: f.fullPath,
                   revision: f.revision,
-                  readOnly: isReadonly(null, f.fullPath, f.revision), //TODO - xxxx
+                  readOnly: isReadonly(props.store, f.fullPath, f.revision),
                   text: f.text,
                   storeType: VersionControlStoreType.Branch,
                 },

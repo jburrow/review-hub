@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { FileStateStatus } from "./events-version-control";
 import { rebaseScripts } from "./import-export";
 

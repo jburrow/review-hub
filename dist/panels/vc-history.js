@@ -6,15 +6,15 @@ const store_1 = require("../store");
 const styles_1 = require("../styles");
 const core_1 = require("@material-ui/core");
 const VCHistory = (props) => {
-    const scid = props.selectedCommitId ? props.selectedCommitId : props.vcStore.headCommitId;
-    const elements = props.vcStore.events
+    const scid = props.selectedCommitId ? props.selectedCommitId : props.store.vcStore.headCommitId;
+    const elements = props.store.vcStore.events
         .filter((e) => e.type === "commit")
         .map((ce, idx) => {
         return (React.createElement("div", { key: idx },
             React.createElement(exports.SelectCommitButton, { commitId: ce.id, dispatch: props.dispatch, selected: scid === ce.id }),
             ce.events.map((e, idx) => (React.createElement("div", { key: idx },
                 exports.renderFileEvent(e),
-                (e.type === "edit" || e.type == "comment" || e.type == "rename") && (React.createElement(exports.SelectEditButton, { commitId: ce.id, selectedView: props.selectedView, vcStore: props.vcStore, dispatch: props.dispatch, editEvent: e }))))),
+                (e.type === "edit" || e.type == "comment" || e.type == "rename") && (React.createElement(exports.SelectEditButton, { commitId: ce.id, selectedView: props.selectedView, store: props.store, dispatch: props.dispatch, editEvent: e }))))),
             React.createElement(core_1.Divider, null)));
     });
     return React.createElement("div", null, elements);
@@ -55,9 +55,9 @@ exports.SelectEditButton = core_1.withStyles(styles_1.SelectedStyles)((props) =>
         props.editEvent.type === "edit" ||
         props.editEvent.type === "rename" ||
         props.editEvent.type === "delete") &&
-        props.vcStore.commits[props.commitId] &&
+        props.store.vcStore.commits[props.commitId] &&
         ((_a = props.selectedView) === null || _a === void 0 ? void 0 : _a.fullPath) == props.editEvent.fullPath &&
-        ((_b = props.selectedView) === null || _b === void 0 ? void 0 : _b.revision) == props.vcStore.commits[props.commitId][props.editEvent.fullPath].revision;
+        ((_b = props.selectedView) === null || _b === void 0 ? void 0 : _b.revision) == props.store.vcStore.commits[props.commitId][props.editEvent.fullPath].revision;
     return (React.createElement(React.Fragment, null,
         React.createElement(core_1.Button, { size: "small", style: { marginLeft: 50 }, onClick: () => {
                 if (
@@ -66,7 +66,7 @@ exports.SelectEditButton = core_1.withStyles(styles_1.SelectedStyles)((props) =>
                     props.editEvent.type === "edit" ||
                     props.editEvent.type === "rename" ||
                     props.editEvent.type === "delete") {
-                    const f = props.vcStore.commits[props.commitId][props.editEvent.fullPath];
+                    const f = props.store.vcStore.commits[props.commitId][props.editEvent.fullPath];
                     props.dispatch({
                         type: "selectCommit",
                         commitId: props.commitId,
@@ -77,7 +77,7 @@ exports.SelectEditButton = core_1.withStyles(styles_1.SelectedStyles)((props) =>
                             type: "view",
                             fullPath: f.fullPath,
                             revision: f.revision,
-                            readOnly: store_1.isReadonly(null, f.fullPath, f.revision),
+                            readOnly: store_1.isReadonly(props.store, f.fullPath, f.revision),
                             text: f.text,
                             storeType: store_1.VersionControlStoreType.Branch,
                         },

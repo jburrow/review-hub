@@ -1,4 +1,9 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { reduceVersionControl, VersionControlEvent, FileStateStatus, FileEvents } from "./events-version-control";
+
 test("reduceVersionControl: edit=>edit=>edit", () => {
   let actions: VersionControlEvent[] = [
     {

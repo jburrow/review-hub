@@ -42,7 +42,7 @@ exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
         React.createElement("div", { key: "1.1", "data-grid": { x: 0, y: 2, w: 12, h: 4 }, className: props.classes.vc_history },
             React.createElement(exports.PanelHeading, null, "VC History"),
             React.createElement(exports.PanelContent, null,
-                React.createElement(vc_history_1.VCHistory, { vcStore: props.store.vcStore, dispatch: props.dispatch, selectedCommitId: props.store.interactionStore.selectedCommitId, selectedView: props.store.interactionStore.selectedView }),
+                React.createElement(vc_history_1.VCHistory, { store: props.store, dispatch: props.dispatch, selectedCommitId: props.store.interactionStore.selectedCommitId, selectedView: props.store.interactionStore.selectedView }),
                 React.createElement("div", null, props.store.vcStore.version)))));
 });
 exports.PanelContent = core_1.withStyles(styles_1.AppStyles)((props) => {

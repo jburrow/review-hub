@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { interactionReducer, SelectedSimpleView } from "./interaction-store";
 import { VersionControlStoreType } from "./store";
 

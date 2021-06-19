@@ -97,7 +97,7 @@ export const App = withStyles(AppStyles)(
           <PanelHeading>VC History</PanelHeading>
           <PanelContent>
             <VCHistory
-              vcStore={props.store.vcStore}
+              store={props.store}
               dispatch={props.dispatch}
               selectedCommitId={props.store.interactionStore.selectedCommitId}
               selectedView={props.store.interactionStore.selectedView}
