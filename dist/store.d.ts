@@ -1,4 +1,4 @@
-import { VersionControlState, VersionControlCommitEvent, VersionControlCommitReset } from "./events-version-control";
+import { VersionControlState, VersionControlCommitEvent, VersionControlCommitReset, Revision } from "./events-version-control";
 import { InteractionStateEvents, InteractionState } from "./interaction-store";
 export declare type AppCommitEvent = {
     storeType: VersionControlStoreType;
@@ -37,4 +37,4 @@ export declare function getFile(store: AppState, storeType: VersionControlStoreT
     storeType: VersionControlStoreType.Branch;
     file: import("./events-version-control").FileState;
 };
-export declare function isReadonly(store: AppState, fullPath: string, revision: number): boolean;
+export declare function isReadonly(store: AppState, fullPath: string, revision: Revision): boolean;

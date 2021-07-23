@@ -15,12 +15,12 @@ const StagingSCM = (props) => {
         React.createElement(core_1.Tooltip, { title: "Changes that have not been merged to main" },
             React.createElement("h3", null, "Working set")),
         React.createElement(exports.SCM, { dispatch: props.dispatch, currentUser: props.currentUser, files: props.wsfiles, comments: props.generalComments, selectedFile: props.selectedFile, storeType: store_1.VersionControlStoreType.Working, store: props.store }),
-        React.createElement(core_1.Button, { size: "small", onClick: () => {
+        React.createElement(core_1.Button, { size: "small", disabled: newFileOpen || props.isHeadCommit, onClick: () => {
                 setNewFileOpen(true);
             } }, "Create New File"),
-        React.createElement(core_1.Button, { size: "small", onClick: () => {
+        React.createElement(core_1.Button, { size: "small", disabled: generalCommentOpen || props.isHeadCommit, onClick: () => {
                 setGeneralCommentOpen(true);
-            }, disabled: props.isHeadCommit }, "Comment"),
+            } }, "Comment"),
         React.createElement(core_1.Button, { size: "small", variant: "contained", color: "primary", onClick: () => {
                 const events = props.events
                     .filter((e) => e.type === "commit")
@@ -48,7 +48,7 @@ const StagingSCM = (props) => {
             }, disabled: props.events.length == 0 }, "Discard Changes"),
         React.createElement(text_input_1.TextInputDialog, { open: generalCommentOpen, title: "Enter general comment", onClose: (c) => {
                 setGeneralCommentOpen(false);
-                c.confirm &&
+                if (c.confirm) {
                     props.dispatch({
                         type: "commit",
                         storeType: store_1.VersionControlStoreType.Working,
@@ -71,10 +71,12 @@ const StagingSCM = (props) => {
                             },
                         ],
                     });
+                }
             } }),
         React.createElement(text_input_1.TextInputDialog, { open: newFileOpen, title: "Create a new file", onClose: (c) => {
                 setNewFileOpen(false);
-                c.confirm &&
+                if (c.confirm) {
+                    const fullPath = c.text;
                     props.dispatch({
                         type: "commit",
                         storeType: store_1.VersionControlStoreType.Working,
@@ -83,12 +85,24 @@ const StagingSCM = (props) => {
                         events: [
                             {
                                 type: "edit",
-                                fullPath: c.text,
+                                fullPath,
                                 text: "",
-                                revision: 0,
+                                revision: null,
                             },
                         ],
                     });
+                    props.dispatch({
+                        type: "selectedView",
+                        selectedView: {
+                            fullPath,
+                            revision: null,
+                            type: "view",
+                            storeType: store_1.VersionControlStoreType.Working,
+                            text: "",
+                            readOnly: false,
+                        },
+                    });
+                }
             } })));
 };
 exports.StagingSCM = StagingSCM;

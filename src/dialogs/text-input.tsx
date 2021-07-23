@@ -25,6 +25,13 @@ export const TextInputDialog = withStyles(AppStyles)(
             onChange={(e) => {
               setText(e.target.value);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && e.ctrlKey) {
+                e.preventDefault();
+                onClose(true);
+              }
+            }}
+            autoFocus
             value={text}
           ></TextField>
         </DialogContent>
@@ -32,7 +39,7 @@ export const TextInputDialog = withStyles(AppStyles)(
           <Button onClick={() => onClose(false)} variant="contained">
             Cancel
           </Button>
-          <Button onClick={() => onClose(true)} variant="contained" color="primary">
+          <Button onClick={() => onClose(true)} variant="contained" color="primary" disabled={text.length == 0}>
             Ok
           </Button>
         </DialogActions>

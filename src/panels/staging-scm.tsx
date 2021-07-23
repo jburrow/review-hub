@@ -1,6 +1,6 @@
 import * as React from "react";
 import { VersionControlStoreType, Dispatch, AppState, isReadonly } from "../store";
-import { FileState, FileStateStatus, FileEvents } from "../events-version-control";
+import { FileState, FileStateStatus, FileEvents, Revision } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
 import { Button, Chip, Divider, Link, Tooltip, WithStyles, withStyles } from "@material-ui/core";
 import { SelectedStyles } from "../styles";
@@ -40,6 +40,7 @@ export const StagingSCM = (props: {
       />
       <Button
         size="small"
+        disabled={newFileOpen || props.isHeadCommit}
         onClick={() => {
           setNewFileOpen(true);
         }}
@@ -49,10 +50,10 @@ export const StagingSCM = (props: {
 
       <Button
         size="small"
+        disabled={generalCommentOpen || props.isHeadCommit}
         onClick={() => {
           setGeneralCommentOpen(true);
         }}
-        disabled={props.isHeadCommit}
       >
         Comment
       </Button>
@@ -103,7 +104,7 @@ export const StagingSCM = (props: {
         onClose={(c) => {
           setGeneralCommentOpen(false);
 
-          c.confirm &&
+          if (c.confirm) {
             props.dispatch({
               type: "commit",
               storeType: VersionControlStoreType.Working,
@@ -126,6 +127,7 @@ export const StagingSCM = (props: {
                 },
               ],
             });
+          }
         }}
       />
 
@@ -135,7 +137,9 @@ export const StagingSCM = (props: {
         onClose={(c) => {
           setNewFileOpen(false);
 
-          c.confirm &&
+          if (c.confirm) {
+            const fullPath = c.text;
+
             props.dispatch({
               type: "commit",
               storeType: VersionControlStoreType.Working,
@@ -144,12 +148,25 @@ export const StagingSCM = (props: {
               events: [
                 {
                   type: "edit",
-                  fullPath: c.text,
+                  fullPath,
                   text: "",
-                  revision: 0,
+                  revision: null,
                 },
               ],
             });
+
+            props.dispatch({
+              type: "selectedView",
+              selectedView: {
+                fullPath,
+                revision: null,
+                type: "view",
+                storeType: VersionControlStoreType.Working,
+                text: "",
+                readOnly: false,
+              },
+            });
+          }
         }}
       />
     </div>
@@ -312,7 +329,7 @@ const SCMItem = withStyles(SelectedStyles)(
   (
     props: {
       fullPath: string;
-      revision: number;
+      revision: Revision;
       status: FileStateStatus;
       store: AppState;
       onClick(fullPath: string, readOnly: boolean): void;

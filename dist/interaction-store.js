@@ -12,8 +12,9 @@ const interactionReducer = (state, event) => {
                 ...state,
                 selectedView: event.selectedView,
             };
+        default:
+            return state;
     }
-    return state;
 };
 exports.interactionReducer = interactionReducer;
 //# sourceMappingURL=interaction-store.js.map

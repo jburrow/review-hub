@@ -1,4 +1,5 @@
 import { ReviewCommentStore } from "monaco-review";
+import { Revision } from "./events-version-control";
 import { VersionControlStoreType } from "./store";
 export interface InteractionState {
     selectedCommitId?: string;
@@ -11,7 +12,7 @@ interface SelectViewBase {
     label?: string;
     text: string;
     comments?: ReviewCommentStore;
-    revision: number;
+    revision: Revision;
     readOnly: boolean;
 }
 export interface SelectedSimpleView extends SelectViewBase {
@@ -20,7 +21,7 @@ export interface SelectedSimpleView extends SelectViewBase {
 export interface SelectedDiffView extends SelectViewBase {
     type: "diff";
     original: string;
-    originalRevision: number;
+    originalRevision: Revision;
     originalStoreType: VersionControlStoreType;
 }
 export declare type SelectedView = SelectedDiffView | SelectedSimpleView;

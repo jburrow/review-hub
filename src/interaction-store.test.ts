@@ -17,7 +17,7 @@ test("interaction-store: selectedView", () => {
     readOnly: false,
     label: "",
     fullPath: "",
-    revision: 0,
+    revision: null,
     text: "",
     storeType: VersionControlStoreType.Working,
   };

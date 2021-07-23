@@ -17,9 +17,14 @@ exports.TextInputDialog = core_1.withStyles(styles_1.AppStyles)((props) => {
         React.createElement(core_1.DialogContent, null,
             React.createElement(core_1.TextField, { onChange: (e) => {
                     setText(e.target.value);
-                }, value: text })),
+                }, onKeyDown: (e) => {
+                    if (e.key === "Enter" && e.ctrlKey) {
+                        e.preventDefault();
+                        onClose(true);
+                    }
+                }, autoFocus: true, value: text })),
         React.createElement(core_1.DialogActions, null,
             React.createElement(core_1.Button, { onClick: () => onClose(false), variant: "contained" }, "Cancel"),
-            React.createElement(core_1.Button, { onClick: () => onClose(true), variant: "contained", color: "primary" }, "Ok"))));
+            React.createElement(core_1.Button, { onClick: () => onClose(true), variant: "contained", color: "primary", disabled: text.length == 0 }, "Ok"))));
 });
 //# sourceMappingURL=text-input.js.map

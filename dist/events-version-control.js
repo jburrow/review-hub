@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.reduceVersionControl = exports.versionControlReducer = exports.initialVersionControlState = exports.FileStateStatus = void 0;
+exports.reduceVersionControl = exports.versionControlReducer = exports.initialVersionControlState = exports.incrementRevision = exports.FileStateStatus = void 0;
 const monaco_review_1 = require("monaco-review");
 const uuid_1 = require("uuid");
 var FileStateStatus;
@@ -13,7 +13,7 @@ function createFileState(event, fullPath, text, prev, status, commentStore) {
         fullPath: fullPath,
         status: status,
         text: text,
-        revision: prev.revision + 1,
+        revision: incrementRevision(prev.revision),
         commentStore: commentStore || { comments: {} },
     };
     return {
@@ -21,6 +21,17 @@ function createFileState(event, fullPath, text, prev, status, commentStore) {
         history: [...prev.history, { event: event, fileState: current }],
     };
 }
+function incrementRevision(revision) {
+    //TODO - FIgure out how this should work.
+    if (revision) {
+        const rev = parseInt(revision, 10);
+        return (rev + 1).toString();
+    }
+    else {
+        return "1";
+    }
+}
+exports.incrementRevision = incrementRevision;
 function initialVersionControlState() {
     return {
         files: {},

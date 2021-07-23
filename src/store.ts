@@ -4,6 +4,7 @@ import {
   VersionControlCommitReset,
   versionControlReducer,
   initialVersionControlState,
+  Revision,
 } from "./events-version-control";
 import { InteractionStateEvents, InteractionState, interactionReducer } from "./interaction-store";
 
@@ -182,7 +183,7 @@ export function getFile(store: AppState, storeType: VersionControlStoreType, ful
   }
 }
 
-export function isReadonly(store: AppState, fullPath: string, revision: number) {
+export function isReadonly(store: AppState, fullPath: string, revision: Revision) {
   let readOnly = true;
   //let headRevision = null;
   if (fullPath && revision) {

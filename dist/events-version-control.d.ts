@@ -3,25 +3,25 @@ export declare type FileEditEvent = {
     type: "edit";
     fullPath: string;
     text: string;
-    revision: number;
+    revision: Revision;
 };
 export declare type FileDeleteEvent = {
     type: "delete";
     fullPath: string;
-    revision: number;
+    revision: Revision;
 };
 export declare type FileCommentEvent = {
     type: "comment";
     fullPath: string;
     commentEvents: ReviewCommentEvent[];
-    revision: number;
+    revision: Revision;
 };
 export declare type FileRenameEvent = {
     type: "rename";
     fullPath: string;
     oldFullPath: string;
     text: string;
-    revision: number;
+    revision: Revision;
 };
 export declare type GeneralComment = {
     type: "general-comment";
@@ -57,9 +57,10 @@ export declare type FileStateX = {
     text: string;
     status: FileStateStatus;
     commentStore: ReviewCommentStore;
-    revision: number;
+    revision: Revision;
 };
 export declare type Files = Record<string, FileState>;
+export declare type Revision = string;
 export interface VersionControlState {
     files: Files;
     commits: Record<string, Files>;
@@ -68,6 +69,7 @@ export interface VersionControlState {
     headCommitId: string;
     commentStore: ReviewCommentStore;
 }
+export declare function incrementRevision(revision: Revision): string;
 export declare function initialVersionControlState(): VersionControlState;
 export declare type VCDispatch = (event: VersionControlEvent) => void;
 export declare function versionControlReducer(state: VersionControlState, event: VersionControlEvent): VersionControlState;

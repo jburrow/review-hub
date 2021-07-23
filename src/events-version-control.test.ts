@@ -4,12 +4,13 @@
 
 import { reduceVersionControl, VersionControlEvent, FileStateStatus, FileEvents } from "./events-version-control";
 
+const revision = "1";
 test("reduceVersionControl: edit=>edit=>edit", () => {
   let actions: VersionControlEvent[] = [
     {
       type: "commit",
       author: "author.one",
-      events: [{ type: "edit", fullPath: "/script1.py", revision: 1, text: "t1" }],
+      events: [{ type: "edit", fullPath: "/script1.py", revision, text: "t1" }],
     },
   ];
   let store = reduceVersionControl(actions);
@@ -19,7 +20,7 @@ test("reduceVersionControl: edit=>edit=>edit", () => {
     {
       type: "commit",
       author: "author.one",
-      events: [{ type: "edit", fullPath: "/script1.py", revision: 1, text: "t2" }],
+      events: [{ type: "edit", fullPath: "/script1.py", revision, text: "t2" }],
     },
   ];
   store = reduceVersionControl(actions, store);
@@ -29,7 +30,7 @@ test("reduceVersionControl: edit=>edit=>edit", () => {
     {
       type: "commit",
       author: "author.one",
-      events: [{ type: "edit", fullPath: "/script1.py", text: "t3", revision: 1 }],
+      events: [{ type: "edit", fullPath: "/script1.py", text: "t3", revision }],
     },
   ];
   store = reduceVersionControl(actions, store);
@@ -42,7 +43,7 @@ test("reduceVersionControl: edit=>delete=>edit", () => {
     {
       type: "commit",
       author: "author.one",
-      events: [{ type: "edit", fullPath: "/script1.py", text: "t1", revision: 1 }],
+      events: [{ type: "edit", fullPath: "/script1.py", text: "t1", revision }],
     },
   ];
   let store = reduceVersionControl(actions);
@@ -52,7 +53,7 @@ test("reduceVersionControl: edit=>delete=>edit", () => {
     {
       type: "commit",
       author: "author.one",
-      events: [{ type: "delete", fullPath: "/script1.py", revision: 1 }],
+      events: [{ type: "delete", fullPath: "/script1.py", revision }],
     },
   ];
   store = reduceVersionControl(actions, store);
@@ -64,7 +65,7 @@ test("reduceVersionControl: edit=>delete=>edit", () => {
     {
       type: "commit",
       author: "author.one",
-      events: [{ type: "edit", fullPath: "/script1.py", text: "t1", revision: 1 }],
+      events: [{ type: "edit", fullPath: "/script1.py", text: "t1", revision }],
     },
   ];
   store = reduceVersionControl(actions, store);
@@ -78,7 +79,7 @@ test("reduceVersionControl: reset=>edit=>comment=>comment", () => {
     {
       type: "commit",
       author: "author.one",
-      events: [{ type: "edit", fullPath: "/script1.py", text: "t1", revision: 1 }],
+      events: [{ type: "edit", fullPath: "/script1.py", text: "t1", revision }],
     },
     {
       type: "commit",
@@ -87,7 +88,7 @@ test("reduceVersionControl: reset=>edit=>comment=>comment", () => {
         {
           type: "comment",
           fullPath: "/script1.py",
-          revision: 1,
+          revision,
           commentEvents: [
             {
               lineNumber: 1,
@@ -106,7 +107,7 @@ test("reduceVersionControl: reset=>edit=>comment=>comment", () => {
         {
           type: "comment",
           fullPath: "/script1.py",
-          revision: 1,
+          revision,
           commentEvents: [
             {
               lineNumber: 2,
@@ -133,19 +134,19 @@ test("reduceVersionControl: commit=>commit=>commit=>commit - check revisions", (
   const events: FileEvents[] = [
     {
       fullPath: "/script1.py",
-      revision: 1,
+      revision,
       text: "function version(){ return 's1.1'}",
       type: "edit",
     },
     {
       fullPath: "/script2.py",
-      revision: 1,
+      revision,
       text: "function version(){ return 's2.1'}",
       type: "edit",
     },
     {
       fullPath: "/script3.py",
-      revision: 1,
+      revision,
       text: "function version(){ return 's3.1'}",
       type: "edit",
     },
@@ -167,7 +168,7 @@ test("reduceVersionControl: commit=>commit=>commit=>commit - check revisions", (
           fullPath: "/script1.py",
           text: "function version(){ return 's1.2'}",
           type: "edit",
-          revision: 1,
+          revision,
         },
       ],
     },
@@ -180,7 +181,7 @@ test("reduceVersionControl: commit=>commit=>commit=>commit - check revisions", (
           fullPath: "/script1.py",
           text: "function version(){ return 's1.3'}",
           type: "edit",
-          revision: 1,
+          revision,
         },
       ],
     },
@@ -191,7 +192,7 @@ test("reduceVersionControl: commit=>commit=>commit=>commit - check revisions", (
       events: [
         {
           fullPath: "/script1.py",
-          revision: 1,
+          revision: "1",
           commentEvents: [
             {
               lineNumber: 1,

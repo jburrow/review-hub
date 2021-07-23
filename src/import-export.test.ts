@@ -10,6 +10,8 @@ test("rebaseScripts - noop", () => {
   expect(event.events.length).toBe(0);
 });
 
+const revision = "1";
+
 test("rebaseScripts - 1 delete & 1 update", () => {
   const event = rebaseScripts(
     "author",
@@ -19,7 +21,7 @@ test("rebaseScripts - 1 delete & 1 update", () => {
         history: [],
         commentStore: null,
         fullPath: "",
-        revision: 1,
+        revision,
         status: FileStateStatus.active,
       },
     },
@@ -29,7 +31,7 @@ test("rebaseScripts - 1 delete & 1 update", () => {
         history: [],
         commentStore: null,
         fullPath: "",
-        revision: 1,
+        revision,
         status: FileStateStatus.active,
       },
     }

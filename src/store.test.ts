@@ -6,6 +6,9 @@ import { FileDeleteEvent, FileEditEvent, FileRenameEvent, initialVersionControlS
 
 import { appReducer, VersionControlStoreType } from "./store";
 
+const revision1 = "1";
+const revision2 = "2";
+
 test("reduceVersionControl: edit=>edit=>edit", () => {
   const store = appReducer(
     {
@@ -23,13 +26,13 @@ test("reduceVersionControl: edit=>edit=>edit", () => {
           type: "edit",
           fullPath: "/script1.py",
           text: "t1",
-          revision: 1,
+          revision: revision1,
         } as FileEditEvent,
       ],
     }
   );
 
-  expect(store.vcStore.files["/script1.py"].revision).toBe(2);
+  expect(store.vcStore.files["/script1.py"].revision).toBe("2");
 
   const s1 = appReducer(store, {
     type: "selectedView",
@@ -52,7 +55,7 @@ test("reduceVersionControl: edit=>edit=>edit", () => {
         type: "edit",
         fullPath: "/script1.py",
         text: "t2",
-        revision: 2,
+        revision: revision2,
       } as FileEditEvent,
     ],
   });

@@ -5,25 +5,25 @@ export type FileEditEvent = {
   type: "edit";
   fullPath: string;
   text: string;
-  revision: number;
+  revision: Revision;
 };
 export type FileDeleteEvent = {
   type: "delete";
   fullPath: string;
-  revision: number;
+  revision: Revision;
 };
 export type FileCommentEvent = {
   type: "comment";
   fullPath: string;
   commentEvents: ReviewCommentEvent[];
-  revision: number;
+  revision: Revision;
 };
 export type FileRenameEvent = {
   type: "rename";
   fullPath: string;
   oldFullPath: string;
   text: string;
-  revision: number;
+  revision: Revision;
 };
 
 export type GeneralComment = {
@@ -69,10 +69,13 @@ export type FileStateX = {
   text: string;
   status: FileStateStatus;
   commentStore: ReviewCommentStore;
-  revision: number;
+  revision: Revision;
 };
 
 export type Files = Record<string, FileState>;
+
+// Completly unsure if we should have this as a number or string; ... to be decided.
+export type Revision = string;
 
 export interface VersionControlState {
   files: Files;
@@ -95,7 +98,7 @@ function createFileState(
     fullPath: fullPath,
     status: status,
     text: text,
-    revision: prev.revision + 1,
+    revision: incrementRevision(prev.revision),
     commentStore: commentStore || { comments: {} },
   };
 
@@ -103,6 +106,16 @@ function createFileState(
     ...current,
     history: [...prev.history, { event: event, fileState: current }],
   };
+}
+
+export function incrementRevision(revision: Revision) {
+  //TODO - FIgure out how this should work.
+  if (revision) {
+    const rev = parseInt(revision, 10);
+    return (rev + 1).toString();
+  } else {
+    return "1";
+  }
 }
 
 export function initialVersionControlState(): VersionControlState {
