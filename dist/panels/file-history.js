@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FileHistory = exports.FileHistoryItem = void 0;
+exports.FileHistory = exports.timeConverter = exports.FileHistoryItem = void 0;
 const React = require("react");
 const store_1 = require("../store");
 const core_1 = require("@material-ui/core");
@@ -23,17 +23,18 @@ function timeConverter(timestamp) {
     if (timestamp) {
         const a = new Date(timestamp);
         const year = a.getFullYear();
-        const month = a.getMonth();
-        const date = a.getDate();
-        const hour = a.getHours();
-        const min = a.getMinutes();
-        const sec = a.getSeconds();
+        const month = a.getMonth().toString().padStart(2, "0");
+        const date = a.getDate().toString().padStart(2, "0");
+        const hour = a.getHours().toString().padStart(2, "0");
+        const min = a.getMinutes().toString().padStart(2, "0");
+        const sec = a.getSeconds().toString().padStart(2, "0");
         return `${year}-${month}-${date} ${hour}:${min}:${sec}`;
     }
     else {
         return "";
     }
 }
+exports.timeConverter = timeConverter;
 exports.FileHistory = core_1.withStyles(styles_1.SelectedStyles)((props) => {
     var _a, _b, _c;
     const [selected, setSelected] = React.useState([]);

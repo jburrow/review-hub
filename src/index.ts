@@ -1,6 +1,6 @@
 import { App, Action, Persistence } from "./app";
 import { Editor } from "./panels/editor";
-import { FileHistory } from "./panels/file-history";
+import { FileHistory, timeConverter } from "./panels/file-history";
 import { SCMPanel } from "./panels/staging-scm";
 import { VCHistory } from "./panels/vc-history";
 import {
@@ -14,7 +14,7 @@ import {
 } from "./events-version-control";
 import { rebaseScripts, generateZip } from "./import-export";
 import { FileState, FileStateStatus } from "./events-version-control";
-import { AppState, Dispatch, appReducer, initialState } from "./store";
+import { AppState, Dispatch, appReducer, initialState, VersionControlStoreType, getFile, isReadonly } from "./store";
 
 export {
   App,
@@ -28,13 +28,17 @@ export {
   rebaseScripts,
   generateZip,
   FileState,
+  getFile,
   FileStateStatus,
+  timeConverter,
   appReducer,
   initialState,
+  isReadonly,
   Files,
   reduceVersionControl,
   FileEvents,
   VersionControlEvent,
+  VersionControlStoreType,
   Editor,
   FileHistory,
   SCMPanel,

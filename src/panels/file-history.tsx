@@ -33,15 +33,15 @@ export const FileHistoryItem = withStyles(SelectedStyles)(
   }
 );
 
-function timeConverter(timestamp: number) {
+export function timeConverter(timestamp: number) {
   if (timestamp) {
     const a = new Date(timestamp);
     const year = a.getFullYear();
-    const month = a.getMonth();
-    const date = a.getDate();
-    const hour = a.getHours();
-    const min = a.getMinutes();
-    const sec = a.getSeconds();
+    const month = a.getMonth().toString().padStart(2, "0");
+    const date = a.getDate().toString().padStart(2, "0");
+    const hour = a.getHours().toString().padStart(2, "0");
+    const min = a.getMinutes().toString().padStart(2, "0");
+    const sec = a.getSeconds().toString().padStart(2, "0");
 
     return `${year}-${month}-${date} ${hour}:${min}:${sec}`;
   } else {

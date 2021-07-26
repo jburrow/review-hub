@@ -8,6 +8,7 @@ export declare const FileHistoryItem: React.ComponentType<Pick<{
 } & {
     classes: import("@material-ui/styles").ClassNameMap<"selectedItem" | "inactiveItem">;
 }, "selectedView" | "history"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+export declare function timeConverter(timestamp: number): string;
 export declare const FileHistory: React.ComponentType<Pick<{
     dispatch: Dispatch;
     store: AppState;
