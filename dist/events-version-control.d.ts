@@ -28,19 +28,28 @@ export declare type GeneralComment = {
     commentEvents: ReviewCommentEvent[];
 };
 export declare type FileEvents = FileEditEvent | FileDeleteEvent | FileRenameEvent | FileCommentEvent | GeneralComment;
+export declare type VersionControlEventBase = {
+    id?: string;
+    createdAt?: number;
+};
 export declare type VersionControlCommitEvent = {
     type: "commit";
     id?: string;
     author: string;
     events: FileEvents[];
     createdAt?: number;
-};
+} & VersionControlEventBase;
 export declare type VersionControlCommitReset = {
     type: "reset";
-    id?: string;
-    createdAt?: number;
-};
-export declare type VersionControlEvent = VersionControlCommitEvent | VersionControlCommitReset;
+} & VersionControlEventBase;
+export declare type VersionControlInformationEvent = {
+    type: "information";
+    message: string;
+    href?: string;
+    title?: string;
+    icon?: string;
+} & VersionControlEventBase;
+export declare type VersionControlEvent = VersionControlCommitEvent | VersionControlCommitReset | VersionControlInformationEvent;
 export declare enum FileStateStatus {
     active = 1,
     deleted = 2

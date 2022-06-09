@@ -5,8 +5,9 @@ import { SelectedStyles } from "../styles";
 import { Button, Chip, Divider, withStyles, WithStyles } from "@material-ui/core";
 import { SelectedView } from "../interaction-store";
 import { ReviewCommentEvent } from "monaco-review";
+import { EnumNumberMember } from "@babel/types";
 
-export const VCHistory = (props: {
+export const Timeline = (props: {
   store: AppState;
   dispatch: Dispatch;
   selectedCommitId: string;
@@ -14,33 +15,62 @@ export const VCHistory = (props: {
 }) => {
   const scid = props.selectedCommitId ? props.selectedCommitId : props.store.vcStore.headCommitId;
 
-  const elements = props.store.vcStore.events
-    .filter((e) => e.type === "commit")
-    .map((ce: VersionControlCommitEvent, idx) => {
-      return (
-        <div key={idx}>
-          <SelectCommitButton commitId={ce.id} dispatch={props.dispatch} selected={scid === ce.id}></SelectCommitButton>
-          {ce.events.map((e, idx) => (
-            <div key={idx}>
-              {renderFileEvent(e)}
-              {(e.type === "edit" || e.type == "comment" || e.type == "rename") && (
-                <SelectEditButton
-                  commitId={ce.id}
-                  selectedView={props.selectedView}
-                  store={props.store}
-                  dispatch={props.dispatch}
-                  editEvent={e}
-                ></SelectEditButton>
-              )}
-              {/* <div style={{ fontSize: 10 }}>{JSON.stringify(e)}</div> */}
-            </div>
-          ))}
-          <Divider />
-        </div>
-      );
-    });
+  const elements = props.store.vcStore.events.map((ce, idx) => {
+    console.log("x:X", ce);
+    switch (ce.type) {
+      case "information":
+        return <div key={idx}>{ce.message}</div>;
+      case "commit":
+        return (
+          <VersionControlCommitEventComponent
+            key={idx}
+            ce={ce}
+            selectedView={props.selectedView}
+            idx={idx}
+            scid={scid}
+            store={props.store}
+            dispatch={props.dispatch}
+          />
+        );
+    }
+  });
 
   return <div>{elements}</div>;
+};
+
+export const VersionControlCommitEventComponent = (props: {
+  dispatch: Dispatch;
+  idx: number;
+  scid: string;
+  ce: VersionControlCommitEvent;
+  selectedView: SelectedView;
+  store: AppState;
+}) => {
+  return (
+    <div>
+      <SelectCommitButton
+        commitId={props.ce.id}
+        dispatch={props.dispatch}
+        selected={props.scid === props.ce.id}
+      ></SelectCommitButton>
+      {props.ce.events.map((e, idx) => (
+        <div key={idx}>
+          {renderFileEvent(e)}
+          {(e.type === "edit" || e.type == "comment" || e.type == "rename") && (
+            <SelectEditButton
+              commitId={props.ce.id}
+              selectedView={props.selectedView}
+              store={props.store}
+              dispatch={props.dispatch}
+              editEvent={e}
+            ></SelectEditButton>
+          )}
+          {/* <div style={{ fontSize: 10 }}>{JSON.stringify(e)}</div> */}
+        </div>
+      ))}
+      <Divider />
+    </div>
+  );
 };
 
 export const renderFileEvent = (e: FileEvents) => {

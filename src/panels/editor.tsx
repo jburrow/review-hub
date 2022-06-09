@@ -56,7 +56,6 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
       ) : (
         <Chip label="EDITABLE" color="secondary" size="small" />
       )}
-
       {props.view.type === "diff" && (
         <Chip
           label={versionControlStoreTypeLabel(props.view.originalStoreType)}
@@ -97,7 +96,6 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
           </Button>
         </React.Fragment>
       )}
-
       <RenameDialog
         fullPath={props.view.fullPath}
         onClose={({ newFullPath, rename }) => {
@@ -120,7 +118,6 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
         }}
         open={renameDialogOpen}
       />
-
       <ConfirmDialog
         open={confirmDialogOpen}
         title="Confirm Delete"
@@ -143,7 +140,6 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
             });
         }}
       />
-
       {text !== props.view.text && (
         <React.Fragment>
           <Button
@@ -177,7 +173,6 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
           </Button>
         </React.Fragment>
       )}
-
       {(comments || []).length > 0 && (
         <React.Fragment>
           <Button

@@ -4,7 +4,7 @@ import { VersionControlState } from "./events-version-control";
 import { Editor } from "./panels/editor";
 import { FileHistory } from "./panels/file-history";
 import { SCMPanel } from "./panels/staging-scm";
-import { VCHistory } from "./panels/vc-history";
+import { Timeline } from "./panels/timeline";
 import { AppState, Dispatch } from "./store";
 import { AppStyles } from "./styles";
 import React = require("react");
@@ -94,9 +94,9 @@ export const App = withStyles(AppStyles)(
           </PanelContent>
         </div>
         <div key="1.1" data-grid={{ x: 0, y: 2, w: 12, h: 4 }} className={props.classes.vc_history}>
-          <PanelHeading>VC History</PanelHeading>
+          <PanelHeading>Timeline</PanelHeading>
           <PanelContent>
-            <VCHistory
+            <Timeline
               store={props.store}
               dispatch={props.dispatch}
               selectedCommitId={props.store.interactionStore.selectedCommitId}

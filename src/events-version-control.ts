@@ -1,3 +1,4 @@
+import { UseScrollTriggerOptions } from "@material-ui/core/useScrollTrigger/useScrollTrigger";
 import { ReviewCommentStore, ReviewCommentEvent, reduceComments } from "monaco-review";
 import { v4 } from "uuid";
 
@@ -33,21 +34,35 @@ export type GeneralComment = {
 
 export type FileEvents = FileEditEvent | FileDeleteEvent | FileRenameEvent | FileCommentEvent | GeneralComment;
 
+export type VersionControlEventBase = {
+  id?: string;
+  createdAt?: number;
+};
+
 export type VersionControlCommitEvent = {
   type: "commit";
   id?: string;
   author: string;
   events: FileEvents[];
   createdAt?: number;
-};
+} & VersionControlEventBase;
 
 export type VersionControlCommitReset = {
   type: "reset";
-  id?: string;
-  createdAt?: number;
-};
+} & VersionControlEventBase;
 
-export type VersionControlEvent = VersionControlCommitEvent | VersionControlCommitReset;
+export type VersionControlInformationEvent = {
+  type: "information";
+  message: string;
+  href?: string;
+  title?: string;
+  icon?: string;
+} & VersionControlEventBase;
+
+export type VersionControlEvent =
+  | VersionControlCommitEvent
+  | VersionControlCommitReset
+  | VersionControlInformationEvent;
 
 export enum FileStateStatus {
   active = 1,
@@ -132,17 +147,20 @@ export function initialVersionControlState(): VersionControlState {
 export type VCDispatch = (event: VersionControlEvent) => void;
 
 export function versionControlReducer(state: VersionControlState, event: VersionControlEvent) {
-  switch (event.type) {
+  // Ensure all events have a timestamp
+  const tmpEvent = {
+    ...event,
+    createdAt: event.createdAt && event.createdAt > 0 ? event.createdAt : new Date().getTime(),
+  };
+
+  switch (tmpEvent.type) {
     case "reset":
       return initialVersionControlState();
 
-    case "commit":
-      // Ensure all events have a timestamp
-      const tmpEvent = {
-        ...event,
-        createdAt: event.createdAt && event.createdAt > 0 ? event.createdAt : new Date().getTime(),
-      };
+    case "information":
+      return { ...state, events: [...state.events, tmpEvent] };
 
+    case "commit":
       const updates: { [fullPath: string]: FileState } = {};
       let generalCommentStore = state.commentStore;
       for (const e of tmpEvent.events) {

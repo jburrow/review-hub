@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VCHistory = exports.SCMPanel = exports.FileHistory = exports.Editor = exports.VersionControlStoreType = exports.reduceVersionControl = exports.isReadonly = exports.initialState = exports.appReducer = exports.timeConverter = exports.FileStateStatus = exports.getFile = exports.generateZip = exports.rebaseScripts = exports.versionControlReducer = exports.initialVersionControlState = exports.App = void 0;
+exports.Timeline = exports.SCMPanel = exports.FileHistory = exports.Editor = exports.VersionControlStoreType = exports.reduceVersionControl = exports.isReadonly = exports.initialState = exports.appReducer = exports.timeConverter = exports.FileStateStatus = exports.getFile = exports.generateZip = exports.rebaseScripts = exports.versionControlReducer = exports.initialVersionControlState = exports.App = void 0;
 const app_1 = require("./app");
 Object.defineProperty(exports, "App", { enumerable: true, get: function () { return app_1.App; } });
 const editor_1 = require("./panels/editor");
@@ -10,8 +10,8 @@ Object.defineProperty(exports, "FileHistory", { enumerable: true, get: function 
 Object.defineProperty(exports, "timeConverter", { enumerable: true, get: function () { return file_history_1.timeConverter; } });
 const staging_scm_1 = require("./panels/staging-scm");
 Object.defineProperty(exports, "SCMPanel", { enumerable: true, get: function () { return staging_scm_1.SCMPanel; } });
-const vc_history_1 = require("./panels/vc-history");
-Object.defineProperty(exports, "VCHistory", { enumerable: true, get: function () { return vc_history_1.VCHistory; } });
+const timeline_1 = require("./panels/timeline");
+Object.defineProperty(exports, "Timeline", { enumerable: true, get: function () { return timeline_1.Timeline; } });
 const events_version_control_1 = require("./events-version-control");
 Object.defineProperty(exports, "reduceVersionControl", { enumerable: true, get: function () { return events_version_control_1.reduceVersionControl; } });
 Object.defineProperty(exports, "initialVersionControlState", { enumerable: true, get: function () { return events_version_control_1.initialVersionControlState; } });

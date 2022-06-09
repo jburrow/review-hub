@@ -6,7 +6,7 @@ const RGL = require("react-grid-layout");
 const editor_1 = require("./panels/editor");
 const file_history_1 = require("./panels/file-history");
 const staging_scm_1 = require("./panels/staging-scm");
-const vc_history_1 = require("./panels/vc-history");
+const timeline_1 = require("./panels/timeline");
 const styles_1 = require("./styles");
 const React = require("react");
 const rooks_1 = require("rooks");
@@ -40,9 +40,9 @@ exports.App = core_1.withStyles(styles_1.AppStyles)((props) => {
             React.createElement(exports.PanelContent, null,
                 React.createElement(file_history_1.FileHistory, { store: props.store, dispatch: props.dispatch }))),
         React.createElement("div", { key: "1.1", "data-grid": { x: 0, y: 2, w: 12, h: 4 }, className: props.classes.vc_history },
-            React.createElement(exports.PanelHeading, null, "VC History"),
+            React.createElement(exports.PanelHeading, null, "Timeline"),
             React.createElement(exports.PanelContent, null,
-                React.createElement(vc_history_1.VCHistory, { store: props.store, dispatch: props.dispatch, selectedCommitId: props.store.interactionStore.selectedCommitId, selectedView: props.store.interactionStore.selectedView }),
+                React.createElement(timeline_1.Timeline, { store: props.store, dispatch: props.dispatch, selectedCommitId: props.store.interactionStore.selectedCommitId, selectedView: props.store.interactionStore.selectedView }),
                 React.createElement("div", null, props.store.vcStore.version)))));
 });
 exports.PanelContent = core_1.withStyles(styles_1.AppStyles)((props) => {

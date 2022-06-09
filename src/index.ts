@@ -2,7 +2,7 @@ import { App, Action, Persistence } from "./app";
 import { Editor } from "./panels/editor";
 import { FileHistory, timeConverter } from "./panels/file-history";
 import { SCMPanel } from "./panels/staging-scm";
-import { VCHistory } from "./panels/vc-history";
+import { Timeline } from "./panels/timeline";
 import {
   Files,
   reduceVersionControl,
@@ -42,5 +42,5 @@ export {
   Editor,
   FileHistory,
   SCMPanel,
-  VCHistory,
+  Timeline,
 };

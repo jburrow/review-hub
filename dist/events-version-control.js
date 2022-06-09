@@ -45,15 +45,17 @@ function initialVersionControlState() {
 exports.initialVersionControlState = initialVersionControlState;
 function versionControlReducer(state, event) {
     var _a;
-    switch (event.type) {
+    // Ensure all events have a timestamp
+    const tmpEvent = {
+        ...event,
+        createdAt: event.createdAt && event.createdAt > 0 ? event.createdAt : new Date().getTime(),
+    };
+    switch (tmpEvent.type) {
         case "reset":
             return initialVersionControlState();
+        case "information":
+            return { ...state, events: [...state.events, tmpEvent] };
         case "commit":
-            // Ensure all events have a timestamp
-            const tmpEvent = {
-                ...event,
-                createdAt: event.createdAt && event.createdAt > 0 ? event.createdAt : new Date().getTime(),
-            };
             const updates = {};
             let generalCommentStore = state.commentStore;
             for (const e of tmpEvent.events) {
