@@ -1,6 +1,6 @@
 {
   "name": "review-hub",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "ReactJs application, components and reducers for a web-based code review tool",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

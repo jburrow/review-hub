@@ -11,6 +11,7 @@ import {
   versionControlReducer,
   VersionControlState,
   VersionControlEvent,
+  FileStateHistory,
 } from "./events-version-control";
 import { rebaseScripts, generateZip } from "./import-export";
 import { FileState, FileStateStatus } from "./events-version-control";
@@ -20,6 +21,7 @@ export {
   App,
   Action,
   Persistence,
+  FileStateHistory,
   initialVersionControlState,
   versionControlReducer,
   VersionControlState,
