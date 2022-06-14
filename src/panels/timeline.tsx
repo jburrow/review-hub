@@ -16,7 +16,6 @@ export const Timeline = (props: {
   const scid = props.selectedCommitId ? props.selectedCommitId : props.store.vcStore.headCommitId;
 
   const elements = props.store.vcStore.events.map((ce, idx) => {
-    console.log("x:X", ce);
     switch (ce.type) {
       case "information":
         return <div key={idx}>{ce.message}</div>;

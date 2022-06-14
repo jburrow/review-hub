@@ -16,7 +16,7 @@ export declare const App: React.ComponentType<Pick<{
     store: AppState;
     buttons?: Action[];
     name?: string;
-}, "dispatch" | "store" | "name" | "buttons"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
+}, "store" | "name" | "dispatch" | "buttons"> & import("@material-ui/core").StyledComponentProps<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">>;
 export declare const PanelContent: React.ComponentType<Pick<{
     classes: import("@material-ui/styles").ClassNameMap<"layout" | "header_bar" | "version_control" | "editor" | "script_history" | "vc_history" | "panel_content" | "panel_heading">;
 } & {

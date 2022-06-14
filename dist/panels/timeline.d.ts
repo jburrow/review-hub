@@ -25,7 +25,7 @@ export declare const SelectCommitButton: React.ComponentType<Pick<{
     selected: boolean;
 } & {
     classes: import("@material-ui/styles").ClassNameMap<"selectedItem" | "inactiveItem">;
-}, "commitId" | "dispatch" | "selected"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+}, "selected" | "commitId" | "dispatch"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
 export declare const SelectEditButton: React.ComponentType<Pick<{
     commitId: string;
     store: AppState;
@@ -34,4 +34,4 @@ export declare const SelectEditButton: React.ComponentType<Pick<{
     selectedView: SelectedView;
 } & {
     classes: import("@material-ui/styles").ClassNameMap<"selectedItem" | "inactiveItem">;
-}, "commitId" | "dispatch" | "store" | "editEvent" | "selectedView"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+}, "store" | "selectedView" | "commitId" | "dispatch" | "editEvent"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
