@@ -12,10 +12,25 @@ import {
   VersionControlState,
   VersionControlEvent,
   FileStateHistory,
+  FileState,
+  FileStateStatus,
+  Revision,
+  VersionControlCommitEvent,
 } from "./events-version-control";
 import { rebaseScripts, generateZip } from "./import-export";
-import { FileState, FileStateStatus } from "./events-version-control";
-import { AppState, Dispatch, appReducer, initialState, VersionControlStoreType, getFile, isReadonly } from "./store";
+
+import {
+  AppState,
+  Dispatch,
+  appReducer,
+  initialState,
+  VersionControlStoreType,
+  versionControlStoreTypeLabel,
+  getFile,
+  isReadonly,
+} from "./store";
+import { SelectedView, InteractionStateEvents } from "./interaction-store";
+import { SelectedStyles } from "./styles";
 
 export {
   App,
@@ -23,22 +38,28 @@ export {
   Persistence,
   FileStateHistory,
   initialVersionControlState,
+  versionControlStoreTypeLabel,
   versionControlReducer,
   VersionControlState,
+  InteractionStateEvents,
+  SelectedView,
   AppState,
   Dispatch,
   rebaseScripts,
   generateZip,
   FileState,
   getFile,
-  FileStateStatus,
   timeConverter,
   appReducer,
   initialState,
   isReadonly,
+  SelectedStyles,
+  VersionControlCommitEvent,
   Files,
   reduceVersionControl,
   FileEvents,
+  Revision,
+  FileStateStatus,
   VersionControlEvent,
   VersionControlStoreType,
   Editor,
