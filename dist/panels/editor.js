@@ -1,15 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Editor = void 0;
-// import * as Editor from "@monaco-editor/react";
 const react_1 = require("@monaco-editor/react");
 const monaco_review_1 = require("monaco-review");
 const React = require("react");
 const store_1 = require("../store");
 const rename_1 = require("../dialogs/rename");
-const core_1 = require("@material-ui/core");
-const Delete_1 = require("@material-ui/icons/Delete");
 const confirm_1 = require("../dialogs/confirm");
+const timeline_1 = require("./timeline");
 const Editor = (props) => {
     const [text, setText] = React.useState(null);
     const [e, setE] = React.useState(null);
@@ -35,21 +33,21 @@ const Editor = (props) => {
     function setEditor(editor) {
         setE(editor);
         //: monaco.editor.IStandaloneCodeEditor
-        const rm = monaco_review_1.createReviewManager(editor, props.currentUser, [], setComments);
+        const rm = (0, monaco_review_1.createReviewManager)(editor, props.currentUser, [], setComments);
         setReviewManager(rm);
     }
     const [renameDialogOpen, setRenameDialogOpen] = React.useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
     const editorHeight = "calc(100% - 25px)";
     return props.view && props.view.fullPath ? (React.createElement("div", { style: { height: "calc(100% - 20px)" } },
-        props.view.readOnly ? (React.createElement(core_1.Chip, { label: "READ-ONLY", color: "primary", size: "small" })) : (React.createElement(core_1.Chip, { label: "EDITABLE", color: "secondary", size: "small" })),
-        props.view.type === "diff" && (React.createElement(core_1.Chip, { label: store_1.versionControlStoreTypeLabel(props.view.originalStoreType), color: "secondary", size: "small", variant: "outlined" })),
-        React.createElement(core_1.Chip, { label: store_1.versionControlStoreTypeLabel(props.view.storeType), color: "secondary", size: "small", variant: "outlined" }),
+        props.view.readOnly ? (React.createElement(timeline_1.Chip, { label: "READ-ONLY", color: "primary", size: "small" })) : (React.createElement(timeline_1.Chip, { label: "EDITABLE", color: "secondary", size: "small" })),
+        props.view.type === "diff" && (React.createElement(timeline_1.Chip, { label: (0, store_1.versionControlStoreTypeLabel)(props.view.originalStoreType), color: "secondary", size: "small", variant: "outlined" })),
+        React.createElement(timeline_1.Chip, { label: (0, store_1.versionControlStoreTypeLabel)(props.view.storeType), color: "secondary", size: "small", variant: "outlined" }),
         !props.view.readOnly && (React.createElement(React.Fragment, null,
-            React.createElement(core_1.Button, { "aria-label": "delete", size: "small", disabled: text !== props.view.text, onClick: () => {
+            React.createElement("button", { "aria-label": "delete", disabled: text !== props.view.text, onClick: () => {
                     setConfirmDialogOpen(true);
-                }, startIcon: React.createElement(Delete_1.default, { fontSize: "small" }) }, "Stage - Delete"),
-            React.createElement(core_1.Button, { size: "small", disabled: text !== props.view.text, onClick: () => {
+                } }, "Stage - Delete"),
+            React.createElement("button", { disabled: text !== props.view.text, onClick: () => {
                     setRenameDialogOpen(true);
                 } }, "stage - rename"))),
         React.createElement(rename_1.RenameDialog, { fullPath: props.view.fullPath, onClose: ({ newFullPath, rename }) => {
@@ -87,7 +85,7 @@ const Editor = (props) => {
                     });
             } }),
         text !== props.view.text && (React.createElement(React.Fragment, null,
-            React.createElement(core_1.Button, { size: "small", onClick: () => {
+            React.createElement("button", { onClick: () => {
                     props.dispatch({
                         storeType: store_1.VersionControlStoreType.Working,
                         type: "commit",
@@ -102,12 +100,12 @@ const Editor = (props) => {
                         ],
                     });
                 } }, "stage - change"),
-            React.createElement(core_1.Button, { size: "small", onClick: () => {
+            React.createElement("button", { onClick: () => {
                     setText(props.view.text);
                     e.getModel().setValue(props.view.text);
                 } }, "undo change"))),
         (comments || []).length > 0 && (React.createElement(React.Fragment, null,
-            React.createElement(core_1.Button, { size: "small", onClick: () => {
+            React.createElement("button", { onClick: () => {
                     props.dispatch({
                         storeType: store_1.VersionControlStoreType.Working,
                         type: "commit",
@@ -125,7 +123,7 @@ const Editor = (props) => {
                 } },
                 "Stage Comments ",
                 `${comments.length}`),
-            React.createElement(core_1.Button, { size: "small", onClick: () => {
+            React.createElement("button", { onClick: () => {
                     setComments([]);
                     reviewManager.loadFromStore(props.view.comments || {
                         comments: {},

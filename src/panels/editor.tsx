@@ -1,13 +1,12 @@
-// import * as Editor from "@monaco-editor/react";
 import { DiffEditor, default as ControlledEditor } from "@monaco-editor/react";
 import { createReviewManager, ReviewManager, ReviewCommentEvent } from "monaco-review";
 import * as React from "react";
 import { Dispatch, VersionControlStoreType, versionControlStoreTypeLabel } from "../store";
 import { SelectedView } from "../interaction-store";
 import { RenameDialog } from "../dialogs/rename";
-import { Button, Chip } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+
 import { ConfirmDialog } from "../dialogs/confirm";
+import { Chip } from "./timeline";
 
 export const Editor = (props: { currentUser: string; view: SelectedView; dispatch: Dispatch }) => {
   const [text, setText] = React.useState<string>(null);
@@ -73,27 +72,24 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
 
       {!props.view.readOnly && (
         <React.Fragment>
-          <Button
+          <button
             aria-label="delete"
-            size="small"
             disabled={text !== props.view.text}
             onClick={() => {
               setConfirmDialogOpen(true);
             }}
-            startIcon={<DeleteIcon fontSize="small" />}
           >
             Stage - Delete
-          </Button>
+          </button>
 
-          <Button
-            size="small"
+          <button
             disabled={text !== props.view.text}
             onClick={() => {
               setRenameDialogOpen(true);
             }}
           >
             stage - rename
-          </Button>
+          </button>
         </React.Fragment>
       )}
       <RenameDialog
@@ -142,8 +138,7 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
       />
       {text !== props.view.text && (
         <React.Fragment>
-          <Button
-            size="small"
+          <button
             onClick={() => {
               props.dispatch({
                 storeType: VersionControlStoreType.Working,
@@ -161,22 +156,20 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
             }}
           >
             stage - change
-          </Button>
-          <Button
-            size="small"
+          </button>
+          <button
             onClick={() => {
               setText(props.view.text);
               e.getModel().setValue(props.view.text);
             }}
           >
             undo change
-          </Button>
+          </button>
         </React.Fragment>
       )}
       {(comments || []).length > 0 && (
         <React.Fragment>
-          <Button
-            size="small"
+          <button
             onClick={() => {
               props.dispatch({
                 storeType: VersionControlStoreType.Working,
@@ -195,10 +188,9 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
             }}
           >
             Stage Comments {`${comments.length}`}
-          </Button>
+          </button>
 
-          <Button
-            size="small"
+          <button
             onClick={() => {
               setComments([]);
               reviewManager.loadFromStore(
@@ -212,7 +204,7 @@ export const Editor = (props: { currentUser: string; view: SelectedView; dispatc
             }}
           >
             Discard Comments
-          </Button>
+          </button>
         </React.Fragment>
       )}
       {props.view.type == "diff" ? (

@@ -1,4 +1,4 @@
-import * as React from "react";
+/// <reference types="react" />
 import { VersionControlCommitEvent, FileEvents } from "../events-version-control";
 import { AppState, Dispatch } from "../store";
 import { SelectedView } from "../interaction-store";
@@ -18,20 +18,22 @@ export declare const VersionControlCommitEventComponent: (props: {
     store: AppState;
 }) => JSX.Element;
 export declare const renderFileEvent: (e: FileEvents) => JSX.Element;
+export declare const Chip: (props: {
+    label: string;
+    color?: string;
+    size?: string;
+    variant?: string;
+}) => JSX.Element;
 export declare const renderCommentEvent: (e: ReviewCommentEvent) => JSX.Element;
-export declare const SelectCommitButton: React.ComponentType<Pick<{
+export declare const SelectCommitButton: (props: {
     commitId: string;
     dispatch: Dispatch;
     selected: boolean;
-} & {
-    classes: import("@material-ui/styles").ClassNameMap<"selectedItem" | "inactiveItem">;
-}, "selected" | "commitId" | "dispatch"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
-export declare const SelectEditButton: React.ComponentType<Pick<{
+}) => JSX.Element;
+export declare const SelectEditButton: (props: {
     commitId: string;
     store: AppState;
     dispatch: Dispatch;
     editEvent: FileEvents;
     selectedView: SelectedView;
-} & {
-    classes: import("@material-ui/styles").ClassNameMap<"selectedItem" | "inactiveItem">;
-}, "store" | "selectedView" | "commitId" | "dispatch" | "editEvent"> & import("@material-ui/core").StyledComponentProps<"selectedItem" | "inactiveItem">>;
+}) => JSX.Element;

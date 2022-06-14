@@ -60,7 +60,7 @@ function versionControlReducer(state, event) {
             let generalCommentStore = state.commentStore;
             for (const e of tmpEvent.events) {
                 if (e.type === "general-comment") {
-                    generalCommentStore = monaco_review_1.reduceComments(e.commentEvents, generalCommentStore);
+                    generalCommentStore = (0, monaco_review_1.reduceComments)(e.commentEvents, generalCommentStore);
                     continue;
                 }
                 const prev = (state.files[e.fullPath] || {
@@ -76,7 +76,7 @@ function versionControlReducer(state, event) {
                 let commentStore = prev.commentStore;
                 switch (e.type) {
                     case "comment":
-                        commentStore = monaco_review_1.reduceComments(e.commentEvents, commentStore);
+                        commentStore = (0, monaco_review_1.reduceComments)(e.commentEvents, commentStore);
                         console.debug("[commentStore] after reduce", commentStore);
                         break;
                     case "edit":
@@ -101,7 +101,7 @@ function versionControlReducer(state, event) {
                 ...state.files,
                 ...updates,
             };
-            const commitId = tmpEvent.id || uuid_1.v4();
+            const commitId = tmpEvent.id || (0, uuid_1.v4)();
             const newCommit = {};
             newCommit[commitId] = files;
             return {

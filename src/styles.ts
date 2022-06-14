@@ -1,9 +1,7 @@
-import { createStyles } from "@material-ui/core";
-
 const panelHeadingHeight = "20px";
 
 const common = { backgroundColor: "#33333311" };
-export const AppStyles = createStyles({
+export const AppStyles = {
   layout: {
     fontSize: "12px",
     backgroundColor: "#f9f4f633",
@@ -43,9 +41,9 @@ export const AppStyles = createStyles({
     paddingTop: 2,
     cursor: "grab",
   },
-});
+};
 
-export const SelectedStyles = createStyles({
+export const SelectedStyles = {
   selectedItem: { textDecoration: "underline", backgroundColor: "orange" },
   inactiveItem: {},
-});
+};

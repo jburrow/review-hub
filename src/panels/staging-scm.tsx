@@ -2,13 +2,14 @@ import * as React from "react";
 import { VersionControlStoreType, Dispatch, AppState, isReadonly } from "../store";
 import { FileState, FileStateStatus, FileEvents, Revision } from "../events-version-control";
 import { VersionControlEvent } from "../events-version-control";
-import { Button, Chip, Divider, Link, Tooltip, WithStyles, withStyles } from "@material-ui/core";
+
 import { SelectedStyles } from "../styles";
 import { v4 } from "uuid";
 import { ReviewCommentStore } from "monaco-review";
 import { ReviewCommentState } from "monaco-review/dist/events-comments-reducers";
 import { TextInputDialog } from "../dialogs/text-input";
 import { SelectedView } from "../interaction-store";
+import { Chip } from "./timeline";
 
 export const StagingSCM = (props: {
   currentUser: string;
@@ -26,9 +27,8 @@ export const StagingSCM = (props: {
 
   return (
     <div>
-      <Tooltip title="Changes that have not been merged to main">
-        <h3>Working set</h3>
-      </Tooltip>
+      <h3>Working set</h3>
+
       <SCM
         dispatch={props.dispatch}
         currentUser={props.currentUser}
@@ -38,30 +38,25 @@ export const StagingSCM = (props: {
         storeType={VersionControlStoreType.Working}
         store={props.store}
       />
-      <Button
-        size="small"
+      <button
         disabled={newFileOpen || props.isHeadCommit}
         onClick={() => {
           setNewFileOpen(true);
         }}
       >
         Create New File
-      </Button>
+      </button>
 
-      <Button
-        size="small"
+      <button
         disabled={generalCommentOpen || props.isHeadCommit}
         onClick={() => {
           setGeneralCommentOpen(true);
         }}
       >
         Comment
-      </Button>
+      </button>
 
-      <Button
-        size="small"
-        variant="contained"
-        color="primary"
+      <button
         onClick={() => {
           const events = props.events
             .filter((e) => e.type === "commit")
@@ -83,10 +78,9 @@ export const StagingSCM = (props: {
         disabled={props.events.length == 0}
       >
         Save All
-      </Button>
+      </button>
 
-      <Button
-        size="small"
+      <button
         onClick={() => {
           props.dispatch({
             type: "reset",
@@ -96,7 +90,7 @@ export const StagingSCM = (props: {
         disabled={props.events.length == 0}
       >
         Discard Changes
-      </Button>
+      </button>
 
       <TextInputDialog
         open={generalCommentOpen}
@@ -300,13 +294,13 @@ const Comment = (props: {
   return (
     <li>
       {props.depth} - {props.comment.comment.text} {props.comment.comment.author} {props.comment.comment.dt}
-      <Link
+      <a
         onClick={() => {
           props.onReply(props.comment.comment.id);
         }}
       >
         reply
-      </Link>
+      </a>
       <ul>
         {Object.values(props.comments)
           .filter((c) => c.comment.parentId === props.comment.comment.id)
@@ -325,30 +319,28 @@ const Comment = (props: {
   );
 };
 
-const SCMItem = withStyles(SelectedStyles)(
-  (
-    props: {
-      fullPath: string;
-      revision: Revision;
-      status: FileStateStatus;
-      store: AppState;
-      onClick(fullPath: string, readOnly: boolean): void;
-      selected: boolean;
-    } & WithStyles<typeof SelectedStyles>
-  ) => {
-    return (
-      <li
-        style={props.status === 2 ? { textDecoration: "line-through" } : { cursor: "pointer" }}
-        onClick={(e) => {
-          props.onClick(props.fullPath, isReadonly(props.store, props.fullPath, props.revision));
-        }}
-        className={props.selected ? props.classes.selectedItem : props.classes.inactiveItem}
-      >
-        {props.fullPath} @ v{props.revision} - {props.status}
-      </li>
-    );
-  }
-);
+const SCMItem = (props: {
+  fullPath: string;
+  revision: Revision;
+  status: FileStateStatus;
+  store: AppState;
+  onClick(fullPath: string, readOnly: boolean): void;
+  selected: boolean;
+}) => {
+  return (
+    <li
+      style={{
+        ...(props.selected ? SelectedStyles.selectedItem : SelectedStyles.inactiveItem),
+        ...(props.status === 2 ? { textDecoration: "line-through" } : { cursor: "pointer" }),
+      }}
+      onClick={(e) => {
+        props.onClick(props.fullPath, isReadonly(props.store, props.fullPath, props.revision));
+      }}
+    >
+      {props.fullPath} @ v{props.revision} - {props.status}
+    </li>
+  );
+};
 
 export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
   const activeFiles = props.store.interactionStore.selectedCommitId
@@ -370,7 +362,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
             store={props.store}
           />
           <Chip label={`Main Events: #${props.store.mainStore?.events.length}`} size="small" />
-          <Divider />
+          <hr />
         </React.Fragment>
       ) : null}
 
@@ -385,7 +377,7 @@ export const SCMPanel = (props: { dispatch: Dispatch; store: AppState }) => {
         store={props.store}
       />
       <Chip label={`Commited Events: #${props.store.vcStore.events.length}`} size="small" />
-      <Divider />
+      <hr />
       <StagingSCM
         dispatch={props.dispatch}
         isHeadCommit={props.store.isHeadCommit}

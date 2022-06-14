@@ -1,6 +1,6 @@
 {
   "name": "review-hub",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "ReactJs application, components and reducers for a web-based code review tool",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "tsc --watch",
-    "compile": "tsc &&  typedoc --out ./docs ./src/main.tsx",
+    "compile": "tsc &&  typedoc --out ./docs ./src/index.ts",
     "doc": "typedoc --out ./docs ./src/index.ts",
     "test": "jest --coverage",
     "testpub": "jest --coverage --coverageReporters=text-lcov | coveralls"
@@ -21,21 +21,19 @@
     "url": "https://github.com/jburrow/review-hub.git"
   },
   "peerDependencies": {
-    "react": "16.x || 17.x",
-    "react-dom": "16.x || 17.x"
+    "react": "16.x || 17.x || 18.x",
+    "react-dom": "16.x || 17.x || 18.x"
   },
   "dependencies": {
-    "@material-ui/core": "^4.11.2",
-    "@material-ui/icons": "^4.11.2",
     "@monaco-editor/react": "^4.0.9",
     "file-saver": "^2.0.5",
-    "jszip": "^3.6.0",
-    "moment": "^2.29.1",
+    "jszip": "^3.10.0",
+    "moment": "^2.29.3",
     "monaco-editor": "^0.26.1",
     "monaco-review": "0.0.30",
     "react-grid-layout": "^1.2.0",
     "react-with-styles": "^4.1.0",
-    "rooks": "4.11.0",
+    "rooks": "5.11.2",
     "stream": "0.0.2",
     "zip-js": "0.0.2"
   },
@@ -50,7 +48,7 @@
     "coveralls": "^3.1.0",
     "jest": "^27.0.4",
     "ts-jest": "^27.0.3",
-    "typedoc": "^0.21.0",
-    "typescript": "^4.3.4"
+    "typedoc": "^0.22.17",
+    "typescript": "^4.7.3"
   }
 }

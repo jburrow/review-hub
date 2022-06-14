@@ -13,7 +13,7 @@ async function generateZip(files) {
         }
     }
     const content = await zip.generateAsync({ type: "blob" });
-    file_saver_1.saveAs(content, "example.zip");
+    (0, file_saver_1.saveAs)(content, "example.zip");
 }
 exports.generateZip = generateZip;
 function rebaseScripts(author, currentFiles, files) {

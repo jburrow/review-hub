@@ -8,30 +8,29 @@ import {
   versionControlStoreTypeLabel,
 } from "../store";
 import { FileStateHistory } from "../events-version-control";
-import { Button, Chip, withStyles, WithStyles } from "@material-ui/core";
+
 import { SelectedStyles } from "../styles";
 import { SelectedView } from "../interaction-store";
+import { Chip } from "./timeline";
 
-export const FileHistoryItem = withStyles(SelectedStyles)(
-  (props: { history: FileStateHistory; selectedView: SelectedView } & WithStyles<typeof SelectedStyles>) => {
-    const comments = props.history.fileState.commentStore?.comments || {};
+export const FileHistoryItem = (props: { history: FileStateHistory; selectedView: SelectedView }) => {
+  const comments = props.history.fileState.commentStore?.comments || {};
 
-    return (
-      <span>
-        <span
-          className={
-            props.selectedView?.revision === props.history.fileState.revision
-              ? props.classes.selectedItem
-              : props.classes.inactiveItem
-          }
-        >
-          v{props.history.fileState.revision}
-        </span>{" "}
-        <span>{Object.values(comments).length}</span> <span>{timeConverter(props.history.event.createdAt)}</span>
-      </span>
-    );
-  }
-);
+  return (
+    <span>
+      <span
+        style={
+          props.selectedView?.revision === props.history.fileState.revision
+            ? SelectedStyles.selectedItem
+            : SelectedStyles.inactiveItem
+        }
+      >
+        v{props.history.fileState.revision}
+      </span>{" "}
+      <span>{Object.values(comments).length}</span> <span>{timeConverter(props.history.event.createdAt)}</span>
+    </span>
+  );
+};
 
 export function timeConverter(timestamp: number) {
   if (timestamp) {
@@ -49,47 +48,92 @@ export function timeConverter(timestamp: number) {
   }
 }
 
-export const FileHistory = withStyles(SelectedStyles)(
-  (
-    props: {
-      dispatch: Dispatch;
-      store: AppState;
-    } & WithStyles<typeof SelectedStyles>
-  ) => {
-    const [selected, setSelected] = React.useState<number[]>([]);
-    const selectedView = props.store.interactionStore.selectedView;
-    const file = getFile(props.store, selectedView?.storeType, selectedView?.fullPath)?.file;
+export const FileHistory = (props: { dispatch: Dispatch; store: AppState }) => {
+  const [selected, setSelected] = React.useState<number[]>([]);
+  const selectedView = props.store.interactionStore.selectedView;
+  const file = getFile(props.store, selectedView?.storeType, selectedView?.fullPath)?.file;
 
-    if (file) {
-      return (
-        <div>
-          <Chip label={versionControlStoreTypeLabel(selectedView.storeType)} variant="outlined" />
+  if (file) {
+    return (
+      <div>
+        <Chip label={versionControlStoreTypeLabel(selectedView.storeType)} />
 
-          {props.store.mainStore &&
-          ((props.store.interactionStore.selectedView?.type == "diff" &&
-            props.store.interactionStore.selectedView.originalStoreType !== VersionControlStoreType.Main) ||
-            (props.store.interactionStore.selectedView?.type == "view" &&
-              props.store.interactionStore.selectedView.storeType !== VersionControlStoreType.Main)) ? (
-            <Button
-              size="small"
+        {props.store.mainStore &&
+        ((props.store.interactionStore.selectedView?.type == "diff" &&
+          props.store.interactionStore.selectedView.originalStoreType !== VersionControlStoreType.Main) ||
+          (props.store.interactionStore.selectedView?.type == "view" &&
+            props.store.interactionStore.selectedView.storeType !== VersionControlStoreType.Main)) ? (
+          <button
+            onClick={() => {
+              const active = getFile(
+                props.store,
+                props.store.interactionStore.selectedView.storeType,
+                props.store.interactionStore.selectedView.fullPath
+              );
+              const m = active.file;
+
+              const original = getFile(
+                props.store,
+                VersionControlStoreType.Main,
+                props.store.interactionStore.selectedView.fullPath
+              ).file;
+              const readOnly =
+                isReadonly(props.store, selectedView.fullPath, m.revision) &&
+                props.store.interactionStore.selectedView.storeType !== VersionControlStoreType.Working;
+              //TODO - review this logic - not sure this is now correct
+
+              props.dispatch({
+                type: "selectedView",
+                selectedView: {
+                  type: "diff",
+                  fullPath: file.fullPath,
+                  label: `base:${original.revision} v other:${m.revision}`,
+                  text: m.text,
+                  readOnly,
+                  revision: m.revision,
+                  original: original.text,
+                  originalRevision: original.revision,
+                  comments: m.commentStore,
+                  storeType: props.store.interactionStore.selectedView.storeType,
+                  originalStoreType: VersionControlStoreType.Main,
+                },
+              });
+            }}
+          >
+            Diff to Main
+          </button>
+        ) : null}
+
+        {file.history.map((h, idx) => (
+          <div key={idx}>
+            <button
               onClick={() => {
-                const active = getFile(
-                  props.store,
-                  props.store.interactionStore.selectedView.storeType,
-                  props.store.interactionStore.selectedView.fullPath
-                );
-                const m = active.file;
+                if (selected.indexOf(idx) > -1) {
+                  setSelected(selected.filter((i) => i !== idx));
+                } else {
+                  setSelected(selected.concat(idx));
+                }
+              }}
+            >
+              {selected.indexOf(idx) > -1 ? "deselect" : "select"}
+            </button>
+            <ViewButton
+              dispatch={props.dispatch}
+              history={h}
+              readOnly={isReadonly(props.store, selectedView.fullPath, h.fileState.revision)}
+              storeType={selectedView.storeType}
+            ></ViewButton>
 
-                const original = getFile(
-                  props.store,
-                  VersionControlStoreType.Main,
-                  props.store.interactionStore.selectedView.fullPath
-                ).file;
-                const readOnly =
-                  isReadonly(props.store, selectedView.fullPath, m.revision) &&
-                  props.store.interactionStore.selectedView.storeType !== VersionControlStoreType.Working;
-                //TODO - review this logic - not sure this is now correct
+            <FileHistoryItem history={h} selectedView={selectedView} />
+          </div>
+        ))}
 
+        {selected.length == 2 && (
+          <React.Fragment>
+            <button
+              onClick={() => {
+                const m = file.history[selected[1]].fileState;
+                const original = file.history[selected[0]].fileState;
                 props.dispatch({
                   type: "selectedView",
                   selectedView: {
@@ -97,104 +141,48 @@ export const FileHistory = withStyles(SelectedStyles)(
                     fullPath: file.fullPath,
                     label: `base:${original.revision} v other:${m.revision}`,
                     text: m.text,
-                    readOnly,
+                    readOnly: isReadonly(props.store, selectedView.fullPath, m.revision),
                     revision: m.revision,
                     original: original.text,
                     originalRevision: original.revision,
                     comments: m.commentStore,
                     storeType: props.store.interactionStore.selectedView.storeType,
-                    originalStoreType: VersionControlStoreType.Main,
+                    originalStoreType: props.store.interactionStore.selectedView.storeType,
                   },
                 });
               }}
             >
-              Diff to Main
-            </Button>
-          ) : null}
+              diff
+            </button>
+            <button
+              onClick={() => {
+                setSelected([]);
 
-          {file.history.map((h, idx) => (
-            <div key={idx}>
-              <Button
-                size="small"
-                onClick={() => {
-                  if (selected.indexOf(idx) > -1) {
-                    setSelected(selected.filter((i) => i !== idx));
-                  } else {
-                    setSelected(selected.concat(idx));
-                  }
-                }}
-              >
-                {selected.indexOf(idx) > -1 ? "deselect" : "select"}
-              </Button>
-              <ViewButton
-                dispatch={props.dispatch}
-                history={h}
-                readOnly={isReadonly(props.store, selectedView.fullPath, h.fileState.revision)}
-                storeType={selectedView.storeType}
-              ></ViewButton>
+                const m = file.history.filter((h) => h.fileState.revision === selectedView.revision)[0]?.fileState;
 
-              <FileHistoryItem history={h} selectedView={selectedView} />
-            </div>
-          ))}
-
-          {selected.length == 2 && (
-            <React.Fragment>
-              <Button
-                size="small"
-                onClick={() => {
-                  const m = file.history[selected[1]].fileState;
-                  const original = file.history[selected[0]].fileState;
-                  props.dispatch({
-                    type: "selectedView",
-                    selectedView: {
-                      type: "diff",
-                      fullPath: file.fullPath,
-                      label: `base:${original.revision} v other:${m.revision}`,
-                      text: m.text,
-                      readOnly: isReadonly(props.store, selectedView.fullPath, m.revision),
-                      revision: m.revision,
-                      original: original.text,
-                      originalRevision: original.revision,
-                      comments: m.commentStore,
-                      storeType: props.store.interactionStore.selectedView.storeType,
-                      originalStoreType: props.store.interactionStore.selectedView.storeType,
-                    },
-                  });
-                }}
-              >
-                diff
-              </Button>
-              <Button
-                size="small"
-                onClick={() => {
-                  setSelected([]);
-
-                  const m = file.history.filter((h) => h.fileState.revision === selectedView.revision)[0]?.fileState;
-
-                  props.dispatch({
-                    type: "selectedView",
-                    selectedView: {
-                      type: "view",
-                      fullPath: file.fullPath,
-                      readOnly: isReadonly(props.store, selectedView.fullPath, m.revision),
-                      text: m.text,
-                      revision: m.revision,
-                      comments: m.commentStore,
-                      storeType: props.store.interactionStore.selectedView.storeType,
-                    },
-                  });
-                }}
-              >
-                clear
-              </Button>
-            </React.Fragment>
-          )}
-        </div>
-      );
-    }
-    return null;
+                props.dispatch({
+                  type: "selectedView",
+                  selectedView: {
+                    type: "view",
+                    fullPath: file.fullPath,
+                    readOnly: isReadonly(props.store, selectedView.fullPath, m.revision),
+                    text: m.text,
+                    revision: m.revision,
+                    comments: m.commentStore,
+                    storeType: props.store.interactionStore.selectedView.storeType,
+                  },
+                });
+              }}
+            >
+              clear
+            </button>
+          </React.Fragment>
+        )}
+      </div>
+    );
   }
-);
+  return null;
+};
 
 const ViewButton: React.FunctionComponent<{
   dispatch: Dispatch;
@@ -203,8 +191,7 @@ const ViewButton: React.FunctionComponent<{
   readOnly: boolean;
 }> = (props) => {
   return (
-    <Button
-      size="small"
+    <button
       onClick={() =>
         props.dispatch({
           type: "selectedView",
@@ -221,6 +208,6 @@ const ViewButton: React.FunctionComponent<{
       }
     >
       view
-    </Button>
+    </button>
   );
 };

@@ -1,4 +1,3 @@
-import { UseScrollTriggerOptions } from "@material-ui/core/useScrollTrigger/useScrollTrigger";
 import { ReviewCommentStore, ReviewCommentEvent, reduceComments } from "monaco-review";
 import { v4 } from "uuid";
 

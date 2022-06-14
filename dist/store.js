@@ -22,8 +22,8 @@ function versionControlStoreTypeLabel(v) {
 exports.versionControlStoreTypeLabel = versionControlStoreTypeLabel;
 exports.initialState = {
     interactionStore: { currentUser: "xyz-user" },
-    wsStore: events_version_control_1.initialVersionControlState(),
-    vcStore: events_version_control_1.initialVersionControlState(),
+    wsStore: (0, events_version_control_1.initialVersionControlState)(),
+    vcStore: (0, events_version_control_1.initialVersionControlState)(),
     isHeadCommit: false,
 };
 const appReducer = (state, event) => {
@@ -32,7 +32,7 @@ const appReducer = (state, event) => {
         case "selectCommit":
         case "selectedView":
         case "setCurrentUser":
-            const interactionStore = interaction_store_1.interactionReducer(state.interactionStore, event);
+            const interactionStore = (0, interaction_store_1.interactionReducer)(state.interactionStore, event);
             return {
                 ...state,
                 interactionStore,
@@ -43,23 +43,23 @@ const appReducer = (state, event) => {
                 ...state,
                 vcStore: (_a = event.vcStore) !== null && _a !== void 0 ? _a : state.vcStore,
                 mainStore: (_b = event.mainStore) !== null && _b !== void 0 ? _b : state.mainStore,
-                wsStore: events_version_control_1.initialVersionControlState(),
+                wsStore: (0, events_version_control_1.initialVersionControlState)(),
             };
         case "commit":
         case "reset":
             switch (event.storeType) {
                 case VersionControlStoreType.Branch:
                     const isHeadCommit = state.interactionStore.selectedCommitId && state.vcStore.headCommitId ? true : false;
-                    let s2 = exports.appReducer({
+                    let s2 = (0, exports.appReducer)({
                         ...state,
-                        vcStore: events_version_control_1.versionControlReducer(state.vcStore, event),
+                        vcStore: (0, events_version_control_1.versionControlReducer)(state.vcStore, event),
                         isHeadCommit,
                     }, {
                         type: "reset",
                         storeType: VersionControlStoreType.Working,
                     });
                     if (isHeadCommit) {
-                        s2 = exports.appReducer(s2, {
+                        s2 = (0, exports.appReducer)(s2, {
                             type: "selectCommit",
                             commitId: null,
                         });
@@ -78,7 +78,7 @@ const appReducer = (state, event) => {
                             newSelectedPath = null;
                         }
                     }
-                    const wsStore = events_version_control_1.versionControlReducer(state.wsStore, event);
+                    const wsStore = (0, events_version_control_1.versionControlReducer)(state.wsStore, event);
                     const s1 = {
                         ...state,
                         wsStore,
@@ -86,7 +86,7 @@ const appReducer = (state, event) => {
                     if (((_e = (_d = state.interactionStore) === null || _d === void 0 ? void 0 : _d.selectedView) === null || _e === void 0 ? void 0 : _e.fullPath) === newSelectedPath &&
                         !((_g = (_f = state.interactionStore) === null || _f === void 0 ? void 0 : _f.selectedView) === null || _g === void 0 ? void 0 : _g.readOnly)) {
                         const value = wsStore.files[newSelectedPath];
-                        interactionStore = interaction_store_1.interactionReducer(state.interactionStore, {
+                        interactionStore = (0, interaction_store_1.interactionReducer)(state.interactionStore, {
                             type: "selectedView",
                             selectedView: (value === null || value === void 0 ? void 0 : value.fullPath)
                                 ? {

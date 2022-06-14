@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SelectedStyles = exports.AppStyles = void 0;
-const core_1 = require("@material-ui/core");
 const panelHeadingHeight = "20px";
 const common = { backgroundColor: "#33333311" };
-exports.AppStyles = core_1.createStyles({
+exports.AppStyles = {
     layout: {
         fontSize: "12px",
         backgroundColor: "#f9f4f633",
@@ -44,9 +43,9 @@ exports.AppStyles = core_1.createStyles({
         paddingTop: 2,
         cursor: "grab",
     },
-});
-exports.SelectedStyles = core_1.createStyles({
+};
+exports.SelectedStyles = {
     selectedItem: { textDecoration: "underline", backgroundColor: "orange" },
     inactiveItem: {},
-});
+};
 //# sourceMappingURL=styles.js.map
