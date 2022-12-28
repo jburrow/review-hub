@@ -1,5 +1,7 @@
 # review-hub
 
+[This project has been gone closed source - it is effectively abandoned for now]
+
 a browser based, version control agnostic, code review tool
 
 [![Coverage Status](https://coveralls.io/repos/github/jburrow/review-hub/badge.svg?branch=master)](https://coveralls.io/github/jburrow/review-hub?branch=master)
